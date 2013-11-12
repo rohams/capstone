@@ -101,6 +101,9 @@ function codeLatLong(map){
         //add the node to the array of nodes
         var newStore= new Node (lat, lng);
         nodes.push(newStore);
+        
+        //add marker to markers array
+        markers.push(marker);
 
       } else {
         alert('No results found');
