@@ -160,9 +160,31 @@ function deleteMarkers() {
 
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {
-                          shape.setMap(map);
-                          drawEllipse(nodes);
+                          //shape.setMap(map);
+                          var points = [];
+                          points = drawEllipse(nodes);
+                          var path = [];
+                          for (i=0;i<points.length;i++)
+                          {
+                              path.push(new google.maps.LatLng(points[i].getLat(),points[i].getLng()));
+                          };
+                          var shape = new google.maps.Polygon({
+                                        paths: path,
+                                        strokeColor: '#000000',
+                                        strokeOpacity: 0.8,
+                                        strokeWeight: 1.5,
+                                        fillOpacity: 0
+                                        });
+                          //shape.setMap(map);              
+                          for (i=0; i<points.length; i++){
+                                     new google.maps.Marker({                              
+                                     position: new google.maps.LatLng(points[i].getLat(), points[i].getLng()),
+                                     draggable: false,
+                                     map: map,
+                                     icon:image1,
                                      });
+                          }
+                      });
     
     //Average finder
     google.maps.event.addDomListener(control2, 'click', function() {

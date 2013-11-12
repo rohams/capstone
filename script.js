@@ -6,20 +6,16 @@ function Node(lat,lng){
     this.getLat = function()
     {
         return this.lat;
-    }
+    };
     
     this.getLng = function()
     {
         return this.lng;
-    }
+    };
 }
 
 //calculate the weighted average of nodes
 function getAverage(nodes){
-    
-    var cost= 2.5;
-    var stepsize= 0.01;
-    var threshold= 0.01;
     var xSum=0;
     var ySum=0;
     for (i=0;i<nodes.length;i++)
@@ -34,6 +30,50 @@ function getAverage(nodes){
     document.getElementById("panel").innerHTML=x;
     return aveNode;
 }
+
+
+function SumOfDistances(foci,i,j){
+    var distance = 0;
+    for (k = 0; k < foci.length; k++) {
+        distance += Math.sqrt( Math.pow(foci[k].getLat() - i, 2) + Math.pow(foci[k].getLng() - j, 2) );
+    }
+    return distance;    
+}
+
+function drawEllipse(foci){
+    var COST= 2.5;
+    var THERESHOLD= 2;
+    var STEPSIZE= 0.01;
+    var ellipse = [];
+    var ave = getAverage(foci); 
+    for (i=49.14; i < 49.40; i += STEPSIZE) {
+			for (j = ave.getLng(); j < -122.95; j += STEPSIZE) {
+				d = SumOfDistances(foci, i, j);
+                                d -= COST;
+                                if (Math.abs(d) < THERESHOLD) {
+                                    var point= new Node(i,j);
+                                    ellipse.push(point);
+                                    break;
+                                }				
+			}
+		}
+                
+     for (i = 49.40; i > 49.14; i -= STEPSIZE) {
+			for (j = ave.getLng(); j > -123.25; j -= STEPSIZE) {
+				d = SumOfDistances(foci, i, j);
+                                d -= COST;
+                                if (Math.abs(d) < THERESHOLD) {
+                                    var point= new Node(i,j);
+                                    ellipse.push(point); 
+                                    break;
+                                }				
+			}
+		}
+                
+    return ellipse;
+}
+
+
 
 
 //google functions
