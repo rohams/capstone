@@ -13,6 +13,24 @@ function Node(lat,lng){
         return this.lng;
     };
 }
+//constructor
+function Cost(input){
+    var MAX_COST = 1000;
+    this.cost=input;
+    this.getCost = function()
+    {
+        return this.cost;
+    };
+    this.OK = function()
+    {
+            if (this.cost>0){
+        if(this.cost<MAX_COST){
+            return true;           
+        }          
+    }
+    else return false;
+    }
+}
 
 //calculate the weighted average of nodes
 function getAverage(nodes){
@@ -46,28 +64,71 @@ function SumOfDistances(foci,i,j){
     return distance;    
 }
 
-function drawEllipse(foci){
-    var COST= 2.5;
-    var THERESHOLD= 2;
-    var STEPSIZE= 0.01;
+ 
+
+function getEllipse(foci,map){
+    
+//    var COST= 0.5;
+    //boundaries
+    var COST_DST_RATIO = 0.001;
+    var MAX_LAT = 50;
+    var MIN_LAT = 48;
+    var MAX_LNG = -120;
+    var MIN_LNG = -124;
+//    var COST_STEP = 50;
+    var NUM_ELLIPSES = 5;
+    
+            
+    var THERESHOLD= 0.002;
+    var STEPSIZE= 0.001;
     var ellipse = [];
+    var point;
+    var min = 1000;
+    var FW_point = new Node; 
+    var cost_step = document.getElementById('coststep').value;
+    var cost = document.getElementById('cost').value;
+    var init_cost = new Cost(document.getElementById('cost').value);
+    if (!init_cost.OK){
+        alert ('Cost is not valid');
+        return false;
+    }
+    
+    initial_c=init_cost.cost;
+    
+    for (m=0; m<NUM_ELLIPSES; m++){
+        
+    var dist = initial_c*COST_DST_RATIO; 
+    
+    
     var ave = getAverage(foci); 
-    for (i=49.14; i < 49.40; i += STEPSIZE) {
-			for (j = ave.getLng(); j < -122.95; j += STEPSIZE) {
+    for (i = MIN_LAT; i < MAX_LAT; i += STEPSIZE) {
+			for (j = ave.getLng(); j < MAX_LNG; j += STEPSIZE) {
 				d = SumOfDistances(foci, i, j);
-                                d -= COST;
+                                 if (d<min){
+                                    min=d;
+                                    FW_point.lat = i;
+                                    FW_point.lng = j;
+                                }      
+                                d -= dist;                                                            
                                 if (Math.abs(d) < THERESHOLD) {
-                                    var point= new Node(i,j);
+                                    point= new Node(i,j);
                                     ellipse.push(point);
                                     break;
+                                    
+                                    
                                 }				
 			}
 		}
                 
-     for (i = 49.40; i > 49.14; i -= STEPSIZE) {
-			for (j = ave.getLng(); j > -123.25; j -= STEPSIZE) {
+     for (i = MAX_LAT; i > MIN_LAT; i -= STEPSIZE) {
+			for (j = ave.getLng(); j > MIN_LNG; j -= STEPSIZE) {
 				d = SumOfDistances(foci, i, j);
-                                d -= COST;
+                                if (d<min){
+                                    min=d;
+                                    FW_point.lat = i;
+                                    FW_point.lng = j;
+                                }      
+                                d -= dist;                                                             
                                 if (Math.abs(d) < THERESHOLD) {
                                     var point= new Node(i,j);
                                     ellipse.push(point); 
@@ -75,11 +136,41 @@ function drawEllipse(foci){
                                 }				
 			}
 		}
+    initial_c -= cost_step;
+    drawEllipse(map, ellipse);
+    
+    }
                 
+       new google.maps.Marker({                              
+                    position: new google.maps.LatLng(FW_point.getLat(), FW_point.getLng()),
+                    draggable: false,
+                    map: map,
+                    icon:image2,
+                    title: 'FW POINT',
+                    zIndex: AVE_ZINDEX,
+                    animation: google.maps.Animation.DROP
+                    }); 
+      var x="Minimum Distance: " + min;
+      document.getElementById("panel").innerHTML=x;
+
     return ellipse;
 }
 
-
+function drawEllipse(map, points){
+    var path = [];
+    for (i=0;i<points.length;i++)
+            {
+                path.push(new google.maps.LatLng(points[i].getLat(),points[i].getLng()));
+            };
+    var shape = new google.maps.Polygon({
+                paths: path,
+                strokeColor: '#000000',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillOpacity: 0
+                });
+    shape.setMap(map);    
+}
 
 
 //google functions
@@ -121,22 +212,3 @@ function codeLatLong(map){
 }
 
 
-
-function addMarkers2() {
-    var image='http://www.elyoukey.com/bloodbowl/dice/dot.png'
-    var bounds = map.getBounds();
-    var southWest = bounds.getSouthWest();
-    var northEast = bounds.getNorthEast();
-    var lngSpan = northEast.lng() - southWest.lng();
-    var latSpan = northEast.lat() - southWest.lat();
-    for (var i = 0; i < 5; i++) {
-        var latLng = new google.maps.LatLng(southWest.lat() + latSpan * Math.random(),
-                                            southWest.lng() + lngSpan * Math.random());
-        var marker = new google.maps.Marker({
-                                            position: latLng,
-                                            draggable: true,
-                                            map: map,
-                                            });
-    }
-    
-}

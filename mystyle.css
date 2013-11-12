@@ -17,8 +17,20 @@ body { height: 100%; margin: 10; padding: 0 }
         left: 1%;
         margin-left: 0px;
         z-index: 5;
-        background-color: #fff;
+        background-color: #ECEBEB;
         padding: 0;
-        border: 1px solid #999;
+      }
+      
+  #panel3 {
+        position: absolute;
+        top: 40px;
+        left: 1%;
+        margin-left: 0px;
+        z-index: 5;
+        width: 275px;
+        background-color: #ECEBEB;
+        padding: 0;
+        
       }
 #latlng {width: 225px;}
+#cost {width: 150px;}
