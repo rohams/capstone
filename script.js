@@ -13,7 +13,7 @@ function Node(lat,lng){
         return this.lng;
     };
 }
-//constructo
+//constructor
 function Cost(input){
     var MAX_COST = 5000;
     this.cost=input;
@@ -174,6 +174,7 @@ function drawEllipse(map, points){
 
 
 //google functions
+
 function codeLatLong(map){
 
     var infowindow = new google.maps.InfoWindow();

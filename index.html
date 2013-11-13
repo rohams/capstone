@@ -18,15 +18,8 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 <script type="text/javascript">
     
     var vancouver = new google.maps.LatLng(49.265116, -123.136139);  
-    var latitudes=[49.26399595412051,49.28437972233387,49.24203478303861,49.317513356758184];
-    var longitudes=[-123.15914154052734,-123.12309265136719,-123.0743408203125,-123.12000274658203];
+
     var nodes = []; 
-    
-    for (i=0;i<latitudes.length;i++)
-        {
-            var store= new Node (latitudes[i], longitudes[i]);
-            nodes.push(store);
-        }
         
     //global variables
     var AVE_ZINDEX = 200;
@@ -45,7 +38,7 @@ function initialize() {
     //map options
     var mapOptions = {
     center: vancouver,
-    zoom: 12,
+    zoom: 5,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     mapTypeControl: true,
     mapTypeControlOptions: {
@@ -152,6 +145,15 @@ function deleteMarkers() {
     control3.title = 'Add a new node to the network';
     control3.index = 3;
 
+    var control4 = document.createElement('DIV');
+    control4.setAttribute("id", "control4");
+    control4.style.padding = '5px';
+    control4.style.border = '1px solid #000';
+    control4.style.backgroundColor = 'white';
+    control4.style.cursor = 'pointer';
+    control4.innerHTML = 'Sub-network';
+    control4.title = 'select sub-network';
+    control4.index = 4;
 
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {
@@ -212,11 +214,17 @@ function deleteMarkers() {
                             addAppend = true;
                             }
                                          });
-                                                                        
+                                          
+    // Sub-network
+    google.maps.event.addDomListener(control4, 'click', function() {
+                           addMarkers();
+                            
+                                         });
                                          
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control1);                                     
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control2);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control3);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(control4);
     }
 
 

@@ -55,20 +55,24 @@
   }
 
   function readFile(file){
-    var LAT = 14;
-    var LNG = 15;
-    var node = new Node;
+    var LAT = 16;
+    var LNG = 17;
     var reader = new FileReader();
     reader.readAsText(file);
     reader.onload = function(event){
       var csv = event.target.result;
       var data = $.csv.toArrays(csv);
         for(var row in data) {
-          node.lat= data[row][LAT];
-          node.lng= data[row][LNG];
-          nodes.push(node);
+            if(row>0){ 
+                if (data[row][LAT]!=undefined && data[row][LNG]!=undefined)
+                { 
+                    var node = new Node(data[row][LAT],data[row][LNG]);
+                    //alert(node.lat);alert(node.lng);
+                    nodes.push(node);
+                }                
+            }
         }
-        alert('Data import successful!');
+    alert('Data import successful!');    
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }
@@ -87,7 +91,7 @@
         }
         html += '</tr>\r\n';
       }
-      $('#content').html(html);
+      $('#panel2').html(html);
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }
