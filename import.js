@@ -65,9 +65,8 @@
         for(var row in data) {
             if(row>0){ 
                 if (data[row][LAT]!=undefined && data[row][LNG]!=undefined)
-                { 
-                    var node = new Node(data[row][LAT],data[row][LNG]);
-                    //alert(node.lat);alert(node.lng);
+                {                
+                    var node = new Node(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]));
                     nodes.push(node);
                 }                
             }
