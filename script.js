@@ -13,7 +13,7 @@ function Node(lat,lng){
         return this.lng;
     };
 }
-//constructor
+//constructo
 function Cost(input){
     var MAX_COST = 1000;
     this.cost=input;
