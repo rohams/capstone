@@ -15,20 +15,20 @@ function Node(lat,lng){
 }
 //constructo
 function Cost(input){
-    var MAX_COST = 1000;
+    var MAX_COST = 5000;
     this.cost=input;
     this.getCost = function()
     {
         return this.cost;
     };
-    this.OK = function()
+    this.status = function()
     {
-            if (this.cost>0){
-        if(this.cost<MAX_COST){
+            if (input>0){
+        if(input<MAX_COST){
             return true;           
         }          
     }
-    else return false;
+    return false;
     }
 }
 
@@ -88,8 +88,8 @@ function getEllipse(foci,map){
     var cost_step = document.getElementById('coststep').value;
     var cost = document.getElementById('cost').value;
     var init_cost = new Cost(document.getElementById('cost').value);
-    if (!init_cost.OK){
-        alert ('Cost is not valid');
+    if (!init_cost.status()){
+        alert ('Entered cost parameter is not valid!');
         return false;
     }
     

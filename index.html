@@ -9,6 +9,84 @@
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbjocx6qcs0&sensor=false">
 </script>
 
+
+<script src="jquery.min.js"></script>
+<script src="jquery.csv-0.71.js"></script>
+
+<script>
+  $(document).ready(function() {
+    if(isAPIAvailable()) {
+      $('#files').bind('change', handleFileSelect);
+    }
+  });
+
+  function isAPIAvailable() {
+    // Check for the various File API support.
+    if (window.File && window.FileReader && window.FileList && window.Blob) {
+      // Great success! All the File APIs are supported.
+      return true;
+    } else {
+      // source: File API availability - http://caniuse.com/#feat=fileapi
+      // source: <output> availability - http://html5doctor.com/the-output-element/
+      document.writeln('The HTML5 APIs used in this form are only available in the following browsers:<br />');
+      // 6.0 File API & 13.0 <output>
+      document.writeln(' - Google Chrome: 13.0 or later<br />');
+      // 3.6 File API & 6.0 <output>
+      document.writeln(' - Mozilla Firefox: 6.0 or later<br />');
+      // 10.0 File API & 10.0 <output>
+      document.writeln(' - Internet Explorer: Not supported (partial support expected in 10.0)<br />');
+      // ? File API & 5.1 <output>
+      document.writeln(' - Safari: Not supported<br />');
+      // ? File API & 9.2 <output>
+      document.writeln(' - Opera: Not supported');
+      return false;
+    }
+  }
+
+  function handleFileSelect(evt) {
+    var files = evt.target.files; // FileList object
+    var file = files[0];
+
+    // read the file metadata
+    var output = ''
+        output += '<span style="font-weight:bold;">' + escape(file.name) + '</span><br />\n';
+        output += ' - FileType: ' + (file.type || 'n/a') + '<br />\n';
+        output += ' - FileSize: ' + file.size + ' bytes<br />\n';
+        output += ' - LastModified: ' + (file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() : 'n/a') + '<br />\n';
+
+    // read the file contents
+    printTable(file);
+
+    // post the results
+    $('#list').append(output);
+  }
+
+  function printTable(file) {
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function(event){
+      var csv = event.target.result;
+      var data = $.csv.toArrays(csv);
+      var html = '';
+      for(var row in data) {
+        html += '<tr>\r\n';
+        for(var item in data[row]) {
+          html += '<td>' + data[row][item] + '</td>\r\n';
+        }
+        html += '</tr>\r\n';
+      }
+      $('#contents').html(html);
+    };
+    reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
+  }
+</script>
+
+
+
+
+
+
+
 <script type="text/javascript">
     
     var vancouver = new google.maps.LatLng(49.265116, -123.136139);  
@@ -142,6 +220,15 @@ function deleteMarkers() {
     control3.innerHTML = 'Add a Node';
     control3.title = 'Add a new node to the network';
     control3.index = 3;
+    
+    var control4 = document.createElement('DIV');
+    control4.style.padding = '5px';
+    control4.style.border = '1px solid #000';
+    control4.style.backgroundColor = 'white';
+    control4.style.cursor = 'pointer';
+    control4.innerHTML = 'Import Data';
+    control4.title = 'Import a CSV file';
+    control4.index = 4;
 
 
     //draw ellipses
@@ -157,11 +244,11 @@ function deleteMarkers() {
                             var input = document.createElement("input");
                             input.type = "text";
                             input.id = "cost";
-                            input.placeholder="initial cost, Example: 500";                          
+                            input.placeholder="initial cost, e.g. 500";                          
                             var input2 = document.createElement("input");
                             input2.type = "text";
                             input2.id = "coststep";
-                            input2.placeholder="cost step, Example: 50";
+                            input2.placeholder="cost step, e.g. 50";
                             document.getElementById("panel2").appendChild(input);
                             document.getElementById("panel2").appendChild(input2);
                             document.getElementById("panel2").appendChild(button);
@@ -203,6 +290,7 @@ function deleteMarkers() {
                             addAppend = true;
                             }
                                          });
+                                                                        
                                          
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control1);                                     
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control2);
@@ -214,11 +302,17 @@ function deleteMarkers() {
     
 </script>
 </head>
+
 <body>
-    <div id="panel2"><div id="panel3"></div></div>
-    
+    <div id=inputs class=clearfix>
+  <input type=file id=files name=files[] multiple />
+</div>
+
+    <div id="panel2"><div id="panel3"></div></div>   
     <div id="panel" style="margin-left: -52px"></div>
     <div id="map-canvas"/>
+
+
 </body>
 </html>
 

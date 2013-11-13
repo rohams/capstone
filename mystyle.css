@@ -6,31 +6,43 @@ body { height: 100%; margin: 10; padding: 0 }
         bottom: 5px;
         left: 5%;
         margin-left: -180px;
-        z-index: 5;
-        background-color: #fff;
+        z-index: 1;
+        background-color: #FFFFD1;
         padding: 5px;
         border: 1px solid #999;
       }
 #panel2 {
         position: absolute;
-        top: 40px;
+        top: 75px;
         left: 1%;
         margin-left: 0px;
         z-index: 5;
         background-color: #ECEBEB;
-        padding: 0;
+        padding: 1;
       }
       
   #panel3 {
         position: absolute;
-        top: 40px;
+        top: 25px;
         left: 1%;
         margin-left: 0px;
         z-index: 5;
-        width: 275px;
+        width: 285px;
         background-color: #ECEBEB;
-        padding: 0;
+        padding: 1;
         
       }
-#latlng {width: 225px;}
-#cost {width: 150px;}
+      #inputs {
+        position: absolute;
+        top: 50px;
+        left: 1%;
+        margin-left: 0px;
+        z-index: 5;
+        width: 285px;
+        background-color: #ECEBEB;
+        padding: 1;
+        
+      }
+#latlng {width: 235px;}
+#cost {width: 115px;}
+#coststep {width: 115px;}
