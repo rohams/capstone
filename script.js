@@ -15,7 +15,7 @@ function Node(lat,lng){
 }
 //constructor
 function Cost(input){
-    var MAX_COST = 5000;
+    var MAX_COST = 10000;
     this.cost=input;
     this.getCost = function()
     {
@@ -40,8 +40,8 @@ function getAverage(nodes){
     for (i=0;i<nodes.length;i++)
     {
         if (nodes[i] != null) {
-            var xSum=xSum+nodes[i].getLat();
-            var ySum=ySum+nodes[i].getLng();
+            xSum=xSum+nodes[i].getLat();
+            ySum=ySum+nodes[i].getLng();
         }
         else{
             count--;
