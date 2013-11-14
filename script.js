@@ -15,13 +15,8 @@ function Node(lat,lng){
 }
 //constructor
 function Cost(input){
-<<<<<<< HEAD
     var MAX_COST = 100000;
     this.cost=input;
-=======
-    var MAX_COST = 5000;
-    this.cost = input;
->>>>>>> 647eff07d909628cc6866fb841b2a4530f34b5b0
     this.getCost = function()
     {
         return this.cost;
