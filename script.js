@@ -15,8 +15,13 @@ function Node(lat,lng){
 }
 //constructor
 function Cost(input){
+<<<<<<< HEAD
     var MAX_COST = 100000;
     this.cost=input;
+=======
+    var MAX_COST = 5000;
+    this.cost = input;
+>>>>>>> 647eff07d909628cc6866fb841b2a4530f34b5b0
     this.getCost = function()
     {
         return this.cost;
@@ -34,24 +39,24 @@ function Cost(input){
 
 //calculate the weighted average of nodes
 function getAverage(nodes){
-    var xSum=0;
-    var ySum=0;
+    var xSum = 0;
+    var ySum = 0;
     var count = nodes.length;
     for (i=0;i<nodes.length;i++)
     {
         if (nodes[i] != null) {
-            xSum=xSum+nodes[i].getLat();
-            ySum=ySum+nodes[i].getLng();
+            xSum += nodes[i].getLat();
+            ySum += nodes[i].getLng();
         }
         else{
             count--;
         }
     }
-    var aveX=xSum/count;
-    var aveY=ySum/count;
+    var aveX = xSum/count;
+    var aveY = ySum/count;
     var aveNode = new Node(aveX,aveY); 
-    var x="Weighted Average Geolocation: (" + aveNode.getLat() +"," + aveNode.getLng() + ")";
-    document.getElementById("panel").innerHTML=x;
+    var x = "Weighted Average Geolocation: (" + aveNode.getLat() +"," + aveNode.getLng() + ")";
+    document.getElementById("panel").innerHTML = x;
     return aveNode;
 }
 
@@ -82,7 +87,7 @@ function getEllipse(foci,map){
     
             
     var THERESHOLD= 0.002;
-    var STEPSIZE= 0.001;
+    var STEPSIZE = 0.001;
     var ellipse = [];
     var point;
     var steps;
