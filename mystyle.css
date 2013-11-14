@@ -23,7 +23,7 @@ body { height: 100%; margin: 10; padding: 0 }
       
   #panel3 {
         position: absolute;
-        top: 25px;
+        top: 75px;
         left: 1%;
         margin-left: 0px;
         z-index: 5;

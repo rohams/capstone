@@ -172,6 +172,7 @@ function deleteMarkers() {
                           if(!drawAppend){
                             var button = document.createElement("BUTTON");
                             button.innerHTML = 'Enter';
+                            button.id = "draw";
                             button.onclick = function(){
                             points = getEllipse(nodes, map);
                             //drawEllipse(map, points);
@@ -184,6 +185,15 @@ function deleteMarkers() {
                             input2.type = "text";
                             input2.id = "coststep";
                             input2.placeholder="cost step, e.g. 50";
+                            //function
+                            var div1 = document.getElementById("latlng");
+                            var div2 = document.getElementById("add");
+                            if (div1!=null && div2!=null){
+                            var parent = document.getElementById("panel3");
+                            parent.removeChild(div1);
+                            parent.removeChild(div2);
+                            addAppend = false;
+                            }
                             document.getElementById("panel2").appendChild(input);
                             document.getElementById("panel2").appendChild(input2);
                             document.getElementById("panel2").appendChild(button);
@@ -213,15 +223,26 @@ function deleteMarkers() {
                             if(!addAppend){
                             var button = document.createElement("BUTTON");
                             button.innerHTML = 'Add';
+                            button.id = "add";
                             button.onclick = function(){
                             codeLatLong(map);
                               };
+                            var div1 = document.getElementById("cost");
+                            var div2 = document.getElementById("coststep");
+                            var div3 = document.getElementById("draw");
+                            if (div1!=null && div2!=null && div3!=null){
+                            var parent = document.getElementById("panel2");
+                            parent.removeChild(div1);
+                            parent.removeChild(div2);
+                            parent.removeChild(div3);
+                            drawAppend = false;
+                            }
                             var input = document.createElement("input");
                             input.type = "text";
                             input.value = "49.282812039212075,-123.08910369873047";
                             input.id = "latlng";
                             document.getElementById("panel3").appendChild(input);
-                            document.getElementById("panel3").appendChild(button);
+                            document.getElementById("panel3").appendChild(button);                                                       
                             addAppend = true;
                             }
                                          });
@@ -249,7 +270,8 @@ function deleteMarkers() {
   <input type=file id=files name=files[] multiple />
 </div>
 
-    <div id="panel2"><div id="panel3"><div id="panel4"></div></div></div>   
+    <div id="panel2"></div> 
+    <div id="panel3"></div>
     <div id="panel" style="margin-left: -52px"></div>
     <div id="map-canvas"/>
 
