@@ -15,7 +15,7 @@ function Node(lat,lng){
 }
 //constructor
 function Cost(input){
-    var MAX_COST = 10000;
+    var MAX_COST = 100000;
     this.cost=input;
     this.getCost = function()
     {
@@ -71,65 +71,81 @@ function getEllipse(foci,map){
 //    var COST= 0.5;
     //boundaries
     var COST_DST_RATIO = 0.001;
-    var MAX_LAT = 50;
+    var MAX_LAT = 60;
     var MIN_LAT = 48;
-    var MAX_LNG = -120;
-    var MIN_LNG = -124;
-//    var COST_STEP = 50;
-    var NUM_ELLIPSES = 5;
+    var MAX_LNG = -105;
+    var MIN_LNG = -130;
+// GRANULARITY
+    var THL_COST = 10000;
+    var GRL = 10;
+    var NUM_ELLIPSES = 2;
     
             
     var THERESHOLD= 0.002;
     var STEPSIZE= 0.001;
     var ellipse = [];
     var point;
+    var steps;
+    var thl;
+    var diff;
     var min = 1000;
     var FW_point = new Node; 
     var cost_step = document.getElementById('coststep').value;
-    var cost = document.getElementById('cost').value;
     var init_cost = new Cost(document.getElementById('cost').value);
     if (!init_cost.status()){
         alert ('Entered cost parameter is not valid!');
         return false;
     }
     
+    //tune the granularity based on the initial cost    
+    if (init_cost.cost>THL_COST){ 
+        steps = STEPSIZE*GRL;
+        thl = THERESHOLD*GRL; 
+    }
+    else{
+        steps = STEPSIZE;
+        thl = THERESHOLD;
+    }
     initial_c=init_cost.cost;
-    
     for (m=0; m<NUM_ELLIPSES; m++){
         
     var dist = initial_c*COST_DST_RATIO; 
     
     
     var ave = getAverage(foci); 
-    for (i = MIN_LAT; i < MAX_LAT; i += STEPSIZE) {
-			for (j = ave.getLng(); j < MAX_LNG; j += STEPSIZE) {
+    for (i = MIN_LAT; i < MAX_LAT; i += steps) {
+			for (j = ave.getLng(); j < MAX_LNG; j += steps) {
 				d = SumOfDistances(foci, i, j);
                                  if (d<min){
                                     min=d;
                                     FW_point.lat = i;
                                     FW_point.lng = j;
-                                }      
+                                }    
+                                if (d>dist){
+                                    break;
+                                }
                                 d -= dist;                                                            
-                                if (Math.abs(d) < THERESHOLD) {
+                                if (Math.abs(d) < thl) {
                                     point= new Node(i,j);
                                     ellipse.push(point);
-                                    break;
-                                    
-                                    
-                                }				
+                                    break;                                                                     
+                                }
 			}
 		}
                 
-     for (i = MAX_LAT; i > MIN_LAT; i -= STEPSIZE) {
-			for (j = ave.getLng(); j > MIN_LNG; j -= STEPSIZE) {
+     for (i = MAX_LAT; i > MIN_LAT; i -= steps) {
+			for (j = ave.getLng(); j > MIN_LNG; j -= steps) {
 				d = SumOfDistances(foci, i, j);
                                 if (d<min){
                                     min=d;
                                     FW_point.lat = i;
                                     FW_point.lng = j;
-                                }      
+                                }
+                                if (d>dist){
+                                    break;
+                                }
                                 d -= dist;                                                             
-                                if (Math.abs(d) < THERESHOLD) {
+                                if (Math.abs(d) < thl) {
                                     var point= new Node(i,j);
                                     ellipse.push(point); 
                                     break;
