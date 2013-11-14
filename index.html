@@ -75,6 +75,17 @@ function addMarkers() {
                                         draggable: true,
                                         map: map
                                         });
+    google.maps.event.addListener(marker, 'dblclick', function(event) {
+    for (var i = 0; i < markers.length; i++) {
+        if (markers[i] == this) {
+            this.setMap(null);
+            nodes[i] = null;
+            markers[i] = null;
+            break;
+        }
+    }
+    });
+    
     markers.push(marker);
     }
 
