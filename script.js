@@ -57,9 +57,11 @@ function getAverage(nodes){
 
 
 function SumOfDistances(foci,i,j){
-    var distance = 0;
+    var distance = 0;      
     for (k = 0; k < foci.length; k++) {
-        distance += Math.sqrt( Math.pow(foci[k].getLat() - i, 2) + Math.pow(foci[k].getLng() - j, 2) );
+        if (foci[k] != null) {
+            distance += Math.sqrt( Math.pow(foci[k].getLat() - i, 2) + Math.pow(foci[k].getLng() - j, 2) );
+        }
     }
     return distance;    
 }
