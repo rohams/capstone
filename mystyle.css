@@ -27,7 +27,7 @@ body { height: 100%; margin: 10; padding: 0 }
         left: 1%;
         margin-left: 0px;
         z-index: 5;
-        width: 285px;
+        width: 190px;
         background-color: #ECEBEB;
         padding: 1;
         
@@ -43,6 +43,6 @@ body { height: 100%; margin: 10; padding: 0 }
         padding: 1;
         
       }
-#latlng {width: 235px;}
+#latlng {width: 180px;}
 #cost {width: 115px;}
 #coststep {width: 115px;}
