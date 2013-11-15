@@ -84,6 +84,12 @@ function addMarkers() {
             }
         }
         });
+        
+        google.maps.event.addListener(marker, 'click', function(event) {
+            infowindow = new google.maps.InfoWindow();
+            infowindow.setContent(this.position + "<br/>Store name etc.<br/>Store address");
+            infowindow.open(map,this);
+         });
 
         markers.push(marker);
         var ave_point = getAverage(nodes);
