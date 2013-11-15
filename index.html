@@ -172,34 +172,43 @@ function deleteMarkers() {
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {                        
                           if(!drawAppend){
+                            //REMOVE ADD A NODE ELEMENTS
+                            var div = document.getElementById("add_node");
+                            if (div!=null){
+                            var parent = document.getElementById("panel3");
+                            parent.removeChild(div);
+                            addAppend = false;
+                            }
+                            // ADD NEW ELEMENTS
                             var button = document.createElement("BUTTON");
                             button.innerHTML = 'Enter';
                             button.id = "draw";
+                            //LOADING
+                            var textnode=document.createTextNode("Loading...");                         
+                            var loadprt = document.getElementById("panel2");
                             button.onclick = function(){
-                                setTimeout(function() {
+                                document.getElementById("panel2").appendChild(textnode);
+                                setTimeout(function() {                                   
                                     getEllipse(nodes, map);
+                                    loadprt.removeChild(textnode);
+                                    
                                 }, 0);
                               };
-                            var input = document.createElement("input");
-                            input.type = "text";
-                            input.id = "cost";
-                            input.placeholder="initial cost, e.g. 500";                          
+                            var node = document.createElement("DIV");
+                            node.id = "draw_ellipse";
+                            var input1 = document.createElement("input");
+                            input1.type = "text";
+                            input1.id = "cost";
+                            input1.placeholder="initial cost, e.g. 500";                          
                             var input2 = document.createElement("input");
                             input2.type = "text";
                             input2.id = "coststep";
                             input2.placeholder="cost step, e.g. 50";
-                            //function
-                            var div1 = document.getElementById("latlng");
-                            var div2 = document.getElementById("add");
-                            if (div1!=null && div2!=null){
-                            var parent = document.getElementById("panel3");
-                            parent.removeChild(div1);
-                            parent.removeChild(div2);
-                            addAppend = false;
-                            }
-                            document.getElementById("panel2").appendChild(input);
-                            document.getElementById("panel2").appendChild(input2);
-                            document.getElementById("panel2").appendChild(button);
+                            
+                            node.appendChild(input1);
+                            node.appendChild(input2);
+                            node.appendChild(button);
+                            document.getElementById("panel2").appendChild(node);
                             drawAppend = true;
                             }
                           
@@ -224,28 +233,34 @@ function deleteMarkers() {
     // Add a node
     google.maps.event.addDomListener(control3, 'click', function() {
                             if(!addAppend){
+                            //REMOVE DRAW ELLIPSE ELEMENT
+                            var div = document.getElementById("draw_ellipse");
+                            if (div!=null){
+                            var parent = document.getElementById("panel2");
+                            parent.removeChild(div);
+                            drawAppend = false;
+                            }
+                            //ADD NEW ELEMENTS
+                            var node = document.createElement("DIV");
+                            node.id = "add_node";
                             var button = document.createElement("BUTTON");
-                            button.innerHTML = 'Add';
+                            button.innerHTML = 'Add it';
                             button.id = "add";
                             button.onclick = function(){
                             codeLatLong(map);
                               };
-                            var div1 = document.getElementById("cost");
-                            var div2 = document.getElementById("coststep");
-                            var div3 = document.getElementById("draw");
-                            if (div1!=null && div2!=null && div3!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div1);
-                            parent.removeChild(div2);
-                            parent.removeChild(div3);
-                            drawAppend = false;
-                            }
-                            var input = document.createElement("input");
-                            input.type = "text";
-                            input.value = "49.282812039212075,-123.08910369873047";
-                            input.id = "latlng";
-                            document.getElementById("panel3").appendChild(input);
-                            document.getElementById("panel3").appendChild(button);                                                       
+                            var geo = document.createElement("input");
+                            geo.type = "text";
+                            geo.placeholder="latitude, longitude";
+                            geo.id = "latlng";
+                            var weight = document.createElement("input");
+                            weight.type = "text";
+                            weight.placeholder="weight";
+                            weight.id = "weight";
+                            node.appendChild(geo);
+                            node.appendChild(weight);
+                            node.appendChild(button);
+                            document.getElementById("panel3").appendChild(node);                                                  
                             addAppend = true;
                             }
                                          });
