@@ -154,9 +154,13 @@ function getEllipse(foci,map){
                                 }				
 			}
 		}
-    drawEllipse(map, ellipse, cost);
-    cost -= cost_step;
-    ellipse = [];    
+                //Terminate
+                if(ellipse.length==0){
+                    break;
+                }
+                drawEllipse(map, ellipse, cost);
+                cost -= cost_step;
+                ellipse = [];    
     }
                 
        new google.maps.Marker({                              
@@ -208,10 +212,10 @@ function drawEllipse(map, points, cost){
 function codeLatLong(map){
 
     var infowindow = new google.maps.InfoWindow();
-    var input = document.getElementById('latlng').value;
-    var latlngStr = input.split(',', 2);
-    var lat = parseFloat(latlngStr[0]);
-    var lng = parseFloat(latlngStr[1]);
+    var input1 = document.getElementById('lat').value;
+    var input2 = document.getElementById('lng').value;
+    var lat = parseFloat(input1);
+    var lng = parseFloat(input2);
     var latlng = new google.maps.LatLng(lat, lng);
     var info = 'New node: ';
     geocoder.geocode({'latLng': latlng}, function(results, status) {

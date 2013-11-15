@@ -255,15 +255,20 @@ function deleteMarkers() {
                             button.onclick = function(){
                             codeLatLong(map);
                               };
-                            var geo = document.createElement("input");
-                            geo.type = "text";
-                            geo.placeholder="latitude, longitude";
-                            geo.id = "latlng";
+                            var lat = document.createElement("input");
+                            lat.type = "text";
+                            lat.placeholder="latitude";
+                            lat.id = "lat";
+                            var lng = document.createElement("input");
+                            lng.type = "text";
+                            lng.placeholder="longitude";
+                            lng.id = "lng";
                             var weight = document.createElement("input");
                             weight.type = "text";
                             weight.placeholder="weight";
                             weight.id = "weight";
-                            node.appendChild(geo);
+                            node.appendChild(lat);
+                            node.appendChild(lng);
                             node.appendChild(weight);
                             node.appendChild(button);
                             document.getElementById("panel3").appendChild(node);                                                  
@@ -289,11 +294,17 @@ function deleteMarkers() {
 </script>
 </head>
 
-<body>
-    <div id=inputs class=clearfix>
-  <input type=file id=files name=files[] multiple />
-</div>
 
+
+    
+                        <div id=inputs class=clearfix>
+                        <button type="button" class="import-button" onclick="document.getElementById('files').click();"><p> Import </p></button>
+                        <div id="upload-wrap">
+                            <input type="file" id=files name=files[] multiple />
+                        </div>
+                        </div>
+    
+    
     <div id="panel2"></div> 
     <div id="panel3"></div>
     <div id="panel" style="margin-left: -52px"></div>

@@ -17,6 +17,7 @@ body { height: 100%; margin: 10; padding: 0 }
         left: 1%;
         margin-left: 0px;
         z-index: 5;
+        width: 150px;
         background-color: #ECEBEB;
         padding: 1;
       }
@@ -27,22 +28,66 @@ body { height: 100%; margin: 10; padding: 0 }
         left: 1%;
         margin-left: 0px;
         z-index: 5;
-        width: 190px;
+        width: 150px;
         background-color: #ECEBEB;
         padding: 1;
         
       }
   #inputs {
         position: absolute;
-        top: 50px;
-        left: 1%;
+        top: 8px;
+        left: 301px;
         margin-left: 0px;
         z-index: 5;
-        width: 285px;
+        width: 75px;
         background-color: #ECEBEB;
         padding: 1;
         
       }
-#latlng {width: 180px;}
-#cost {width: 115px;}
-#coststep {width: 115px;}
+   #draw {
+    cursor: pointer;
+    float: left;
+    margin: 0px 0px 0px 2px;
+    height: 20px;
+    width: 80px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    }
+    
+    #add {
+    cursor: pointer;
+    float: left;
+    margin: 0px 0px 0px 2px;
+    height: 20px;
+    width: 80px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    }
+
+    #upload-wrap {
+    float: left;
+    height: 30px;
+    width: 200px;
+    display:none;
+    }
+    
+    .import-button {
+    cursor: pointer;
+    float: left;
+    margin: 0px 10px 0px 0px;
+    height: 27px;
+    width: 75px;
+    border: 1px solid #000;
+    background-color: #FFFFFF;
+    border-radius: 0px 0px 0px 0px;
+    }
+    .import-button p {
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    }
+
+#lat {width: 140px;}
+#lng {width: 140px;}
+#weight {width: 140px;}
+#cost {width: 140px;}
+#coststep {width: 140px;}
