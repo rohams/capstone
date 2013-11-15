@@ -29,7 +29,7 @@ function Cost(input){
         }          
     }
     return false;
-    }
+    };
 }
 
 //calculate the weighted average of nodes
