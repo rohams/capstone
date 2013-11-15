@@ -21,18 +21,7 @@ body { height: 100%; margin: 10; padding: 0 }
         background-color: #ECEBEB;
         padding: 1;
       }
-      
-  #panel3 {
-        position: absolute;
-        top: 75px;
-        left: 1%;
-        margin-left: 0px;
-        z-index: 5;
-        width: 150px;
-        background-color: #ECEBEB;
-        padding: 1;
-        
-      }
+
   #inputs {
         position: absolute;
         top: 8px;
@@ -44,7 +33,7 @@ body { height: 100%; margin: 10; padding: 0 }
         padding: 1;
         
       }
-   #draw {
+#draw {
     cursor: pointer;
     float: left;
     margin: 0px 0px 0px 2px;
@@ -54,7 +43,7 @@ body { height: 100%; margin: 10; padding: 0 }
     background-color: #FFFFFF;
     }
     
-    #add {
+#add {
     cursor: pointer;
     float: left;
     margin: 0px 0px 0px 2px;
@@ -64,14 +53,14 @@ body { height: 100%; margin: 10; padding: 0 }
     background-color: #FFFFFF;
     }
 
-    #upload-wrap {
+#upload-wrap {
     float: left;
     height: 30px;
     width: 200px;
     display:none;
     }
     
-    .import-button {
+.import-button {
     cursor: pointer;
     float: left;
     margin: 0px 10px 0px 0px;
@@ -80,10 +69,6 @@ body { height: 100%; margin: 10; padding: 0 }
     border: 1px solid #000;
     background-color: #FFFFFF;
     border-radius: 0px 0px 0px 0px;
-    }
-    .import-button p {
-    margin: 0px 0px 0px 0px;
-    padding: 0px 0px 0px 0px;
     }
 
 #lat {width: 140px;}
