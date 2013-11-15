@@ -17,8 +17,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 
 <script type="text/javascript">
     
-    var vancouver = new google.maps.LatLng(49.265116, -123.136139);  
-
+    var canada = new google.maps.LatLng(54.36775852406841, -97.20703125);  
     var nodes = []; 
         
     //global variables
@@ -37,8 +36,8 @@ function initialize() {
     
     //map options
     var mapOptions = {
-    center: vancouver,
-    zoom: 5,
+    center: canada,
+    zoom: 4,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     mapTypeControl: true,
     mapTypeControlOptions: {
@@ -75,18 +74,22 @@ function addMarkers() {
                                         draggable: true,
                                         map: map
                                         });
-    google.maps.event.addListener(marker, 'dblclick', function(event) {
-    for (var i = 0; i < markers.length; i++) {
-        if (markers[i] == this) {
-            this.setMap(null);
-            nodes[i] = null;
-            markers[i] = null;
-            break;
+        google.maps.event.addListener(marker, 'dblclick', function(event) {
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i] == this) {
+                this.setMap(null);
+                nodes[i] = null;
+                markers[i] = null;
+                break;
+            }
         }
-    }
-    });
-    
-    markers.push(marker);
+        });
+
+        markers.push(marker);
+        var ave_point = getAverage(nodes);
+        var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
+        map.setCenter(new_center);
+        map.setZoom(6);
     }
 
 }
@@ -167,15 +170,15 @@ function deleteMarkers() {
     control4.index = 4;
 
     //draw ellipses
-    google.maps.event.addDomListener(control1, 'click', function() {
-                          var points = [];                         
+    google.maps.event.addDomListener(control1, 'click', function() {                        
                           if(!drawAppend){
                             var button = document.createElement("BUTTON");
                             button.innerHTML = 'Enter';
                             button.id = "draw";
                             button.onclick = function(){
-                            points = getEllipse(nodes, map);
-                            //drawEllipse(map, points);
+                                setTimeout(function() {
+                                    getEllipse(nodes, map);
+                                }, 0);
                               };
                             var input = document.createElement("input");
                             input.type = "text";

@@ -71,7 +71,7 @@
                 }                
             }
         }
-    alert('Data import successful!');    
+    alert(row+' stores imported!');    
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }

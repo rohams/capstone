@@ -15,7 +15,7 @@ function Node(lat,lng){
 }
 //constructor
 function Cost(input){
-    var MAX_COST = 100000;
+    var MAX_COST = 1000000;
     this.cost=input;
     this.getCost = function()
     {
@@ -74,7 +74,7 @@ function getEllipse(foci,map){
     //boundaries
     var COST_DST_RATIO = 0.001;
     var MAX_LAT = 60;
-    var MIN_LAT = 48;
+    var MIN_LAT = 42;
     var MAX_LNG = -105;
     var MIN_LNG = -130;
 // GRANULARITY
@@ -108,10 +108,10 @@ function getEllipse(foci,map){
         steps = STEPSIZE;
         thl = THERESHOLD;
     }
-    initial_c=init_cost.cost;
-    for (m=0; m<NUM_ELLIPSES; m++){
+    var cost=init_cost.cost;
+    while(cost>0){
         
-    var dist = initial_c*COST_DST_RATIO; 
+    var dist = cost*COST_DST_RATIO; 
     
     
     var ave = getAverage(foci); 
@@ -154,17 +154,20 @@ function getEllipse(foci,map){
                                 }				
 			}
 		}
-    initial_c -= cost_step;
-    drawEllipse(map, ellipse);
-    
+    drawEllipse(map, ellipse, cost);
+    cost -= cost_step;
+    ellipse = [];    
     }
                 
        new google.maps.Marker({                              
                     position: new google.maps.LatLng(FW_point.getLat(), FW_point.getLng()),
                     draggable: false,
                     map: map,
-                    icon:image2,
-                    title: 'FW POINT',
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 6
+                      },
+                    title: 'Fermat-Weber Point',
                     zIndex: AVE_ZINDEX,
                     animation: google.maps.Animation.DROP
                     }); 
@@ -174,7 +177,7 @@ function getEllipse(foci,map){
     return ellipse;
 }
 
-function drawEllipse(map, points){
+function drawEllipse(map, points, cost){
     var path = [];
     for (i=0;i<points.length;i++)
             {
@@ -185,8 +188,17 @@ function drawEllipse(map, points){
                 strokeColor: '#000000',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillOpacity: 0
+                fillOpacity: 0,
+                visible: true,
+                clickable: false
                 });
+                
+    var pathInfo = new google.maps.InfoWindow();
+    var html = '$' + cost;
+    pathInfo.setContent(html);
+    pathInfo.setPosition(path[1]);
+    pathInfo.open(map);
+
     shape.setMap(map);    
 }
 
