@@ -292,4 +292,71 @@ function codeLatLong(map){
   });
 }
 
+function removeMarkers(id){
+        for (var i = 0; i < stores.length; i++) {
+            if(stores[i].getSub()==id){
+                markers[i].setMap(null);
+            }
+        }
+}
 
+function removeMarker(marker){
+    //TODO: use indexOf() instead
+        for (var i = 0; i < markers.length; i++) {
+             if (markers[i] == marker) {
+                 marker.setMap(null);
+                // stores[i] = null;
+                 markers[i] = null;
+                 break;
+             }
+         }
+}
+
+function markerInfoWin(marker){
+            infowindow = new google.maps.InfoWindow();
+            var sub_name;
+            var marker_id = markers.indexOf(marker);
+                if (marker_id==-1){
+                infowindow.setContent( "<Store ID<br/>" + marker.position);
+                }
+                else{
+            sub_id = stores[marker_id].getSub();
+            sub_name = subs[sub_id];
+            infowindow.setContent( "Store ID <br/> Sub-network: " + sub_name + "<br/>" + marker.position);
+                }
+            infowindow.open(map,marker);
+}
+
+function addMarkers(id) {
+    for (var i = 0; i < stores.length; i++) {
+        if(stores[i].getSub()==id){
+    var marker = new google.maps.Marker({
+                                        position: new google.maps.LatLng(stores[i].getLat(), stores[i].getLng()),
+                                        draggable: false,
+                                        map: map
+                                        });
+ 
+        //Add info window
+        google.maps.event.addListener(marker, 'click', function() {
+            markerInfoWin(this);
+         });
+         
+        //Add listeners for Removing markers
+         google.maps.event.addListener(marker, 'dblclick', function() {
+            removeMarker(this);
+
+                 //TODO: use indexOf() instead
+
+        });
+
+        markers[i]=marker;
+        var ave_point = getAverage(stores);
+        var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
+        map.setCenter(new_center);
+        map.setZoom(6);
+    }
+    
+
+    }
+
+}

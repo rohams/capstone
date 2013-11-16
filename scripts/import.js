@@ -4,52 +4,53 @@
     }
   });
   
-    //TODO: make it dynamic
+    //TODO: make it dynamic 
+    //move this to another file
   $('#sub_id0').live('change', function(){
     if($(this).is(':checked')){
-        alert('0');
+        addMarkers(0);
     } else {
-        alert('un-checked');
+        removeMarkers(0);
     }
 });
 
   $('#sub_id1').live('change', function(){
     if($(this).is(':checked')){
-        alert('1');
+        addMarkers(1);
     } else {
-        alert('un-checked');
+        removeMarkers(1);
     }
 });
 
   $('#sub_id2').live('change', function(){
     if($(this).is(':checked')){
-        alert('2');
+        addMarkers(2);
     } else {
-        alert('un-checked');
+        removeMarkers(2);
     }
 });
 
   $('#sub_id3').live('change', function(){
     if($(this).is(':checked')){
-        alert('3');
+        addMarkers(3);
     } else {
-        alert('un-checked');
+        removeMarkers(3);
     }
 });
 
   $('#sub_id4').live('change', function(){
     if($(this).is(':checked')){
-        alert('4');
+        addMarkers(4);
     } else {
-        alert('un-checked');
+        removeMarkers(4);
     }
 });
 
   $('#sub_id5').live('change', function(){
     if($(this).is(':checked')){
-        alert('5');
+        addMarkers(5);
     } else {
-        alert('un-checked');
+        removeMarkers(5);
     }
 });
 
@@ -116,7 +117,8 @@
                         }
                     store.setSub(subs.indexOf(data[row][SUB]));
                     }
-                    stores.push(store);
+                    stores.push(store);                    
+                    markers.push(null);
                 }                
             }
         }
