@@ -14,7 +14,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
             
     //global variables
     var canada = new google.maps.LatLng(54.36775852406841, -97.20703125);  
-    var nodes = []; 
+    var stores = []; 
     var subs = [];
     
     var AVE_ZINDEX = 200;
@@ -64,17 +64,18 @@ function initialize() {
 
  
 function addMarkers() {
-    for (var i = 0; i < nodes.length; i++) {
+    for (var i = 0; i < stores.length; i++) {
     var marker = new google.maps.Marker({
-                                        position: new google.maps.LatLng(nodes[i].getLat(), nodes[i].getLng()),
+                                        position: new google.maps.LatLng(stores[i].getLat(), stores[i].getLng()),
                                         draggable: true,
                                         map: map
                                         });
+        //TODO: use indexOf() instead
         google.maps.event.addListener(marker, 'dblclick', function(event) {
         for (var i = 0; i < markers.length; i++) {
             if (markers[i] == this) {
                 this.setMap(null);
-                nodes[i] = null;
+                stores[i] = null;
                 markers[i] = null;
                 break;
             }
@@ -83,12 +84,21 @@ function addMarkers() {
         
         google.maps.event.addListener(marker, 'click', function(event) {
             infowindow = new google.maps.InfoWindow();
-            infowindow.setContent(this.position + "<br/>Store name etc.<br/>Store address");
+            var sub_name;
+            var marker_id = markers.indexOf(this);
+                if (marker_id==-1){
+                infowindow.setContent( "<Store ID<br/>" + this.position);
+                }
+                else{
+            sub_id = stores[marker_id].getSub();
+            sub_name = subs[sub_id];
+            infowindow.setContent( "Store ID <br/> Sub-network: " + sub_name + "<br/>" +this.position);
+                }
             infowindow.open(map,this);
          });
 
         markers.push(marker);
-        var ave_point = getAverage(nodes);
+        var ave_point = getAverage(stores);
         var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
         map.setCenter(new_center);
         map.setZoom(6);
@@ -191,7 +201,7 @@ function deleteMarkers() {
                             button.onclick = function(){
                                 document.getElementById("panel2").appendChild(textnode);
                                 setTimeout(function() {                                   
-                                    getEllipse(nodes, map);
+                                    getEllipse(stores, map);
                                     loadprt.removeChild(textnode);
                                     
                                 }, 0);
@@ -218,7 +228,7 @@ function deleteMarkers() {
     
     //Average finder
     google.maps.event.addDomListener(control2, 'click', function() {
-                            var node = getAverage(nodes); 
+                            var node = getAverage(stores); 
                             oldAveMarker = aveMarker;
                             aveMarker = new google.maps.Marker({                              
                                      position: new google.maps.LatLng(node.getLat(), node.getLng()),

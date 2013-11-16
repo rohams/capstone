@@ -33,6 +33,10 @@ function Store(lat,lng,sub_id){
     {
         return this.sub;
     };
+    this.setSub = function(id)
+    {
+     this.sub = id;;
+    };
 }
 
 //constructor
@@ -272,8 +276,9 @@ function codeLatLong(map){
         infowindow.open(map, marker);
 
         //add the node to the array of nodes
-        var newStore= new Node (lat, lng);
-        nodes.push(newStore);
+        //TODO: set the subnetwork
+        var newStore= new Node (lat, lng, -1);
+        stores.push(newStore);
         
         //add marker to markers array
         markers.push(marker);

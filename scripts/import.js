@@ -3,6 +3,55 @@
       $('#files').bind('change', handleFileSelect);
     }
   });
+  
+    //TODO: make it dynamic
+  $('#sub_id0').live('change', function(){
+    if($(this).is(':checked')){
+        alert('0');
+    } else {
+        alert('un-checked');
+    }
+});
+
+  $('#sub_id1').live('change', function(){
+    if($(this).is(':checked')){
+        alert('1');
+    } else {
+        alert('un-checked');
+    }
+});
+
+  $('#sub_id2').live('change', function(){
+    if($(this).is(':checked')){
+        alert('2');
+    } else {
+        alert('un-checked');
+    }
+});
+
+  $('#sub_id3').live('change', function(){
+    if($(this).is(':checked')){
+        alert('3');
+    } else {
+        alert('un-checked');
+    }
+});
+
+  $('#sub_id4').live('change', function(){
+    if($(this).is(':checked')){
+        alert('4');
+    } else {
+        alert('un-checked');
+    }
+});
+
+  $('#sub_id5').live('change', function(){
+    if($(this).is(':checked')){
+        alert('5');
+    } else {
+        alert('un-checked');
+    }
+});
 
   function isAPIAvailable() {
     // Check for the various File API support.
@@ -58,18 +107,19 @@
             if(row>0){ 
                 if (data[row][LAT]!=undefined && data[row][LNG]!=undefined)
                 {                
-                    var node = new Node(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]));
-                    nodes.push(node);
+                    var store = new Store(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]),0);
+                    
                     if(data[row][SUB]!=undefined ){
                         //search the array (only add new sub networks)
                         if(subs.indexOf(data[row][SUB])==-1){
                         subs.push(data[row][SUB]);
                         }
+                    store.setSub(subs.indexOf(data[row][SUB]));
                     }
+                    stores.push(store);
                 }                
             }
         }
-        alert(row+' stores imported!');
             for (x in subs){
                 var node = document.createElement("DIV");
                 node.id = 'sub_name' + x;
@@ -82,6 +132,7 @@
                 node.appendChild(checkbox);
                 node.appendChild(textnode); 
             };
+        alert(row+' stores imported!');
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }
