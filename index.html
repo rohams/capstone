@@ -11,11 +11,12 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 <script src="scripts/jquery.csv-0.71.js"></script>
 <script src="scripts/import.js"></script>
 <script type="text/javascript">
-    
+            
+    //global variables
     var canada = new google.maps.LatLng(54.36775852406841, -97.20703125);  
     var nodes = []; 
-        
-    //global variables
+    var subs = [];
+    
     var AVE_ZINDEX = 200;
     var addAppend = false;
     var drawAppend = false;
@@ -156,7 +157,7 @@ function deleteMarkers() {
     control3.style.border = '1px solid #000';
     control3.style.backgroundColor = 'white';
     control3.style.cursor = 'pointer';
-    control3.innerHTML = 'Add a Node';
+    control3.innerHTML = 'Add a Store';
     control3.title = 'Add a new node to the network';
     control3.index = 3;
 
@@ -297,7 +298,6 @@ function deleteMarkers() {
     </div>
     </div>
     <div id="panel2"></div> 
-    <div id="panel2"></div>
     <div id="panel" style="margin-left: -52px"></div>
     <div id="map-canvas"/>
     

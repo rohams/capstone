@@ -2,15 +2,6 @@
     if(isAPIAvailable()) {
       $('#files').bind('change', handleFileSelect);
     }
-  /*  $('#control1').click(function(){
-        alert ('hi');
-        $component = '<input type="text" id="cost" placeholder="initial cost, e.g. 500">';
-        $component += '<input type="text" id="coststep" placeholder="cost step, e.g. 50">';
-        $component += '<button>Enter</button>'
-    $('#panel2').append($component);
-    $('#panel2').css({'display':'none'}).slideDown(300);
-    return false;
-    });*/
   });
 
   function isAPIAvailable() {
@@ -55,6 +46,7 @@
   }
 
   function readFile(file){
+    var SUB = 15;
     var LAT = 16;
     var LNG = 17;
     var reader = new FileReader();
@@ -68,10 +60,28 @@
                 {                
                     var node = new Node(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]));
                     nodes.push(node);
+                    if(data[row][SUB]!=undefined ){
+                        //search the array (only add new sub networks)
+                        if(subs.indexOf(data[row][SUB])==-1){
+                        subs.push(data[row][SUB]);
+                        }
+                    }
                 }                
             }
         }
-    alert(row+' stores imported!');    
+        alert(row+' stores imported!');
+            for (x in subs){
+                var node = document.createElement("DIV");
+                node.id = 'sub_name' + x;
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.value = x;
+                checkbox.id = 'sub_id'+ x;
+                var textnode=document.createTextNode(subs[x]); 
+                document.getElementById("panel2").appendChild(node);
+                node.appendChild(checkbox);
+                node.appendChild(textnode); 
+            };
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }

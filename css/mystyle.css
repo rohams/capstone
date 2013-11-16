@@ -9,6 +9,8 @@ body { height: 100%; margin: 10; padding: 0 }
         z-index: 1;
         background-color: #FFFFD1;
         padding: 5px;
+        font: -webkit-small-control;
+        font-size:14x;
         border: 1px solid #999;
       }
 #panel2 {
@@ -19,8 +21,11 @@ body { height: 100%; margin: 10; padding: 0 }
         z-index: 5;
         width: 150px;
         background-color: #ECEBEB;
-        padding: 1;
+        font: -webkit-small-control;
+        font-size:12x;
+        padding: 5;
       }
+      
 
   #inputs {
         position: absolute;

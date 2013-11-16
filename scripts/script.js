@@ -13,6 +13,28 @@ function Node(lat,lng){
         return this.lng;
     };
 }
+
+//constructor 
+function Store(lat,lng,sub_id){
+    this.lat=lat;
+    this.lng=lng;
+    this.sub=sub_id;
+    
+    this.getLat = function()
+    {
+        return this.lat;
+    };
+    
+    this.getLng = function()
+    {
+        return this.lng;
+    };
+    this.getSub = function()
+    {
+        return this.sub;
+    };
+}
+
 //constructor
 function Cost(input){
     var MAX_COST = 1000000;
@@ -32,7 +54,21 @@ function Cost(input){
     };
 }
 
-//calculate the weighted average of nodes
+//cunstructor
+function subnetwork(id,name){
+    this.id=id;
+    this.name = name;
+    this.setName = function(input)
+    {
+        this.name= input;
+    }
+    this.getName = function()
+    {
+        return this.name;
+    }
+}
+
+//calculate the average of nodes
 function getAverage(nodes){
     var xSum = 0;
     var ySum = 0;
@@ -55,6 +91,8 @@ function getAverage(nodes){
     return aveNode;
 }
 
+//calculate the weighted average of nodes
+//ADD function here
 
 function SumOfDistances(foci,i,j){
     var distance = 0;      
@@ -67,7 +105,6 @@ function SumOfDistances(foci,i,j){
 }
 
  
-
 function getEllipse(foci,map){
     
 //    var COST= 0.5;
@@ -179,6 +216,10 @@ function getEllipse(foci,map){
       document.getElementById("panel").innerHTML=x;
 
     return ellipse;
+}
+
+function genSubNet (){
+    
 }
 
 function drawEllipse(map, points, cost){
