@@ -150,12 +150,22 @@ function getEllipse(foci,map){
         thl = THERESHOLD;
     }
     var cost=init_cost.cost;
+    
+    
+    //remove last drawing
+        for(x in shape){
+        shape[x].setVisible(false);
+        shape[x].setMap(map);
+        pathInfo[x].close(map);
+        
+    }
+    
+    //draw new ellipses
     while(cost>0){
         
     var dist = cost*COST_DST_RATIO; 
-    
-    
     var ave = getAverage(foci); 
+    
     for (i = MIN_LAT; i < MAX_LAT; i += steps) {
 			for (j = ave.getLng(); j < MAX_LNG; j += steps) {
 				d = SumOfDistances(foci, i, j);
@@ -232,9 +242,9 @@ function drawEllipse(map, points, cost){
             {
                 path.push(new google.maps.LatLng(points[i].getLat(),points[i].getLng()));
             };
-    var shape = new google.maps.Polygon({
+    shape [i] = new google.maps.Polygon({
                 paths: path,
-                strokeColor: '#000000',
+                strokeColor: '#00000',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
                 fillOpacity: 0,
@@ -242,13 +252,13 @@ function drawEllipse(map, points, cost){
                 clickable: false
                 });
                 
-    var pathInfo = new google.maps.InfoWindow();
+    pathInfo[i] = new google.maps.InfoWindow();
     var html = '$' + cost;
-    pathInfo.setContent(html);
-    pathInfo.setPosition(path[1]);
-    pathInfo.open(map);
+    pathInfo[i].setContent(html);
+    pathInfo[i].setPosition(path[1]);
+    pathInfo[i].open(map);
 
-    shape.setMap(map);    
+    shape[i].setMap(map);    
 }
 
 

@@ -16,6 +16,8 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var CANADA = new google.maps.LatLng(54.36775852406841, -97.20703125);  
     var stores = []; 
     var subs = [];
+    var shape = [];
+    var pathInfo = [];
     
     var AVE_ZINDEX = 200;
     var addAppend = false;
@@ -134,8 +136,8 @@ function deleteMarkers() {
     control4.style.border = '1px solid #000';
     control4.style.backgroundColor = 'white';
     control4.style.cursor = 'pointer';
-    control4.innerHTML = 'Sub-network';
-    control4.title = 'select sub-network';
+    control4.innerHTML = 'More Options';
+    control4.title = 'add the next most optimal store';
     control4.index = 4;
 
     //draw ellipses
