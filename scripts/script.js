@@ -152,12 +152,13 @@ function getEllipse(foci,map){
     var cost=init_cost.cost;
     
     
-    //remove last drawing
+    //fase last drawing
         for(x in shape){
-        shape[x].setVisible(false);
+        shape[x].setOptions({strokeColor:'#A2A2A2'});
         shape[x].setMap(map);
+    }
+    for (x in pathInfo){
         pathInfo[x].close(map);
-        
     }
     
     //draw new ellipses
