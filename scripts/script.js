@@ -59,7 +59,7 @@ function Cost(input){
 }
 
 //cunstructor
-function subnetwork(id,name){
+function Subnetwork(id,name){
     this.id=id;
     this.name = name;
     this.setName = function(input)

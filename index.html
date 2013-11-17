@@ -13,7 +13,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 <script type="text/javascript">
             
     //global variables
-    var canada = new google.maps.LatLng(54.36775852406841, -97.20703125);  
+    var CANADA = new google.maps.LatLng(54.36775852406841, -97.20703125);  
     var stores = []; 
     var subs = [];
     
@@ -32,16 +32,12 @@ function initialize() {
     
     //map options
     var mapOptions = {
-    center: canada,
+    center: CANADA,
     zoom: 4,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
     mapTypeControl: true,
     mapTypeControlOptions: {
     style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
-    },
-    navigationControl: true,
-    navigationControlOptions: {
-    style: google.maps.NavigationControlStyle.SMALL
     },
     streetViewControl: false,
     panControl: true,
@@ -50,7 +46,7 @@ function initialize() {
     },
     zoomControl: true,
     zoomControlOptions: {
-    style: google.maps.ZoomControlStyle.LARGE,
+    style: google.maps.ZoomControlStyle.DEFAULT,
     position: google.maps.ControlPosition.RIGHT_TOP
     }
     };
@@ -107,6 +103,7 @@ function addMarkers() {
 }
     
     //set info window
+    //TODO: should delete the previous opened info window
     var infoWindow = new google.maps.InfoWindow();
     google.maps.event.addListener(map, 'click', function(event) {
                                   var html = '' + event.latLng;
@@ -309,7 +306,7 @@ function deleteMarkers() {
     </div>
     <div id="panel2"></div> 
     <div id="panel" style="margin-left: -52px"></div>
-    <div id="map-canvas"/>
+    <div id="map-canvas"></div>
     
 </body>
 </html>
