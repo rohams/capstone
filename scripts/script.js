@@ -1,3 +1,8 @@
+
+
+// Global var
+var openedInfoWindow = null;
+
 //constructor 
 function Node(lat,lng){
     this.lat=lat;
@@ -284,7 +289,7 @@ function codeLatLong(map){
         });
 
         infowindow.setContent(info + results[1].formatted_address);
-        infowindow.open(map, marker);
+//        infowindow.open(map, marker);
 
         //add the node to the array of nodes
         //TODO: set the subnetwork
@@ -324,18 +329,21 @@ function removeMarker(marker){
 }
 
 function markerInfoWin(marker){
-            infowindow = new google.maps.InfoWindow();
-            var sub_name;
-            var marker_id = markers.indexOf(marker);
-                if (marker_id==-1){
-                infowindow.setContent( "<Store ID<br/>" + marker.position);
-                }
-                else{
-            sub_id = stores[marker_id].getSub();
-            sub_name = subs[sub_id];
+	if (openedInfoWindow != null) {
+		openedInfoWindow.close();
+	}
+		infowindow = new google.maps.InfoWindow();
+        var sub_name;
+        var marker_id = markers.indexOf(marker);
+        if (marker_id==-1){
+        	infowindow.setContent( "<Store ID<br/>" + marker.position);
+        } else {
+        	sub_id = stores[marker_id].getSub();
+        	sub_name = subs[sub_id];
             infowindow.setContent( "Store ID <br/> Sub-network: " + sub_name + "<br/>" + marker.position);
-                }
-            infowindow.open(map,marker);
+        }
+        infowindow.open(map,marker);
+        openedInfoWindow = infowindow;
 }
 
 function addMarkers(id) {

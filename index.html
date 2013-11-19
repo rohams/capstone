@@ -28,7 +28,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var aveMarker;
     var map;
     var markers = [];
-                  
+    
     // initialize the map    
 function initialize() {
     geocoder = new google.maps.Geocoder();
@@ -62,18 +62,18 @@ function initialize() {
    // google.maps.event.addListenerOnce(map, 'tilesloaded', addMarkers);
 
  
-
-    
-    //set info window
-    //TODO: should delete the previous opened info window
+    // Set info window anywhere the mouse click showing the LatLng of that point.
     var infoWindow = new google.maps.InfoWindow();
     google.maps.event.addListener(map, 'click', function(event) {
+								  if (openedInfoWindow != null) {
+									  openedInfoWindow.close();
+								  }
                                   var html = '' + event.latLng;
                                   infoWindow.setContent(html);
                                   infoWindow.setPosition(event.latLng);
                                   infoWindow.open(map);
+                                  openedInfoWindow = infoWindow;
                                   });
-             
 
 // Sets the map on all markers in the array.
 function setAllMap(map) {
@@ -251,7 +251,7 @@ function deleteMarkers() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control2);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control3);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control4);
-    }
+}
 
 
     google.maps.event.addDomListener(window, 'load', initialize);
