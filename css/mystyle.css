@@ -29,7 +29,7 @@ body { height: 100%; margin: 10; padding: 0 }
 #inputs {
       position: absolute;
       top: 8px;
-      left: 301px;
+      left: 230px;
       z-index: 5;
       width: 75px;
       background-color: #ECEBEB;
@@ -52,6 +52,26 @@ body { height: 100%; margin: 10; padding: 0 }
     margin: 4px 2px 5px 2px;
     height: 20px;
     width: 80px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    }
+
+ #ave {
+    cursor: pointer;
+    float: none;
+    margin: 4px 2px 5px 2px;
+    height: 20px;
+    width: 142px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    }
+  
+ #add_next {
+    cursor: pointer;
+    float: none;
+    margin: 4px 2px 5px 2px;
+    height: 20px;
+    width: 142px;
     border: 1px solid #999;
     background-color: #FFFFFF;
     }

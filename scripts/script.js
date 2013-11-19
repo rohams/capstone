@@ -285,7 +285,6 @@ function addNode(map){
         infowindow.setContent(info + results[1].formatted_address);
         infowindow.open(map, marker);
 
-
         //Add listeners for Removing markers
          google.maps.event.addListener(marker, 'dblclick', function() {
            removeMarker(this);
