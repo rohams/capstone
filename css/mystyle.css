@@ -1,6 +1,6 @@
 html { height: 100% }
 body { height: 100%; margin: 10; padding: 0 }
-#map-canvas { height: 100%}
+#map-canvas { height: 99%}
 #panel {
         position: absolute;
         bottom: 5px;

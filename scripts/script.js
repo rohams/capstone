@@ -238,10 +238,6 @@ function getEllipse(foci,map){
     return ellipse;
 }
 
-function genSubNet (){
-    
-}
-
 function drawEllipse(map, points, cost){
     var path = [];
     for (i=0;i<points.length;i++)
