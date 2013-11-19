@@ -14,7 +14,8 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
             
     //global variables
     var CANADA = new google.maps.LatLng(54.36775852406841, -97.20703125);  
-    var stores = []; 
+    var stores = [];
+    var imported = [];
     var subs = [];
     var shape = [];
     var pathInfo = [];
@@ -201,8 +202,10 @@ function deleteMarkers() {
                                      title: 'Weighted Average',
                                      zIndex: AVE_ZINDEX,
                                      animation: google.maps.Animation.DROP
-                                     });   
-                            oldAveMarker.setMap(null);
+                                     });
+                                     if(typeof(oldAveMarker) != "undefined"){
+                                          oldAveMarker.setMap(null);
+                                     }                          
                                          });
                                          
     // Add a store
@@ -222,7 +225,7 @@ function deleteMarkers() {
                             button.innerHTML = 'Add it';
                             button.id = "add";
                             button.onclick = function(){
-                            codeLatLong(map);
+                            addNode(map);
                               };
                             var lat = document.createElement("input");
                             lat.type = "text";
@@ -240,7 +243,7 @@ function deleteMarkers() {
                             node.appendChild(lng);
                             node.appendChild(weight);
                             node.appendChild(button);
-                            document.getElementById("panel2").appendChild(node);                                                  
+                            document.getElementById("panel2").appendChild(node);
                             addAppend = true;
                             }
                                          });
@@ -270,7 +273,11 @@ function deleteMarkers() {
         <input type="file" id=files name=files[] multiple />
     </div>
     </div>
-    <div id="panel2"></div> 
+    <div class="side-panel">
+        <div id="panel3"></div>
+        <div id="panel2"></div>
+        
+    </div>
     <div id="panel" style="margin-left: -52px"></div>
     <div id="map-canvas"></div>
     

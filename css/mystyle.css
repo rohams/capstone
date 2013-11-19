@@ -13,7 +13,7 @@ body { height: 100%; margin: 10; padding: 0 }
         font-size:14x;
         border: 1px solid #999;
       }
-#panel2 {
+.side-panel {
         position: absolute;
         top: 75px;
         left: 1%;
@@ -25,23 +25,21 @@ body { height: 100%; margin: 10; padding: 0 }
         font-size:12x;
         padding: 5;
       }
-      
 
-  #inputs {
-        position: absolute;
-        top: 8px;
-        left: 301px;
-        margin-left: 0px;
-        z-index: 5;
-        width: 75px;
-        background-color: #ECEBEB;
-        padding: 1;
-        
-      }
+#inputs {
+      position: absolute;
+      top: 8px;
+      left: 301px;
+      z-index: 5;
+      width: 75px;
+      background-color: #ECEBEB;
+      padding: 1;
+
+    }
 #draw {
     cursor: pointer;
     float: left;
-    margin: 0px 0px 0px 2px;
+    margin: 4px 2px 5px 2px;
     height: 20px;
     width: 80px;
     border: 1px solid #999;
@@ -51,7 +49,7 @@ body { height: 100%; margin: 10; padding: 0 }
 #add {
     cursor: pointer;
     float: left;
-    margin: 0px 0px 0px 2px;
+    margin: 4px 2px 5px 2px;
     height: 20px;
     width: 80px;
     border: 1px solid #999;
@@ -76,8 +74,22 @@ body { height: 100%; margin: 10; padding: 0 }
     border-radius: 0px 0px 0px 0px;
     }
 
-#lat {width: 140px;}
-#lng {width: 140px;}
-#weight {width: 140px;}
-#cost {width: 140px;}
-#coststep {width: 140px;}
+#lat {width: 136px;
+      margin-left:2px;
+      margin-right:2px;
+    }
+#lng {width: 136px;
+      margin-left:2px;
+      margin-right:2px;
+    }
+#weight {width: 136px;
+      margin-left:2px;
+      margin-right:2px;
+    }
+#cost {width: 136px;
+      margin-left:2px;
+    }
+#coststep {width: 136px;
+      margin-left:2px;
+      margin-right:2px;
+    }

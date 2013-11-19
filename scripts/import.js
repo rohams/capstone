@@ -89,7 +89,6 @@
         output += ' - LastModified: ' + (file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() : 'n/a') + '<br />\n';
 
     // read the file contents
-    //printTable(file);
     readFile(file);
     // post the results
     $('#panel').append(output);
@@ -116,8 +115,9 @@
                         subs.push(data[row][SUB]);
                         }
                     store.setSub(subs.indexOf(data[row][SUB]));
-                    }
-                    stores.push(store);                    
+                    }                 
+                    imported.push(store);
+                    stores.push(null);
                     markers.push(null);
                 }                
             }
@@ -130,9 +130,10 @@
                 checkbox.value = x;
                 checkbox.id = 'sub_id'+ x;
                 var textnode=document.createTextNode(subs[x]); 
-                document.getElementById("panel2").appendChild(node);
+                document.getElementById("panel3").appendChild(node);
                 node.appendChild(checkbox);
                 node.appendChild(textnode); 
+                document.getElementById('panel3').style.marginBottom = '10px';
             };
         alert(row+' stores imported!');
     };

@@ -119,9 +119,9 @@ function getEllipse(foci,map){
 //    var COST= 0.5;
     //boundaries
     var COST_DST_RATIO = 0.001;
-    var MAX_LAT = 60;
+    var MAX_LAT = 62;
     var MIN_LAT = 42;
-    var MAX_LNG = -105;
+    var MAX_LNG = -101;
     var MIN_LNG = -130;
 // GRANULARITY
     var THL_COST = 10000;
@@ -157,9 +157,9 @@ function getEllipse(foci,map){
     var cost=init_cost.cost;
     
     
-    //fase last drawing
+    //remove last drawing
         for(x in shape){
-        shape[x].setOptions({strokeColor:'#A2A2A2'});
+        shape[x].setVisible(false);
         shape[x].setMap(map);
     }
     for (x in pathInfo){
@@ -264,9 +264,7 @@ function drawEllipse(map, points, cost){
 }
 
 
-//google functions
-
-function codeLatLong(map){
+function addNode(map){
 
     var infowindow = new google.maps.InfoWindow();
     var input1 = document.getElementById('lat').value;
@@ -274,23 +272,30 @@ function codeLatLong(map){
     var lat = parseFloat(input1);
     var lng = parseFloat(input2);
     var latlng = new google.maps.LatLng(lat, lng);
-    var info = 'New node: ';
+    var info = 'New Store: ';
     geocoder.geocode({'latLng': latlng}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       if (results[1]) {
-        marker = new google.maps.Marker({
+       var marker = new google.maps.Marker({
             position: latlng,
             map: map,
             animation: google.maps.Animation.DROP
         });
 
         infowindow.setContent(info + results[1].formatted_address);
-//        infowindow.open(map, marker);
+        infowindow.open(map, marker);
+
+
+        //Add listeners for Removing markers
+         google.maps.event.addListener(marker, 'dblclick', function() {
+           removeMarker(this);
+        });
 
         //add the node to the array of nodes
         //TODO: set the subnetwork
-        var newStore= new Node (lat, lng, -1);
+        var newStore= new Store (lat, lng, -1);
         stores.push(newStore);
+        imported.push(newStore);
         
         //add marker to markers array
         markers.push(marker);
@@ -306,8 +311,12 @@ function codeLatLong(map){
 
 function removeMarkers(id){
         for (var i = 0; i < stores.length; i++) {
-            if(stores[i].getSub()==id){
-                markers[i].setMap(null);
+            if(stores[i]!=null){
+                if(stores[i].getSub()==id){
+                    markers[i].setMap(null);
+                    markers[i] = null;
+                    stores[i] = null;
+                }
             }
         }
 }
@@ -317,7 +326,7 @@ function removeMarker(marker){
         for (var i = 0; i < markers.length; i++) {
              if (markers[i] == marker) {
                  marker.setMap(null);
-                // stores[i] = null;
+                 stores[i] = null;
                  markers[i] = null;
                  break;
              }
@@ -343,35 +352,32 @@ function markerInfoWin(marker){
 }
 
 function addMarkers(id) {
-    for (var i = 0; i < stores.length; i++) {
-        if(stores[i].getSub()==id){
-    var marker = new google.maps.Marker({
-                                        position: new google.maps.LatLng(stores[i].getLat(), stores[i].getLng()),
-                                        draggable: false,
-                                        map: map
-                                        });
+    for (var i = 0; i < imported.length; i++) {
+        if(imported[i].getSub()==id){
+            stores[i]=imported[i];
+            var marker = new google.maps.Marker({
+                                                position: new google.maps.LatLng(stores[i].getLat(), stores[i].getLng()),
+                                                draggable: false,
+                                                map: map
+                                                });
  
-        //Add info window
-        google.maps.event.addListener(marker, 'click', function() {
-            markerInfoWin(this);
-         });
+            //Add info window
+            google.maps.event.addListener(marker, 'click', function() {
+                markerInfoWin(this);
+            });
          
-        //Add listeners for Removing markers
-         google.maps.event.addListener(marker, 'dblclick', function() {
-            removeMarker(this);
+            //Add listeners for Removing markers
+             google.maps.event.addListener(marker, 'dblclick', function() {
+                removeMarker(this);
 
-                 //TODO: use indexOf() instead
+            });
 
-        });
-
-        markers[i]=marker;
-        var ave_point = getAverage(stores);
-        var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
-        map.setCenter(new_center);
-        map.setZoom(6);
-    }
-    
-
+            markers[i]=marker;
+            var ave_point = getAverage(imported);
+            var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
+            map.setCenter(new_center);
+            map.setZoom(6);
+        }
     }
 
 }
