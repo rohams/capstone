@@ -17,9 +17,8 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var stores = [];
     var imported = [];
     var subs = [];
-    var shape = [];
-    var pathInfo = [];
-    
+    var shapes = [];
+    var pathInfos = [];
     var AVE_ZINDEX = 200;
     var addAppend = false;
     var drawAppend = false;
@@ -28,6 +27,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var image2 = 'images/marker2.png';
     var geocoder;
     var aveMarker;
+    var openedInfoWindow = null;
     var map;
     var markers = [];
     
@@ -62,11 +62,6 @@ function initialize() {
     map = new google.maps.Map(document.getElementById("map-canvas"),
                                   mapOptions);
                                   
-      
-        
-   //set nodes
-   // google.maps.event.addListenerOnce(map, 'tilesloaded', addMarkers);
-
  
     // Set info window anywhere the mouse click showing the LatLng of that point.
     var infoWindow = new google.maps.InfoWindow();
@@ -79,31 +74,7 @@ function initialize() {
                                   infoWindow.setPosition(event.latLng);
                                   infoWindow.open(map);
                                   openedInfoWindow = infoWindow;
-                                  });
-
-// Sets the map on all markers in the array.
-function setAllMap(map) {
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
-  }
-}
-
-// Removes the markers from the map, but keeps them in the array.
-function clearMarkers() {
-  setAllMap(null);
-}
-
-// Shows any markers currently in the array.
-function showMarkers() {
-  setAllMap(map);
-}
-
-// Deletes all markers in the array by removing references to them.
-function deleteMarkers() {
-  clearMarkers();
-  markers = [];
-}                                
-    
+                                  });                             
 
     //set controls
     var control1 = document.createElement('DIV');
@@ -301,9 +272,18 @@ function deleteMarkers() {
                             var button2 = document.createElement("BUTTON");
                             button2.innerHTML = "The Node to Add ...";                         
                             button2.id = "add_next";
+                             var bounds = new google.maps.LatLngBounds(
+                             new google.maps.LatLng(49.490, -123.649),
+                             new google.maps.LatLng(49.599, -123.443)
+                            );
                             button2.onclick = function(){
-                            var node = getAverage(stores);                          
-                              };
+                            var rectangle = new google.maps.Rectangle({
+                                bounds: bounds,
+                                draggable: true,
+                                editable: true
+                              });
+                              rectangle.setMap(map);                        
+                            };
                             var button3 = document.createElement("BUTTON");
                             button3.innerHTML = "The Node to Remove";                         
                             button3.id = "add_next";

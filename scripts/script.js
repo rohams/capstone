@@ -1,8 +1,3 @@
-
-
-// Global var
-var openedInfoWindow = null;
-
 //constructor 
 function Node(lat,lng){
     this.lat=lat;
@@ -117,25 +112,20 @@ function SumOfDistances(foci,i,j){
 function getEllipse(foci,map){
     
 //    var COST= 0.5;
-    //boundaries
+//set boundaries
     var COST_DST_RATIO = 0.001;
     var MAX_LAT = 62;
     var MIN_LAT = 42;
     var MAX_LNG = -101;
     var MIN_LNG = -130;
-// GRANULARITY
-    var THL_COST = 10000;
-    var GRL = 10;
-    var NUM_ELLIPSES = 2;
-    
-            
+//GRANULARITY
+    var GRL = 0.0001;
     var THERESHOLD= 0.002;
     var STEPSIZE = 0.001;
     var ellipse = [];
     var point;
     var steps;
     var thl;
-    var diff;
     var min = 1000;
     var FW_point = new Node; 
     var cost_step = document.getElementById('coststep').value;
@@ -144,26 +134,21 @@ function getEllipse(foci,map){
         alert ('Entered cost parameter is not valid!');
         return false;
     }
+
+    var cost = init_cost.cost;
+    var dynamic_grl = cost*GRL;
     
-    //tune the granularity based on the initial cost    
-    if (init_cost.cost>THL_COST){ 
-        steps = STEPSIZE*GRL;
-        thl = THERESHOLD*GRL; 
-    }
-    else{
-        steps = STEPSIZE;
-        thl = THERESHOLD;
-    }
-    var cost=init_cost.cost;
-    
+    //dynamically tune the granularity based on the initial cost    
+    steps = STEPSIZE*dynamic_grl;
+    thl = THERESHOLD*dynamic_grl;
     
     //remove last drawing
-        for(x in shape){
-        shape[x].setVisible(false);
-        shape[x].setMap(map);
+        for(x in shapes){
+        shapes[x].setVisible(false);
+        shapes[x].setMap(map);
     }
-    for (x in pathInfo){
-        pathInfo[x].close(map);
+    for (x in pathInfos){
+        pathInfos[x].close(map);
     }
     
     //draw new ellipses
@@ -244,7 +229,7 @@ function drawEllipse(map, points, cost){
             {
                 path.push(new google.maps.LatLng(points[i].getLat(),points[i].getLng()));
             };
-    shape [i] = new google.maps.Polygon({
+    var shape = new google.maps.Polygon({
                 paths: path,
                 strokeColor: '#00000',
                 strokeOpacity: 0.8,
@@ -254,16 +239,61 @@ function drawEllipse(map, points, cost){
                 clickable: false
                 });
                 
-    pathInfo[i] = new google.maps.InfoWindow();
+    var pathInfo = new google.maps.InfoWindow();
     var html = '$' + cost;
-    pathInfo[i].setContent(html);
-    pathInfo[i].setPosition(path[1]);
-    pathInfo[i].open(map);
-
-    shape[i].setMap(map);    
+    pathInfo.setContent(html);
+    pathInfo.setPosition(path[1]);
+    pathInfo.open(map);
+    shape.setMap(map);
+    shapes.push(shape);
+    pathInfos.push(pathInfo);
 }
 
+// Sets the map on all markers in the array.
+function setAllMap(map) {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+  }
+}
 
+// Removes the markers from the map, but keeps them in the array.
+function clearMarkers() {
+  setAllMap(null);
+}
+
+// Shows any markers currently in the array.
+function showMarkers() {
+  setAllMap(map);
+}
+
+// Deletes all markers in the array by removing references to them.
+function deleteMarkers() {
+  clearMarkers();
+  markers = [];
+}   
+
+//remove markers by sub-network id
+function removeMarkers(id){
+        for (var i = 0; i < stores.length; i++) {
+            if(stores[i]!=null){
+                if(stores[i].getSub()==id){
+                    markers[i].setMap(null);
+                    markers[i] = null;
+                    stores[i] = null;
+                }
+            }
+        }
+}
+
+//remove a single marker
+function removeMarker(marker){
+    marker_id = markers.indexOf(marker);
+    marker.setMap(null);
+    stores[marker_id] = null;
+    markers[marker_id] = null;
+}
+
+//add a single node
 function addNode(map){
 
     var infowindow = new google.maps.InfoWindow();
@@ -308,48 +338,7 @@ function addNode(map){
   });
 }
 
-function removeMarkers(id){
-        for (var i = 0; i < stores.length; i++) {
-            if(stores[i]!=null){
-                if(stores[i].getSub()==id){
-                    markers[i].setMap(null);
-                    markers[i] = null;
-                    stores[i] = null;
-                }
-            }
-        }
-}
-
-function removeMarker(marker){
-    //TODO: use indexOf() instead
-        for (var i = 0; i < markers.length; i++) {
-             if (markers[i] == marker) {
-                 marker.setMap(null);
-                 stores[i] = null;
-                 markers[i] = null;
-                 break;
-             }
-         }
-}
-
-function markerInfoWin(marker){
-	if (openedInfoWindow != null) {
-		openedInfoWindow.close();
-	}
-		infowindow = new google.maps.InfoWindow();
-        var sub_name;
-        var marker_id = markers.indexOf(marker);
-        if (marker_id==-1){
-        	infowindow.setContent( "<Store ID<br/>" + marker.position);
-        } else {
-        	sub_id = stores[marker_id].getSub();
-        	sub_name = subs[sub_id];
-            infowindow.setContent( "Store ID <br/> Sub-network: " + sub_name + "<br/>" + marker.position);
-        }
-        infowindow.open(map,marker);
-        openedInfoWindow = infowindow;
-}
-
+//add markers by sub-network id
 function addMarkers(id) {
     for (var i = 0; i < imported.length; i++) {
         if(imported[i].getSub()==id){
@@ -380,4 +369,23 @@ function addMarkers(id) {
         }
     }
 
+}
+
+//info window for each marker
+function markerInfoWin(marker){
+	if (openedInfoWindow != null) {
+		openedInfoWindow.close();
+	}
+		infowindow = new google.maps.InfoWindow();
+        var sub_name;
+        var marker_id = markers.indexOf(marker);
+        if (marker_id==-1){
+        	infowindow.setContent( "<Store ID<br/>" + marker.position);
+        } else {
+        	sub_id = stores[marker_id].getSub();
+        	sub_name = subs[sub_id];
+            infowindow.setContent( "Store ID <br/> Sub-network: " + sub_name + "<br/>" + marker.position);
+        }
+        infowindow.open(map,marker);
+        openedInfoWindow = infowindow;
 }
