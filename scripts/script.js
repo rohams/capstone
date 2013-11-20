@@ -374,6 +374,7 @@ function addMarkers(id) {
             markers[i]=marker;
             var ave_point = getAverage(imported);
             var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
+            // Does this code suppose to make the ave_point as the center of the screen with proper zoom level?
             map.setCenter(new_center);
             map.setZoom(6);
         }
