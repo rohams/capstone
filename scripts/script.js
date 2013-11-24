@@ -15,10 +15,11 @@ function Node(lat,lng){
 }
 
 //constructor 
-function Store(lat,lng,sub_id){
+function Store(lat,lng,sub_id,ext_id){
     this.lat=lat;
     this.lng=lng;
     this.sub=sub_id;
+    this.ext=ext_id;
     
     this.getLat = function()
     {
@@ -33,9 +34,17 @@ function Store(lat,lng,sub_id){
     {
         return this.sub;
     };
+    this.getExt = function()
+    {
+        return this.ext;
+    }
     this.setSub = function(id)
     {
      this.sub = id;;
+    };
+    this.setExt = function(id)
+    {
+     this.ext = id;;
     };
 }
 
@@ -385,9 +394,10 @@ function markerInfoWin(marker){
         if (marker_id==-1){
         	infowindow.setContent( "<Store ID<br/>" + marker.position);
         } else {
-        	sub_id = stores[marker_id].getSub();
+        	var sub_id = stores[marker_id].getSub();
+                var ext_id = stores[marker_id].getExt();
         	sub_name = subs[sub_id];
-            infowindow.setContent( "Store ID <br/> Sub-network: " + sub_name + "<br/>" + marker.position);
+            infowindow.setContent( "Store ID: "+ ext_id +"<br/> Sub-network: " + sub_name + "<br/>" + marker.position);
         }
         infowindow.open(map,marker);
         openedInfoWindow = infowindow;

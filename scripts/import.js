@@ -54,6 +54,22 @@
     }
 });
 
+  $('#sub_id6').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(6);
+    } else {
+        removeMarkers(6);
+    }
+});
+
+  $('#sub_id7').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(7);
+    } else {
+        removeMarkers(7);
+    }
+});
+
   function isAPIAvailable() {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -89,12 +105,72 @@
         output += ' - LastModified: ' + (file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() : 'n/a') + '<br />\n';
 
     // read the file contents
-    readFile(file);
+    if(!imp1){
+        readFile1(file);
+        imp1 = true;
+    }
+    else {
+        readFile2(file);
+    }
+    
     // post the results
-    $('#panel').append(output);
+    document.getElementById("panel").innerHTML = output;
   }
 
-  function readFile(file){
+  function readFile1(file){
+    var SUB = 15;
+    var LAT = 16;
+    var LNG = 17;
+    var EXT = 2;
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = function(event){
+      var csv = event.target.result;
+      var data = $.csv.toArrays(csv);
+        for(var row in data) {
+            if(row>0){ 
+                if (data[row][LAT]!=undefined && data[row][LNG]!=undefined)
+                {                
+                    var store = new Store(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]),0,0);
+                    
+                    if(data[row][EXT]!=undefined ){
+                        store.setExt(data[row][EXT]);
+                    }   
+                    
+                    if(data[row][SUB]!=undefined ){
+                        //search the array (only add new sub networks)
+                        if(subs.indexOf(data[row][SUB])==-1){
+                        subs.push(data[row][SUB]);
+                        }
+                    store.setSub(subs.indexOf(data[row][SUB]));
+                    }                 
+                    imported.push(store);
+                    stores.push(null);
+                    markers.push(null);
+                }                
+            }
+        }
+            for (x in subs){
+                var node = document.createElement("DIV");
+                node.id = 'sub_name' + x;
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.value = x;
+                checkbox.id = 'sub_id'+ x;
+                var textnode=document.createTextNode(subs[x]); 
+                document.getElementById("panel3").appendChild(node);
+                node.appendChild(checkbox);
+                node.appendChild(textnode); 
+                document.getElementById('panel3').style.marginBottom = '10px';
+            };
+        alert(row+' stores imported!');
+        //set the import button for the second import.
+        setFile2();
+    };
+    reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
+  }
+  
+  function readFile2(file){
     var SUB = 15;
     var LAT = 16;
     var LNG = 17;
@@ -135,10 +211,32 @@
                 node.appendChild(textnode); 
                 document.getElementById('panel3').style.marginBottom = '10px';
             };
-        alert(row+' stores imported!');
+        alert(row+' rows of data imported!');
+        var div = document.getElementById("imp_2");
+        var parent = document.getElementById("inputs");
+        if (div!=null){
+            parent.removeChild(div);
+        }
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }
+  
+  function setFile2(){
+      var div = document.getElementById("imp_1");
+      var parent = document.getElementById("inputs");
+      if (div!=null){
+        var import2 = document.createElement("BUTTON");
+        import2.id = "imp_2";
+        import2.innerHTML = "import 2";
+        import2.className = "import-button";
+        import2.onclick = function(){
+            document.getElementById('files').click();
+        };
+        parent.removeChild(div);
+        parent.appendChild(import2); 
+      }
+  }
+  
 
   function printTable(file) {
     var reader = new FileReader();
