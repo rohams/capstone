@@ -288,9 +288,11 @@ function removeMarkers(id){
 //remove a single marker
 function removeMarker(marker){
     marker_id = markers.indexOf(marker);
+    var x = "Successfully removed store at (" + stores[marker_id].getLat() + ", " + stores[marker_id].getLng() + ")";
     marker.setMap(null);
     stores[marker_id] = null;
-    markers[marker_id] = null;
+    markers[marker_id] = null;    
+    document.getElementById("panel").innerHTML = x;
 }
 
 //add a single node
@@ -346,6 +348,7 @@ function addMarkers(id) {
             var marker = new google.maps.Marker({
                                                 position: new google.maps.LatLng(stores[i].getLat(), stores[i].getLng()),
                                                 draggable: false,
+						optimized: false,
                                                 map: map
                                                 });
  
