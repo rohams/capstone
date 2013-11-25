@@ -188,6 +188,10 @@ function getAverage(stores){
     return aveNode;
 }
 
+function distance(point1, point2){
+    return Math.sqrt( Math.pow(point1.getLat() - point2.getLat(), 2) + Math.pow(point1.getLng() - point2.getLng(), 2) );
+}
+
 
 function SumOfDistances(foci,i,j){
     var distance = 0;      
@@ -221,10 +225,11 @@ function getEllipse(foci,map){
     var MAX_LNG = -101;
     var MIN_LNG = -130;
 //GRANULARITY
-    var GRL = 0.0004;
-    var weight_factor=norm_weight_ave*norm_weight_ave;
-    var THERESHOLD= 0.002;
-    var STEPSIZE = 0.001;
+    var GRL = 0.0002;
+    var height = 0;
+    var set_grl = true;
+    var THERESHOLD= 0.012;
+    var STEPSIZE = 0.006;
     var ellipse = [];
     var point;
     var steps;
@@ -238,13 +243,12 @@ function getEllipse(foci,map){
         alert ('Entered cost parameter is not valid!');
         return false;
     }
-
+    var d;
     var cost = init_cost.cost;
-    var dynamic_grl = (cost*GRL)/weight_factor;
     
     //dynamically tune the granularity based on the initial cost    
-    steps = STEPSIZE*dynamic_grl;
-    thl = THERESHOLD*dynamic_grl;
+    steps = STEPSIZE;
+    thl = THERESHOLD;
     //remove last drawing
         for(x in shapes){
         shapes[x].setVisible(false);
@@ -261,6 +265,7 @@ function getEllipse(foci,map){
     var min = dist;
     var ave = getWeightedAverage(foci); 
     
+    //sweep the right side
     for (i = MIN_LAT; i < MAX_LAT; i += steps) {
 			for (j = ave.getLng(); j < MAX_LNG; j += steps) {
 				d = SumOfDistances(foci, i, j);
@@ -275,13 +280,29 @@ function getEllipse(foci,map){
                                 d -= dist;                                                            
                                 if (Math.abs(d) < thl) {
                                     point= new Node(i,j);
+                                    if(set_grl){
+                                        set_grl=false;
+                                        height = distance(point,ave);
+                                        steps *= height/norm_weight_ave;
+                                        thl*=height/norm_weight_ave;
+                                    }
                                     ellipse.push(point);
-                                    break;                                                                     
+                                    break;
                                 }
-			}
-		}
-                
-     for (i = MAX_LAT; i > MIN_LAT; i -= steps) {
+                        }
+     }
+     //get the highest LAT (sweeping anything above it is unncessary)
+     if(ellipse[ellipse.length-1]!=undefined)
+     {
+        var highest_lat = ellipse[ellipse.length-1].getLat();
+     }
+     //get the lowest LAT (sweeping anything below it is unncessary)
+     if(ellipse[0]!=undefined)
+     {
+        var lowest_lat = ellipse[0].getLat();
+     }
+     //sweep the left side           
+     for (i = highest_lat; i > lowest_lat; i -= steps) {
 			for (j = ave.getLng(); j > MIN_LNG; j -= steps) {
 				d = SumOfDistances(foci, i, j);
                                 if (d<min){
@@ -321,7 +342,7 @@ function getEllipse(foci,map){
                     zIndex: AVE_ZINDEX,
                     animation: google.maps.Animation.DROP
                     }); 
-      var x="Minimum Distance: " + min;
+      var x="Minimum Distance: " + min + " granularity: " + steps;
       document.getElementById("panel").innerHTML=x;
 
     return ellipse;
@@ -505,8 +526,11 @@ function normalizeWeights(){
         if(stores[s]!=null){
             for (x in tot_weights){
                 if(stores[s].getExt()==tot_weights[x].getID()){
-                    if(tot_weights[x].getWeight()<min && tot_weights[x].getWeight()!=0){
-                        min=tot_weights[x].getWeight();
+                    if(tot_weights[x].getWeight()!=0){
+                        count++;
+                        if(tot_weights[x].getWeight()<min){
+                            min=tot_weights[x].getWeight();
+                        }
                     }
                     break;
                 }            
@@ -516,7 +540,6 @@ function normalizeWeights(){
     //deviding weight by the sum
     for (s in stores){
         if(stores[s]!=null){
-            count++;
             //if the store is not in the weights import file assign zero
             stores[s].setWeight(0);
             for (x in tot_weights){

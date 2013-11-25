@@ -9,7 +9,7 @@ body { height: 100%; margin: 10; padding: 0 }
         z-index: 1;
         background-color: #FFFFD1;
         padding: 5px;
-        font: -webkit-small-control;
+        font: 12px/18px "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
         font-size:14x;
         border: 1px solid #999;
       }
@@ -21,7 +21,7 @@ body { height: 100%; margin: 10; padding: 0 }
         z-index: 5;
         width: 150px;
         background-color: #ECEBEB;
-        font: -webkit-small-control;
+        font: 12px/18px "Lucida Grande",Helvetica,Arial,Verdana,sans-serif;
         font-size:12x;
         padding: 5;
       }
