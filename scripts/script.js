@@ -13,13 +13,61 @@ function Node(lat,lng){
         return this.lng;
     };
 }
+//constructor 
+function Tot_weight(id,weight){
+    this.id=id;
+    this.w=weight;
+    
+    this.addWeight = function(weight){
+        this.w+=weight;
+    };
+    this.subWeight = function(weight){
+        this.w-=weight;
+    };
+    this.setWeight = function(weight){
+        this.w=weight;
+    };
+    this.getWeight = function(){
+        return this.w;
+    };
+    this.getID = function(){
+        return this.id;
+    };
+    
+}
+
 
 //constructor 
-function Store(lat,lng,sub_id,ext_id){
+function Weight(id,A,F,P){
+    this.id=id;
+    this.A=A;
+    this.F=F;
+    this.P=P;
+    this.getID = function()
+    {
+        return this.id;
+    };
+    this.getCmd = function(id)
+    {
+        switch(id)
+        {
+            case 0:
+                return this.A;
+            case 1:
+                return this.F;
+            case 2:
+                return this.P;
+        }
+    };
+}
+
+//constructor 
+function Store(lat,lng,sub_id,ext_id,weight){
     this.lat=lat;
     this.lng=lng;
     this.sub=sub_id;
     this.ext=ext_id;
+    this.w=weight;
     
     this.getLat = function()
     {
@@ -30,21 +78,35 @@ function Store(lat,lng,sub_id,ext_id){
     {
         return this.lng;
     };
+    
     this.getSub = function()
     {
         return this.sub;
     };
+    
     this.getExt = function()
     {
         return this.ext;
-    }
+    };
+    
+    this.getWeight = function()
+    {
+        return this.w;
+    };
+    
     this.setSub = function(id)
     {
      this.sub = id;;
     };
+    
     this.setExt = function(id)
     {
      this.ext = id;;
+    };
+    
+    this.setWeight = function(weight)
+    {
+     this.w = weight;;
     };
 }
 
@@ -383,6 +445,56 @@ function addMarkers(id) {
 
 }
 
+
+//Add commodity type
+function addCmd(id){
+    for (x in tot_weights){
+        tot_weights[x].addWeight(weights[x].getCmd(id));
+    }
+    normalizeWeights();    
+}
+
+//Remove commodity type
+function removeCmd(id){
+     for (x in tot_weights){
+        tot_weights[x].subWeight(weights[x].getCmd(id));
+    }
+    normalizeWeights();
+}
+
+//normalize weights 
+function normalizeWeights(){
+    var sum = 0;
+    //calculating the sum
+    for (s in stores){
+        if(stores[s]!=null){
+            for (x in tot_weights){
+                if(stores[s].getExt()==tot_weights[x].getID()){
+                    sum+=tot_weights[x].getWeight();
+                    break;
+                }            
+            }
+        }
+    }
+    var output = "Sum of weights: "+sum;
+    document.getElementById("panel").innerHTML = output;
+    //deviding weight by the sum
+    for (s in stores){
+        if(stores[s]!=null){
+            stores[s].setWeight(0);
+            for (x in tot_weights){
+                if(stores[s].getExt()==tot_weights[x].getID()){
+                    var new_weight=tot_weights[x].getWeight()/sum;
+                    stores[s].setWeight(new_weight);
+                    break;
+                }                
+            }
+        }
+    }
+    
+}
+
+
 //info window for each marker
 function markerInfoWin(marker){
 	if (openedInfoWindow != null) {
@@ -395,10 +507,51 @@ function markerInfoWin(marker){
         	infowindow.setContent( "<Store ID<br/>" + marker.position);
         } else {
         	var sub_id = stores[marker_id].getSub();
-                var ext_id = stores[marker_id].getExt();
-        	sub_name = subs[sub_id];
-            infowindow.setContent( "Store ID: "+ ext_id +"<br/> Sub-network: " + sub_name + "<br/>" + marker.position);
+                var ext_id = stores[marker_id].getExt();                
+            sub_name = subs[sub_id];
+            var weight = stores[marker_id].getWeight();
+            infowindow.setContent( "Store ID: "+ ext_id +"<br/> Sub-network: " + sub_name +"<br/> Calculated Weight: " + weight + "<br/>" + marker.position);
         }
         infowindow.open(map,marker);
         openedInfoWindow = infowindow;
 }
+
+
+
+function setWeightUI(){
+    var days = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
+    var cmds = new Array("Ambient","Frozen","Perishable");
+    var title=document.createTextNode("Week days:");
+    //title.style.fontWeight = "bold";
+    document.getElementById("panel4").appendChild(title);
+    for (i=0;i<days.length; i++){
+                var node = document.createElement("DIV");
+                node.id = 'day_' + i;
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.value = i;
+                checkbox.id = 'ch_day_'+ x;
+                var textnode=document.createTextNode(days[i]);
+                document.getElementById("panel4").appendChild(node);
+                node.appendChild(checkbox);
+                node.appendChild(textnode); 
+                document.getElementById('panel4').style.marginBottom = '10px';
+            };
+     var title2=document.createTextNode("Commodities:");
+     document.getElementById("panel5").appendChild(title2);
+     for (i=0;i<cmds.length; i++){
+                var node = document.createElement("DIV");
+                node.id = 'cmd_' + i;
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.value = i;
+                checkbox.id = 'ch_cmd_'+ i;
+                var textnode=document.createTextNode(cmds[i]);
+                document.getElementById("panel5").appendChild(node);
+                node.appendChild(checkbox);
+                node.appendChild(textnode); 
+                document.getElementById('panel5').style.marginBottom = '10px';
+            };
+    
+    
+};
