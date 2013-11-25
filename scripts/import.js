@@ -164,6 +164,8 @@
                     
                     if(data[row][EXT]!=undefined ){
                         store.setExt(data[row][EXT]);
+                        var total_w = new Tot_weight(data[row][EXT],1);  
+                        tot_weights.push(total_w);
                     }   
                     
                     if(data[row][SUB]!=undefined ){
@@ -209,10 +211,12 @@
     var EXT = 1;
     //***********************
     var count;
+    tot_weights = [];
     var reader = new FileReader();
     reader.readAsText(file);
     reader.onload = function(event){
       count =0;
+      max_weight = 0;
       var csv = event.target.result;
       var data = $.csv.toArrays(csv);
         for(var row in data) {
@@ -222,7 +226,17 @@
                     var total_w = new Tot_weight(data[row][EXT],0);
                     weights.push(weight);   
                     tot_weights.push(total_w);
+                    if(parseFloat(data[row][WT_A_1])>max_weight){
+                        max_weight=parseFloat(data[row][WT_A_1]);
+                    }
+                    if(parseFloat(data[row][WT_F_1])>max_weight){
+                        max_weight=parseFloat(data[row][WT_F_1]);
+                    }
+                    if(parseFloat(data[row][WT_P_1])>max_weight){
+                        max_weight=parseFloat(data[row][WT_P_1]);
+                    }
                     count ++;
+                    
                 }                
             }
         }

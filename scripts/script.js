@@ -136,26 +136,25 @@ function Subnetwork(id,name){
     this.setName = function(input)
     {
         this.name= input;
-    }
+    };
     this.getName = function()
     {
         return this.name;
-    }
+    };
 }
 
-//calculate the average of nodes
-function getAverage(nodes){
+//calculate the weighted average of nodes
+function getWeightedAverage(stores){
+    normalizeWeights();
     var xSum = 0;
     var ySum = 0;
-    var count = nodes.length;
-    for (i=0;i<nodes.length;i++)
+    var count = 0;
+    for (i=0;i<stores.length;i++)
     {
-        if (nodes[i] != null) {
-            xSum += nodes[i].getLat();
-            ySum += nodes[i].getLng();
-        }
-        else{
-            count--;
+        if (stores[i] != null) {
+            xSum += (stores[i].getLat())*stores[i].getWeight();
+            ySum += (stores[i].getLng())*stores[i].getWeight();
+            count +=stores[i].getWeight();
         }
     }
     var aveX = xSum/count;
@@ -166,21 +165,59 @@ function getAverage(nodes){
     return aveNode;
 }
 
-//calculate the weighted average of nodes
-//ADD function here
+//calculate the average of nodes
+function getAverage(stores){
+    var xSum = 0;
+    var ySum = 0;
+    var count = stores.length;
+    for (i=0;i<stores.length;i++)
+    {
+        if (stores[i] != null) {
+            xSum += stores[i].getLat();
+            ySum += stores[i].getLng();
+        }
+        else{
+-            count--;
+        }
+    }
+    var aveX = xSum/count;
+    var aveY = ySum/count;
+    var aveNode = new Node(aveX,aveY); 
+    var x = "Weighted Average Geolocation: (" + aveNode.getLat() +"," + aveNode.getLng() + ")";
+    document.getElementById("panel").innerHTML = x;
+    return aveNode;
+}
+
 
 function SumOfDistances(foci,i,j){
     var distance = 0;      
     for (k = 0; k < foci.length; k++) {
         if (foci[k] != null) {
-            distance += Math.sqrt( Math.pow(foci[k].getLat() - i, 2) + Math.pow(foci[k].getLng() - j, 2) );
+            distance += foci[k].getWeight()*(Math.sqrt( Math.pow(foci[k].getLat() - i, 2) + Math.pow(foci[k].getLng() - j, 2) ));
         }
     }
     return distance;    
 }
 
+//node
+ function getEllipse(foci, map, node){
+     //set boundaries
+    var COST_DST_RATIO = 0.001;
+    var MAX_LAT = 62;
+    var MIN_LAT = 42;
+    var MAX_LNG = -101;
+    var MIN_LNG = -130;
+     
+ }
  
+ 
+//cost 
 function getEllipse(foci,map){
+    
+    d = SumOfDistances(foci, 55.68427770577118, -120.99365234375);
+   // alert(d);
+    
+    
     
 //    var COST= 0.5;
 //set boundaries
@@ -197,7 +234,7 @@ function getEllipse(foci,map){
     var point;
     var steps;
     var thl;
-    var min = 1000;
+    var min = getWeightedAverage(foci);
     var FW_point = new Node; 
     var cost_step = document.getElementById('coststep').value;
     var init_cost = new Cost(document.getElementById('cost').value);
@@ -212,7 +249,6 @@ function getEllipse(foci,map){
     //dynamically tune the granularity based on the initial cost    
     steps = STEPSIZE*dynamic_grl;
     thl = THERESHOLD*dynamic_grl;
-    
     //remove last drawing
         for(x in shapes){
         shapes[x].setVisible(false);
@@ -226,7 +262,7 @@ function getEllipse(foci,map){
     while(cost>0){
         
     var dist = cost*COST_DST_RATIO; 
-    var ave = getAverage(foci); 
+    var ave = getWeightedAverage(foci); 
     
     for (i = MIN_LAT; i < MAX_LAT; i += steps) {
 			for (j = ave.getLng(); j < MAX_LNG; j += steps) {
@@ -464,27 +500,31 @@ function removeCmd(id){
 
 //normalize weights 
 function normalizeWeights(){
-    var sum = 0;
-    //calculating the sum
+    var min = max_weight;
+    //calculating the min
     for (s in stores){
         if(stores[s]!=null){
             for (x in tot_weights){
                 if(stores[s].getExt()==tot_weights[x].getID()){
-                    sum+=tot_weights[x].getWeight();
+                    if(tot_weights[x].getWeight()<min && tot_weights[x].getWeight()!=0){
+                        min=tot_weights[x].getWeight();
+                    }
                     break;
                 }            
             }
         }
     }
-    var output = "Sum of weights: "+sum;
+    //alert("min "+min);
+    var output = "Min of weights: "+min;
     document.getElementById("panel").innerHTML = output;
     //deviding weight by the sum
     for (s in stores){
         if(stores[s]!=null){
+            //if the store is not in the weights import file assign zero
             stores[s].setWeight(0);
             for (x in tot_weights){
                 if(stores[s].getExt()==tot_weights[x].getID()){
-                    var new_weight=tot_weights[x].getWeight()/sum;
+                    var new_weight=tot_weights[x].getWeight()/min;
                     stores[s].setWeight(new_weight);
                     break;
                 }                

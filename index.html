@@ -21,6 +21,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var subs = [];
     var shapes = [];
     var imp1 = false;
+    var max_weight= 1;
     var pathInfos = [];
     var AVE_ZINDEX = 200;
     var addAppend = false;
@@ -257,7 +258,7 @@ function initialize() {
                             button1.innerHTML = "Find Weighted Average";                         
                             button1.id = "ave";
                             button1.onclick = function(){
-                               var node = getAverage(stores); 
+                               var node = getWeightedAverage(stores); 
                             oldAveMarker = aveMarker;
                             aveMarker = new google.maps.Marker({                              
                                      position: new google.maps.LatLng(node.getLat(), node.getLng()),
@@ -291,9 +292,8 @@ function initialize() {
                             button3.innerHTML = "The Node to Remove";                         
                             button3.id = "add_next";
                             button3.onclick = function(){
-                            var node = getAverage(stores);                          
+                            var node = getWeightedAverage(stores);                          
                               };
-
                             node.appendChild(button1);
                             node.appendChild(button2);
                             node.appendChild(button3);
