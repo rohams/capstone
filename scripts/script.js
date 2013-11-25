@@ -199,8 +199,9 @@ function SumOfDistances(foci,i,j){
     return distance;    
 }
 
-//node
- function getEllipse(foci, map, node){
+//TODO:
+// a function to draw ellipse based on a given point
+ function getEllipse2(foci, map, node){
      //set boundaries
     var COST_DST_RATIO = 0.001;
     var MAX_LAT = 62;
@@ -211,15 +212,8 @@ function SumOfDistances(foci,i,j){
  }
  
  
-//cost 
+// a function to draw ellipse based on cost
 function getEllipse(foci,map){
-    
-    d = SumOfDistances(foci, 55.68427770577118, -120.99365234375);
-   // alert(d);
-    
-    
-    
-//    var COST= 0.5;
 //set boundaries
     var COST_DST_RATIO = 0.001;
     var MAX_LAT = 62;
@@ -227,24 +221,26 @@ function getEllipse(foci,map){
     var MAX_LNG = -101;
     var MIN_LNG = -130;
 //GRANULARITY
-    var GRL = 0.0001;
+    var GRL = 0.0004;
+    var weight_factor=norm_weight_ave*norm_weight_ave;
     var THERESHOLD= 0.002;
     var STEPSIZE = 0.001;
     var ellipse = [];
     var point;
     var steps;
     var thl;
-    var min = getWeightedAverage(foci);
+    var min;
     var FW_point = new Node; 
     var cost_step = document.getElementById('coststep').value;
     var init_cost = new Cost(document.getElementById('cost').value);
+    normalizeWeights();
     if (!init_cost.status()){
         alert ('Entered cost parameter is not valid!');
         return false;
     }
 
     var cost = init_cost.cost;
-    var dynamic_grl = cost*GRL;
+    var dynamic_grl = (cost*GRL)/weight_factor;
     
     //dynamically tune the granularity based on the initial cost    
     steps = STEPSIZE*dynamic_grl;
@@ -262,6 +258,7 @@ function getEllipse(foci,map){
     while(cost>0){
         
     var dist = cost*COST_DST_RATIO; 
+    var min = dist;
     var ave = getWeightedAverage(foci); 
     
     for (i = MIN_LAT; i < MAX_LAT; i += steps) {
@@ -501,6 +498,8 @@ function removeCmd(id){
 //normalize weights 
 function normalizeWeights(){
     var min = max_weight;
+    var sum =0;
+    var count=0;
     //calculating the min
     for (s in stores){
         if(stores[s]!=null){
@@ -514,24 +513,25 @@ function normalizeWeights(){
             }
         }
     }
-    //alert("min "+min);
-    var output = "Min of weights: "+min;
-    document.getElementById("panel").innerHTML = output;
     //deviding weight by the sum
     for (s in stores){
         if(stores[s]!=null){
+            count++;
             //if the store is not in the weights import file assign zero
             stores[s].setWeight(0);
             for (x in tot_weights){
                 if(stores[s].getExt()==tot_weights[x].getID()){
                     var new_weight=tot_weights[x].getWeight()/min;
                     stores[s].setWeight(new_weight);
+                    sum += new_weight;
                     break;
                 }                
             }
         }
     }
-    
+    norm_weight_ave=sum/count;
+    var output = "Min of weights: "+min +", Ave of weights " + norm_weight_ave;
+    document.getElementById("panel").innerHTML = output;
 }
 
 

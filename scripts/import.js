@@ -247,6 +247,7 @@
             parent.removeChild(div);
         }
         setWeightUI();
+        normalizeWeights();
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
   }
