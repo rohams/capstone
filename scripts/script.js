@@ -426,7 +426,8 @@ function removeMarker(marker){
 
 //add a single node
 function addNode(map){
-
+    
+    manual_add_id++;
     var infowindow = new google.maps.InfoWindow();
     var input1 = document.getElementById('lat').value;
     var input2 = document.getElementById('lng').value;
@@ -447,16 +448,19 @@ function addNode(map){
 
         infowindow.setContent(info + results[1].formatted_address);
         infowindow.open(map, marker);
+        
+        google.maps.event.addListener(marker, 'click', function() {
+                markerInfoWin(this);
+            });
 
         //Add listeners for Removing markers
          google.maps.event.addListener(marker, 'dblclick', function() {
            removeMarker(this);
         });
-
+        var store_id="manually-added-"+manual_add_id;
         //add the node to the array of nodes
-        //alert(wgt);
-        var newStore= new Store (lat, lng, -1, -1, wgt);
-        var total_w = new Tot_weight(-1,1); 
+        var newStore= new Store (lat, lng, -1, store_id, wgt);
+        var total_w = new Tot_weight(store_id, wgt); 
         stores.push(newStore);
         imported.push(newStore);
         tot_weights.push(total_w);
