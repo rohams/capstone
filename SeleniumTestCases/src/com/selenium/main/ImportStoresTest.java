@@ -19,7 +19,7 @@ public class ImportStoresTest {
 	@Before
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		baseUrl = "file:///Users/sj/capstone/index.html";
+		baseUrl = "http://localhost:8080/index.html";
 		filePath = "/Users/sj/capstone/UBC ECE Capstone Project - Nodes.csv";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
@@ -36,6 +36,79 @@ public class ImportStoresTest {
 		driver.findElement(By.id("sub_id0")).click();
 		driver.findElement(By.id("sub_id1")).click();
 		driver.findElement(By.id("sub_id2")).click();
+		driver.findElement(By.id("sub_id3")).click();
+		driver.findElement(By.id("sub_id4")).click();
+		driver.findElement(By.id("sub_id5")).click();
+		driver.findElement(By.cssSelector("#gmimap24 > area")).click();
+		assertEquals(
+				"Store ID: S-951\nSub-network: BC Vancouver Island\nCalculated Weight: 1\n(49.206369, -124.00547799999998)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap8 > area")).click();
+		assertEquals(
+				"Store ID: S-6642\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.701017, -112.83046999999999)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap12 > area")).click();
+		assertEquals(
+				"Store ID: S-78\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.696062, -114.84030200000001)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap9 > area")).click();
+		assertEquals(
+				"Store ID: S-915\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.516363, -115.75455299999999)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap6 > area")).click();
+		assertEquals(
+				"Store ID: S-33\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.673058, -115.98283800000002)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap11 > area")).click();
+		assertEquals(
+				"Store ID: S-16\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.125286, -116.494144)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap10 > area")).click();
+		assertEquals(
+				"Store ID: S-953\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.500382, -117.28768500000001)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap7 > area")).click();
+		assertEquals(
+				"Store ID: S-24\nSub-network: BC Kootenays\nCalculated Weight: 1\n(49.136013, -118.51278300000001)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap14 > area")).click();
+		assertEquals(
+				"Store ID: S-157\nSub-network: BC Lower Mainland\nCalculated Weight: 1\n(49.353756, -121.21627799999999)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap22 > area")).click();
+		assertEquals(
+				"Store ID: S-956\nSub-network: BC Interior\nCalculated Weight: 1\n(49.827837, -119.62995899999999)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap21 > area")).click();
+		assertEquals(
+				"Store ID: S-126\nSub-network: BC Interior\nCalculated Weight: 1\n(50.021169, -119.40516500000001)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap20 > area")).click();
+		assertEquals(
+				"Store ID: S-952\nSub-network: BC Lower Mainland\nCalculated Weight: 1\n(49.111242, -121.95764400000002)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap2 > area")).click();
+		assertEquals(
+				"Store ID: S-6619\nSub-network: AB North\nCalculated Weight: 1\n(53.453318, -113.56372099999999)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
+		driver.findElement(By.cssSelector("#gmimap23 > area")).click();
+		assertEquals(
+				"Store ID: S-6628\nSub-network: BC North\nCalculated Weight: 1\n(55.176613, -118.80512199999998)",
+				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
+						.getText());
 		Thread.sleep(2000);
 	}
 
