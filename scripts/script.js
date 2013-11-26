@@ -155,8 +155,12 @@ function getWeightedAverage(stores){
             xSum += (stores[i].getLat())*stores[i].getWeight();
             ySum += (stores[i].getLng())*stores[i].getWeight();
             count +=stores[i].getWeight();
+            //alert("lat " + stores[i].getLat());
+            //alert("lng " + stores[i].getLng());
+            //alert("wgt " + stores[i].getWeight());
         }
     }
+//    alert("count " + count);
     var aveX = xSum/count;
     var aveY = ySum/count;
     var aveNode = new Node(aveX,aveY); 
@@ -426,8 +430,10 @@ function addNode(map){
     var infowindow = new google.maps.InfoWindow();
     var input1 = document.getElementById('lat').value;
     var input2 = document.getElementById('lng').value;
+    var input3 = document.getElementById('weight').value;
     var lat = parseFloat(input1);
     var lng = parseFloat(input2);
+    var wgt = parseFloat(input3);
     var latlng = new google.maps.LatLng(lat, lng);
     var info = 'New Store: ';
     geocoder.geocode({'latLng': latlng}, function(results, status) {
@@ -448,10 +454,12 @@ function addNode(map){
         });
 
         //add the node to the array of nodes
-        //TODO: set the subnetwork
-        var newStore= new Store (lat, lng, -1);
+        //alert(wgt);
+        var newStore= new Store (lat, lng, -1, -1, wgt);
+        var total_w = new Tot_weight(-1,1); 
         stores.push(newStore);
         imported.push(newStore);
+        tot_weights.push(total_w);
         
         //add marker to markers array
         markers.push(marker);
@@ -541,16 +549,16 @@ function normalizeWeights(){
     for (s in stores){
         if(stores[s]!=null){
             //if the store is not in the weights import file assign zero
-            stores[s].setWeight(0);
-            for (x in tot_weights){
-                if(stores[s].getExt()==tot_weights[x].getID()){
-                    var new_weight=tot_weights[x].getWeight()/min;
-                    stores[s].setWeight(new_weight);
-                    sum += new_weight;
-                    break;
-                }                
+                stores[s].setWeight(0);
+                for (x in tot_weights){
+                    if(stores[s].getExt()==tot_weights[x].getID()){
+                        var new_weight=tot_weights[x].getWeight()/min;
+                        stores[s].setWeight(new_weight);
+                        sum += new_weight;
+                        break;
+                    }                
+                }
             }
-        }
     }
     norm_weight_ave=sum/count;
     var output = "Min of weights: "+min +", Ave of weights " + norm_weight_ave;
