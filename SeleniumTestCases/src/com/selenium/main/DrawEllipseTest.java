@@ -41,16 +41,11 @@ public class DrawEllipseTest {
 		driver.findElement(By.id("sub_id5")).click();
 		driver.findElement(By.id("control1")).click();
 		driver.findElement(By.id("cost")).clear();
-		//driver.findElement(By.id("cost")).sendKeys("160000");
-		//driver.findElement(By.id("coststep")).clear();
-		//driver.findElement(By.id("coststep")).sendKeys("4000");
-		 
 		driver.findElement(By.id("cost")).sendKeys("160000");
 		driver.findElement(By.id("coststep")).clear();
 		driver.findElement(By.id("coststep")).sendKeys("15000");
 		jsx.executeScript("testGetEllipse(stores, map);");	
-		
-		driver.findElement(By.id("draw")).click();
+		Thread.sleep(2000);
 		assertEquals("$160000",
 				driver.findElement(By.cssSelector("div.gm-style-iw > div"))
 						.getText());
