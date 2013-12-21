@@ -112,7 +112,7 @@ function Store(lat,lng,sub_id,ext_id,weight){
 
 //constructor
 function Cost(input){
-    var MAX_COST = 1000000;
+    var MAX_COST = 2000000;
     this.cost=input;
     this.getCost = function()
     {
@@ -223,17 +223,15 @@ function SumOfDistances(foci,i,j){
 // a function to draw ellipse based on cost
 function getEllipse(foci,map){
 //set boundaries
-    var COST_DST_RATIO = 0.001;
-    var MAX_LAT = 62;
-    var MIN_LAT = 42;
-    var MAX_LNG = -101;
-    var MIN_LNG = -130;
+    var MAX_LAT = 65;
+    var MIN_LAT = 34;
+    var MAX_LNG = -100;
+    var MIN_LNG = -135;
 //GRANULARITY
-    var GRL = 0.0002;
     var height = 0;
     var set_grl = true;
-    var THERESHOLD= 0.012;
-    var STEPSIZE = 0.006;
+    var THERESHOLD= 0.01;
+    var STEPSIZE = 0.005;
     var ellipse = [];
     var point;
     var steps;
@@ -264,8 +262,8 @@ function getEllipse(foci,map){
     
     //draw new ellipses
     while(cost>0){
-        
-    var dist = cost*COST_DST_RATIO; 
+    var dist = cost*DST_CST_RATIO; 
+    //initialize min variable for finding the FW point
     var min = dist;
     var ave = getWeightedAverage(foci); 
     
@@ -287,8 +285,8 @@ function getEllipse(foci,map){
                                     if(set_grl){
                                         set_grl=false;
                                         height = distance(point,ave);
-                                        steps *= height/norm_weight_ave;
-                                        thl*=height/norm_weight_ave;
+                                        steps = STEPSIZE*height;
+                                        thl=THERESHOLD*height*norm_weight_ave;
                                     }
                                     ellipse.push(point);
                                     break;
@@ -331,9 +329,11 @@ function getEllipse(foci,map){
                 }
                 drawEllipse(map, ellipse, cost);
                 cost -= cost_step;
-                ellipse = [];    
+                ellipse = [];
+                //tune granularity for each ellipse
+                set_grl=true;
     }
-                
+       //mark FW point         
        new google.maps.Marker({                              
                     position: new google.maps.LatLng(FW_point.getLat(), FW_point.getLng()),
                     draggable: false,

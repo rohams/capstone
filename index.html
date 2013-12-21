@@ -15,6 +15,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
             
     //global variables
     var CANADA = new google.maps.LatLng(54.36775852406841, -97.20703125);  
+    //all the visible stores on the map
     var stores = [];
     var imported = [];
     var weights = [];
@@ -30,6 +31,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var addAppend = false;
     var drawAppend = false;
     var optAppend = false;
+    var DST_CST_RATIO = 0.001;
     var image1 = 'images/marker.png';
     var image2 = 'images/marker2.png';
     var geocoder;
@@ -76,7 +78,9 @@ function initialize() {
 								  if (openedInfoWindow != null) {
 									  openedInfoWindow.close();
 								  }
-                                  var html = '' + event.latLng;
+                                  var dist = SumOfDistances(stores, event.latLng.lat(), event.latLng.lng());
+                                  var cost = dist/DST_CST_RATIO;
+                                  var html = '' + event.latLng +  "<br/>Cost: " + cost;
                                   infoWindow.setContent(html);
                                   infoWindow.setPosition(event.latLng);
                                   infoWindow.open(map);
@@ -270,7 +274,8 @@ function initialize() {
                                      icon:image1,
                                      title: 'Weighted Average',
                                      zIndex: AVE_ZINDEX,
-                                     animation: google.maps.Animation.DROP
+                                     animation: google.maps.Animation.DROP,
+                                     clickable:false
                                      });
                                      if(typeof(oldAveMarker) != "undefined"){
                                           oldAveMarker.setMap(null);
