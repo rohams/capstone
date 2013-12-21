@@ -206,18 +206,6 @@ function SumOfDistances(foci,i,j){
     }
     return distance;    
 }
-
-//TODO:
-// a function to draw ellipse based on a given point
- function getEllipse2(foci, map, node){
-     //set boundaries
-    var COST_DST_RATIO = 0.001;
-    var MAX_LAT = 62;
-    var MIN_LAT = 42;
-    var MAX_LNG = -101;
-    var MIN_LNG = -130;
-     
- }
  
  
 // a function to draw ellipse based on cost
@@ -230,13 +218,15 @@ function getEllipse(foci,map){
 //GRANULARITY
     var height = 0;
     var set_grl = true;
-    var THERESHOLD= 0.01;
-    var STEPSIZE = 0.005;
+    var THERESHOLD= 0.012;
+    var STEPSIZE = 0.006;
     var ellipse = [];
+    var lngs = [];
     var point;
     var steps;
     var thl;
     var min;
+    var max_lng, min_lng, mid_lng;
     var FW_point = new Node; 
     var cost_step = document.getElementById('coststep').value;
     var init_cost = new Cost(document.getElementById('cost').value);
@@ -247,7 +237,6 @@ function getEllipse(foci,map){
     }
     var d;
     var cost = init_cost.cost;
-    
     //dynamically tune the granularity based on the initial cost    
     steps = STEPSIZE;
     thl = THERESHOLD;
@@ -259,80 +248,145 @@ function getEllipse(foci,map){
     for (x in pathInfos){
         pathInfos[x].close(map);
     }
-    
+    var ave = getWeightedAverage(foci); 
+    mid_lng = ave.getLng();
     //draw new ellipses
     while(cost>0){
     var dist = cost*DST_CST_RATIO; 
     //initialize min variable for finding the FW point
     var min = dist;
-    var ave = getWeightedAverage(foci); 
-    
     //sweep the right side
     for (i = MIN_LAT; i < MAX_LAT; i += steps) {
-			for (j = ave.getLng(); j < MAX_LNG; j += steps) {
-				d = SumOfDistances(foci, i, j);
-                                 if (d<min){
-                                    min=d;
-                                    FW_point.lat = i;
-                                    FW_point.lng = j;
-                                }    
-                                if (d>dist){
-                                    break;
-                                }
-                                d -= dist;                                                            
-                                if (Math.abs(d) < thl) {
-                                    point= new Node(i,j);
-                                    if(set_grl){
-                                        set_grl=false;
-                                        height = distance(point,ave);
-                                        steps = STEPSIZE*height;
-                                        thl=THERESHOLD*height*norm_weight_ave;
-                                    }
-                                    ellipse.push(point);
-                                    break;
-                                }
+            for (j = mid_lng; j < MAX_LNG; j += steps) {
+                    d = SumOfDistances(foci, i, j);
+                     if (d<min){
+                        min=d;
+                        FW_point.lat = i;
+                        FW_point.lng = j;
+                    }    
+                    if (d>dist){
+                        break;
+                    }
+                    d -= dist;                                                            
+                    if (Math.abs(d) < thl) {
+                        point= new Node(i,j);
+                        if(set_grl){
+                            set_grl=false;
+                            height = distance(point,ave);
+                            steps = STEPSIZE*height;
+                            thl=THERESHOLD*height*norm_weight_ave;
                         }
+                        lngs.push(j);
+                        ellipse.push(point);
+                        break;
+                    }
+            }
      }
-     //get the highest LAT (sweeping anything above it is unncessary)
-     if(ellipse[ellipse.length-1]!=undefined)
-     {
-        var highest_lat = ellipse[ellipse.length-1].getLat();
-     }
-     //get the lowest LAT (sweeping anything below it is unncessary)
-     if(ellipse[0]!=undefined)
-     {
-        var lowest_lat = ellipse[0].getLat();
-     }
-     //sweep the left side           
-     for (i = highest_lat; i > lowest_lat; i -= steps) {
-			for (j = ave.getLng(); j > MIN_LNG; j -= steps) {
-				d = SumOfDistances(foci, i, j);
-                                if (d<min){
-                                    min=d;
-                                    FW_point.lat = i;
-                                    FW_point.lng = j;
-                                }
-                                if (d>dist){
-                                    break;
-                                }
-                                d -= dist;                                                             
-                                if (Math.abs(d) < thl) {
-                                    var point= new Node(i,j);
-                                    ellipse.push(point); 
-                                    break;
-                                }				
-			}
-		}
-                //Terminate
-                if(ellipse.length==0){
-                    break;
+      //get the highest LAT LNG
+      
+      if(ellipse[ellipse.length-1]!=undefined)
+      {
+         var highest_lat = ellipse[ellipse.length-1].getLat();
+         var highest_lng = ellipse[ellipse.length-1].getLng();
+      }
+      //get the lowest LAT LNG
+      if(ellipse[0]!=undefined)
+      {
+         var lowest_lat = ellipse[0].getLat();
+      }
+      //sweep up
+      for (j = highest_lng; j > MIN_LNG; j -= steps) {
+                for (i = highest_lat; i < MAX_LAT; i += steps) {
+                        d = SumOfDistances(foci, i, j);
+                        if (d<min){
+                            min=d;
+                            FW_point.lat = i;
+                            FW_point.lng = j;
+                        }
+                        if (d>dist){
+                            break;
+                        }
+                        d -= dist;                                                             
+                        if (Math.abs(d) < thl) {
+                            var point= new Node(i,j);
+                            ellipse.push(point); 
+                            lngs.push(j);
+                            break;
+                        }				
                 }
-                drawEllipse(map, ellipse, cost);
-                cost -= cost_step;
-                ellipse = [];
-                //tune granularity for each ellipse
-                set_grl=true;
+        }
+        
+      if(ellipse[ellipse.length-1]!=undefined)
+      {
+         var final_lat = ellipse[ellipse.length-1].getLat();
+         var final_lng = ellipse[ellipse.length-1].getLng();
+      }
+      
+     //sweep the left side           
+     for (i = final_lat; i > lowest_lat; i -= steps) {
+                    for (j = final_lng; j > MIN_LNG; j -= steps) {
+                            d = SumOfDistances(foci, i, j);
+                            if (d<min){
+                                min=d;
+                                FW_point.lat = i;
+                                FW_point.lng = j;
+                            }
+                            if (d>dist){
+                                break;
+                            }
+                            d -= dist;                                                             
+                            if (Math.abs(d) < thl) {
+                                var point= new Node(i,j);
+                                ellipse.push(point); 
+                                lngs.push(j);
+                                break;
+                            }				
+                    }
+        }
+        
+      if(ellipse[ellipse.length-1]!=undefined)
+      {
+         final_lat = ellipse[ellipse.length-1].getLat();
+         final_lng = ellipse[ellipse.length-1].getLng();
+      }
+      
+      //sweep down
+      for (j = final_lng; j < MAX_LNG; j += steps) {
+                for (i = final_lat; i > MIN_LAT; i -= steps) {
+                        d = SumOfDistances(foci, i, j);
+                        if (d<min){
+                            min=d;
+                            FW_point.lat = i;
+                            FW_point.lng = j;
+                        }
+                        if (d>dist){
+                            break;
+                        }
+                        d -= dist;                                                             
+                        if (Math.abs(d) < thl) {
+                            var point= new Node(i,j);
+                            lngs.push(j);
+                            ellipse.push(point); 
+                            break;
+                        }				
+                }
+        }
+        //Terminate
+        if(ellipse.length==0){
+            break;
+        }
+        drawEllipse(map, ellipse, cost);
+        cost -= cost_step;
+        //find new average
+        max_lng = Math.max.apply(Math,lngs);
+        min_lng = Math.min.apply(Math,lngs);
+        mid_lng=(max_lng+min_lng)/2;
+        ellipse = [];
+        lngs = [];
+        //tune granularity for next ellipse
+        set_grl=true;
     }
+    
        //mark FW point         
        new google.maps.Marker({                              
                     position: new google.maps.LatLng(FW_point.getLat(), FW_point.getLng()),
