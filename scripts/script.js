@@ -683,9 +683,9 @@ function setWeightUI(){
     var days = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
     var cmds = new Array("Ambient","Frozen","Perishable");
 
-    var title=document.createTextNode("Week days:");
+    var title=document.createTextNode("Week days");
     //title.style.fontWeight = "bold";
-    document.getElementById("panel4").appendChild(title);
+    document.getElementById("panel44").appendChild(title);
     for (i=0;i<days.length; i++){
                 var node = document.createElement("DIV");
                 node.id = 'day_' + i;
@@ -699,8 +699,8 @@ function setWeightUI(){
                 node.appendChild(textnode); 
                 document.getElementById('panel4').style.marginBottom = '10px';
             };
-     var title2=document.createTextNode("Commodities:");
-     document.getElementById("panel5").appendChild(title2);
+     var title2=document.createTextNode("Commodities");
+     document.getElementById("panel55").appendChild(title2);
      for (i=0;i<cmds.length; i++){
                 var node = document.createElement("DIV");
                 node.id = 'cmd_' + i;

@@ -12,6 +12,24 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 <script src="scripts/jquery.csv-0.71.js"></script>
 <script src="scripts/import.js"></script>
 <script type="text/javascript">
+
+  $(document).ready(function() {
+ $('body').on("click", '#control4', function() {
+     removeLastDraw(); 
+     //$("#panel6").slideToggle("fast");
+     document.getElementById("panel6").style.display = 'block'; 
+  });
+  $('body').on("click", '#panel1', function() {
+     $("#panel3").slideToggle("fast");
+     //document.getElementById("panel6").style.display = 'block'; 
+  });
+    $('body').on("click", '#panel44', function() {
+     $("#panel4").slideToggle("fast");
+  });
+    $('body').on("click", '#panel55', function() {
+     $("#panel5").slideToggle("fast");
+  });
+});
             
     //****** global variables ******
     var CANADA = new google.maps.LatLng(54.36775852406841, -97.20703125); 
@@ -36,7 +54,6 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var AVE_ZINDEX = 200;
     var addAppend = false;
     var drawAppend = false;
-    var optAppend = false;
     var DST_CST_RATIO = 0.001;
     var image1 = 'images/marker.png';
     var image2 = 'images/marker2.png';
@@ -107,7 +124,6 @@ function initialize() {
     control1.title = 'draw cost based ellipse';
     control1.index = 1;
 
-    // Control2 is not used.
     var control2 = document.createElement('DIV');
     control2.setAttribute("id", "control2");
     control2.style.padding = '5px';
@@ -134,22 +150,15 @@ function initialize() {
     control4.style.border = '1px solid #000';
     control4.style.backgroundColor = 'white';
     control4.style.cursor = 'pointer';
-    control4.innerHTML = 'More Options';
+    control4.innerHTML = 'Store Optimiz';
     control4.title = 'add the next most optimal store';
     control4.index = 4;
 
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {                        
                           if(!drawAppend){
-                            if(optAppend){
-                            //REMOVE OPTION ELEMENTs
-                            var div = document.getElementById("options");
-                            if (div!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div);
-                            optAppend = false;
-                            }
-                            }    
+                            //REMOVE STORE OPT ELEMENTs
+                            document.getElementById("panel6").style.display = 'none'; 
                             if(addAppend){
                             //REMOVE ADD A NODE ELEMENTS
                             var div = document.getElementById("add_node");
@@ -207,15 +216,8 @@ function initialize() {
                             drawAppend = false;
                             }
                             }
-                            if(optAppend){
-                            //REMOVE OPTION ELEMENTs
-                            var div = document.getElementById("options");
-                            if (div!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div);
-                            optAppend = false;
-                            }
-                            }                           
+                            //REMOVE STORE OPT ELEMENTs
+                            document.getElementById("panel6").style.display = 'none';                         
                             //ADD NEW ELEMENTS
                             var node = document.createElement("DIV");
                             node.id = "add_node";
@@ -246,9 +248,8 @@ function initialize() {
                             }
                                          });
                                           
-    // More options
+    // Store opt
     google.maps.event.addDomListener(control4, 'click', function() {
-                        if(!optAppend){
                             if(drawAppend){
                             //REMOVE DRAW ELLIPSE ELEMENT
                             var div = document.getElementById("draw_ellipse");
@@ -266,15 +267,11 @@ function initialize() {
                             parent.removeChild(div);
                             addAppend = false;
                             }                                
-                            }
-                            //ADD NEW ELEMENTS
-                            var node = document.createElement("DIV");
-                            node.id = "options";
-                            var button1 = document.createElement("BUTTON");
-                            button1.innerHTML = "Find Weighted Average";                         
-                            button1.id = "ave";
-                            button1.onclick = function(){
-                               var node = getWeightedAverage(stores); 
+                            }                                          
+                                         });
+       // Find Average
+    google.maps.event.addDomListener(control2, 'click', function() {                        
+                            var node = getWeightedAverage(stores); 
                             oldAveMarker = aveMarker;
                             aveMarker = new google.maps.Marker({                              
                                      position: new google.maps.LatLng(node.getLat(), node.getLng()),
@@ -288,40 +285,11 @@ function initialize() {
                                      });
                                      if(typeof(oldAveMarker) != "undefined"){
                                           oldAveMarker.setMap(null);
-                                     }   
-                              };
-                            var button2 = document.createElement("BUTTON");
-                            button2.innerHTML = "The Node to Add ...";                         
-                            button2.id = "add_next";
-                             var bounds = new google.maps.LatLngBounds(
-                             new google.maps.LatLng(49.490, -123.649),
-                             new google.maps.LatLng(49.599, -123.443)
-                            );
-                            button2.onclick = function(){
-                            var rectangle = new google.maps.Rectangle({
-                                bounds: bounds,
-                                draggable: true,
-                                editable: true
-                              });
-                              removeLastDraw();
-                              rectangle.setMap(map);                        
-                            };
-                            var button3 = document.createElement("BUTTON");
-                            button3.innerHTML = "The Node to Remove";                         
-                            button3.id = "add_next";
-                            button3.onclick = function(){
-                            var node = getWeightedAverage(stores);                          
-                              };
-                            node.appendChild(button1);
-                            node.appendChild(button2);
-                            node.appendChild(button3);
-                            document.getElementById("panel2").appendChild(node);
-                            optAppend = true;
-                        }
-
-                                         });
+                                     }                         
+                              });                                                              
                                          
-    map.controls[google.maps.ControlPosition.TOP_LEFT].push(control1);                                     
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(control1);
+    map.controls[google.maps.ControlPosition.TOP_LEFT].push(control2);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control3);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control4);
 }
@@ -339,10 +307,19 @@ function initialize() {
     </div>
     </div>
     <div class="side-panel">
+        <div id="panel1"></div>
         <div id="panel3"></div>
+        <div id="panel44"></div>
         <div id="panel4"></div>
+        <div id="panel55"></div>
         <div id="panel5"></div>
         <div id="panel2"></div>
+        <div id="panel6">   
+            Enter DC Location:<br>
+            <input type="text" placeholder="latitude" id="dc-lat">
+            <input type="text" placeholder="longitude" id="dc-lng">
+            <button id="add-dc">Insert</button>
+        </div>
         
     </div>
     <div id="panel" style="margin-left: -52px"></div>

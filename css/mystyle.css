@@ -13,6 +13,21 @@ body { height: 100%; margin: 10; padding: 0 }
         font-size:14x;
         border: 1px solid #999;
       }
+#panel1 {
+        cursor:pointer;
+        background-color:#C8C8C8;
+      }
+#panel44 {
+        cursor:pointer;
+        background-color:#C8C8C8;
+      }
+#panel55 {
+        cursor:pointer;
+        background-color:#C8C8C8;
+      }
+#panel6 {
+        display:none;
+      }
 .side-panel {
         position: absolute;
         top: 75px;
@@ -29,7 +44,7 @@ body { height: 100%; margin: 10; padding: 0 }
 #inputs {
       position: absolute;
       top: 8px;
-      left: 230px;
+      left: 308px;
       z-index: 5;
       width: 75px;
       background-color: #ECEBEB;
@@ -55,23 +70,13 @@ body { height: 100%; margin: 10; padding: 0 }
     border: 1px solid #999;
     background-color: #FFFFFF;
     }
-
- #ave {
-    cursor: pointer;
-    float: none;
-    margin: 4px 2px 5px 2px;
-    height: 20px;
-    width: 142px;
-    border: 1px solid #999;
-    background-color: #FFFFFF;
-    }
     
- #add_next {
+#add-dc {
     cursor: pointer;
-    float: none;
+    float: left;
     margin: 4px 2px 5px 2px;
     height: 20px;
-    width: 142px;
+    width: 80px;
     border: 1px solid #999;
     background-color: #FFFFFF;
     }
@@ -99,6 +104,14 @@ body { height: 100%; margin: 10; padding: 0 }
       margin-right:2px;
     }
 #lng {width: 136px;
+      margin-left:2px;
+      margin-right:2px;
+    }
+#dc-lat {width: 136px;
+      margin-left:2px;
+      margin-right:2px;
+    }
+#dc-lng {width: 136px;
       margin-left:2px;
       margin-right:2px;
     }

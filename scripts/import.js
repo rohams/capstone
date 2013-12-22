@@ -257,8 +257,8 @@
                 }                
             }
         }
-            var title=document.createTextNode("Sub-networks:");   
-            document.getElementById("panel3").appendChild(title);
+            var title=document.createTextNode("Sub-networks");   
+            document.getElementById("panel1").appendChild(title);
             for (x in subs){
                 var node = document.createElement("DIV");
                 node.id = 'sub_name' + x;
