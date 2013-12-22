@@ -38,26 +38,52 @@ function Tot_weight(id,weight){
 
 
 //constructor 
-function Weight(id,A,F,P){
+function Weight(id,A1,A2,A3,A4,A5,A6,A7,F1,F2,F3,F4,F5,F6,F7,P1,P2,P3,P4,P5,P6,P7){
+    
     this.id=id;
-    this.A=A;
-    this.F=F;
-    this.P=P;
+    this.A1=A1;
+    this.A2=A2;
+    this.A3=A3;
+    this.A4=A4;
+    this.A5=A5;
+    this.A6=A6;
+    this.A7=A7;
+    
+    this.F1=F1;
+    this.F2=F2;
+    this.F3=F3;
+    this.F4=F4;
+    this.F5=F5;
+    this.F6=F6;
+    this.F7=F7;
+    
+    this.P1=P1;
+    this.P2=P2;
+    this.P3=P3;
+    this.P4=P4;
+    this.P5=P5;
+    this.P6=P6;
+    this.P7=P7;
+    
+    this.A=0;
+    this.F=0;
+    this.P=0;
+    this.total=0;
+    
+    this.setWeight= function(){    
+        this.A=(this.A1*sun)+(this.A2*mon)+(this.A3*tue)+(this.A4*wed)+(this.A5*thu)+(this.A6*fri)+(this.A7*sat);
+        this.F=(this.F1*sun)+(this.F2*mon)+(this.F3*tue)+(this.F4*wed)+(this.F5*thu)+(this.F6*fri)+(this.F7*sat);
+        this.P=(this.P1*sun)+(this.P2*mon)+(this.P3*tue)+(this.P4*wed)+(this.P5*thu)+(this.P6*fri)+(this.P7*sat);
+        this.total=this.A*w_ambient+this.F*w_frozen+this.P*w_perishable;
+    };
+    
     this.getID = function()
     {
         return this.id;
     };
-    this.getCmd = function(id)
+    this.getWeight= function()
     {
-        switch(id)
-        {
-            case 0:
-                return this.A;
-            case 1:
-                return this.F;
-            case 2:
-                return this.P;
-        }
+        return this.total;
     };
 }
 
@@ -155,12 +181,8 @@ function getWeightedAverage(stores){
             xSum += (stores[i].getLat())*stores[i].getWeight();
             ySum += (stores[i].getLng())*stores[i].getWeight();
             count +=stores[i].getWeight();
-            //alert("lat " + stores[i].getLat());
-            //alert("lng " + stores[i].getLng());
-            //alert("wgt " + stores[i].getWeight());
         }
     }
-//    alert("count " + count);
     var aveX = xSum/count;
     var aveY = ySum/count;
     var aveNode = new Node(aveX,aveY); 
@@ -218,8 +240,8 @@ function getEllipse(foci,map){
 //GRANULARITY
     var height = 0;
     var set_grl = true;
-    var THERESHOLD= 0.012;
-    var STEPSIZE = 0.006;
+    var THERESHOLD= 0.009;
+    var STEPSIZE = 0.004;
     var ellipse = [];
     var lngs = [];
     var point;
@@ -351,7 +373,7 @@ function getEllipse(foci,map){
       }
       
       //sweep down
-      for (j = final_lng; j < MAX_LNG; j += steps) {
+      for (j = final_lng; j < mid_lng; j += steps) {
                 for (i = final_lat; i > MIN_LAT; i -= steps) {
                         d = SumOfDistances(foci, i, j);
                         if (d<min){
@@ -565,26 +587,17 @@ function addMarkers(id) {
 
 }
 
-
-//Add commodity type
-function addCmd(id){
+function updateWeights(){
     for (x in tot_weights){
-        tot_weights[x].addWeight(weights[x].getCmd(id));
-    }
-    normalizeWeights();    
-}
-
-//Remove commodity type
-function removeCmd(id){
-     for (x in tot_weights){
-        tot_weights[x].subWeight(weights[x].getCmd(id));
+        weights[x].setWeight();
+        tot_weights[x].setWeight(weights[x].getWeight());
     }
     normalizeWeights();
 }
 
 //normalize weights 
 function normalizeWeights(){
-    var min = max_weight;
+    var min = MAX_WEIGHT;
     var sum =0;
     var count=0;
     //calculating the min
@@ -603,7 +616,7 @@ function normalizeWeights(){
             }
         }
     }
-    //deviding weight by the sum
+    //dividing weight by sum
     for (s in stores){
         if(stores[s]!=null){
             //if the store is not in the weights import file assign zero
@@ -650,6 +663,7 @@ function markerInfoWin(marker){
 function setWeightUI(){
     var days = new Array("Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday");
     var cmds = new Array("Ambient","Frozen","Perishable");
+
     var title=document.createTextNode("Week days:");
     //title.style.fontWeight = "bold";
     document.getElementById("panel4").appendChild(title);
@@ -659,7 +673,7 @@ function setWeightUI(){
                 var checkbox = document.createElement('input');
                 checkbox.type = "checkbox";
                 checkbox.value = i;
-                checkbox.id = 'ch_day_'+ x;
+                checkbox.id = 'ch_day_'+ i;
                 var textnode=document.createTextNode(days[i]);
                 document.getElementById("panel4").appendChild(node);
                 node.appendChild(checkbox);

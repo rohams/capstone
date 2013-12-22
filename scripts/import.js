@@ -72,29 +72,105 @@
     }
 });
 
+  $('#sub_id8').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(8);
+    } else {
+        removeMarkers(8);
+    }
+});
+
+  $('#sub_id9').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(9);
+    } else {
+        removeMarkers(9);
+    }
+});
    //commodity
   $('#ch_cmd_0').live('change', function(){
     if($(this).is(':checked')){
-        addCmd(0);
+        w_ambient=1;
     } else {
-        removeCmd(0);
+        w_ambient=0;
     }
+    updateWeights();
 });
 
   $('#ch_cmd_1').live('change', function(){
     if($(this).is(':checked')){
-        addCmd(1);
+        w_frozen =1;
     } else {
-        removeCmd(1);
+        w_frozen=0;
     }
+    updateWeights();
 });
 
   $('#ch_cmd_2').live('change', function(){
     if($(this).is(':checked')){
-        addCmd(2);
+        w_perishable=1;
     } else {
-        removeCmd(2);
+        w_perishable=0;
     }
+    updateWeights();
+});
+
+    //weekdays
+     $('#ch_day_0').live('change', function(){
+    if($(this).is(':checked')){
+        sun=1;
+    } else {
+        sun=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_1').live('change', function(){
+    if($(this).is(':checked')){
+        mon=1;
+    } else {
+        mon=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_2').live('change', function(){
+    if($(this).is(':checked')){
+        tue=1;
+    } else {
+        tue=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_3').live('change', function(){
+    if($(this).is(':checked')){
+        wed=1;
+    } else {
+        wed=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_4').live('change', function(){
+    if($(this).is(':checked')){
+        thu=1;
+    } else {
+        thu=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_5').live('change', function(){
+    if($(this).is(':checked')){
+        fri=1;
+    } else {
+        fri=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_6').live('change', function(){
+    if($(this).is(':checked')){
+        sat=1;
+    } else {
+        sat=0;
+    }
+    updateWeights();
 });
 
   function isAPIAvailable() {
@@ -206,8 +282,28 @@
   function readFile2(file){
     //******configure file2 columns*****
     var WT_A_1 = 2;
+    var WT_A_2 = 3;
+    var WT_A_3 = 4;
+    var WT_A_4 = 5;
+    var WT_A_5 = 6;
+    var WT_A_6 = 7;
+    var WT_A_7 = 8;
+    
     var WT_F_1 = 9;
+    var WT_F_2 = 10;
+    var WT_F_3 = 11;
+    var WT_F_4 = 12;
+    var WT_F_5 = 13;
+    var WT_F_6 = 14;
+    var WT_F_7 = 15;
+    
     var WT_P_1 = 16;
+    var WT_P_2 = 17;
+    var WT_P_3 = 18;
+    var WT_P_4 = 19;
+    var WT_P_5 = 20;
+    var WT_P_6 = 21;
+    var WT_P_7 = 22;
     var EXT = 1;
     //***********************
     var count;
@@ -216,27 +312,20 @@
     reader.readAsText(file);
     reader.onload = function(event){
       count =0;
-      max_weight = 0;
       var csv = event.target.result;
       var data = $.csv.toArrays(csv);
         for(var row in data) {
             if(row>0){ 
                 if (data[row][EXT]!=undefined)
-                {   var weight = new Weight(data[row][EXT],parseFloat(data[row][WT_A_1]),parseFloat(data[row][WT_F_1]),parseFloat(data[row][WT_P_1]));
+                {   var weight = new Weight(data[row][EXT],parseFloat(data[row][WT_A_1]),parseFloat(data[row][WT_A_2]),parseFloat(data[row][WT_A_3]),parseFloat(data[row][WT_A_4]),
+                                            parseFloat(data[row][WT_A_5]),parseFloat(data[row][WT_A_6]),parseFloat(data[row][WT_A_7]),parseFloat(data[row][WT_F_1]),parseFloat(data[row][WT_F_2]),
+                                            parseFloat(data[row][WT_F_3]),parseFloat(data[row][WT_F_4]),parseFloat(data[row][WT_F_5]),parseFloat(data[row][WT_F_6]),parseFloat(data[row][WT_F_7]),
+                                            parseFloat(data[row][WT_P_1]),parseFloat(data[row][WT_P_2]),parseFloat(data[row][WT_P_3]),parseFloat(data[row][WT_P_4]),parseFloat(data[row][WT_P_5]),
+                                            parseFloat(data[row][WT_P_6]),parseFloat(data[row][WT_P_7]));
                     var total_w = new Tot_weight(data[row][EXT],0);
                     weights.push(weight);   
                     tot_weights.push(total_w);
-                    if(parseFloat(data[row][WT_A_1])>max_weight){
-                        max_weight=parseFloat(data[row][WT_A_1]);
-                    }
-                    if(parseFloat(data[row][WT_F_1])>max_weight){
-                        max_weight=parseFloat(data[row][WT_F_1]);
-                    }
-                    if(parseFloat(data[row][WT_P_1])>max_weight){
-                        max_weight=parseFloat(data[row][WT_P_1]);
-                    }
-                    count ++;
-                    
+                    count ++;                    
                 }                
             }
         }
