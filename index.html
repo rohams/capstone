@@ -47,6 +47,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
     var w_ambient=0,w_frozen=0,w_perishable=0;
     var markers = [];
+    var FW_marker;
 
     // initialize the map    
 function initialize() {
@@ -302,6 +303,7 @@ function initialize() {
                                 draggable: true,
                                 editable: true
                               });
+                              removeLastDraw();
                               rectangle.setMap(map);                        
                             };
                             var button3 = document.createElement("BUTTON");

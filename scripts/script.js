@@ -263,13 +263,7 @@ function getEllipse(foci,map){
     steps = STEPSIZE;
     thl = THERESHOLD;
     //remove last drawing
-        for(x in shapes){
-        shapes[x].setVisible(false);
-        shapes[x].setMap(map);
-    }
-    for (x in pathInfos){
-        pathInfos[x].close(map);
-    }
+    removeLastDraw(); 
     var ave = getWeightedAverage(foci); 
     mid_lng = ave.getLng();
     //draw new ellipses
@@ -410,7 +404,7 @@ function getEllipse(foci,map){
     }
     
        //mark FW point         
-       new google.maps.Marker({                              
+       FW_marker = new google.maps.Marker({                              
                     position: new google.maps.LatLng(FW_point.getLat(), FW_point.getLng()),
                     draggable: false,
                     map: map,
@@ -476,6 +470,19 @@ function deleteMarkers() {
   clearMarkers();
   markers = [];
 }   
+//remove last drawing
+function removeLastDraw(){
+    for(x in shapes){
+        shapes[x].setVisible(false);
+        shapes[x].setMap(map);
+    }
+    for (x in pathInfos){
+        pathInfos[x].close(map);
+    }
+    if(FW_marker!=undefined){
+        FW_marker.setMap(null);
+    }
+}
 
 //remove markers by sub-network id
 function removeMarkers(id){
@@ -536,7 +543,7 @@ function addNode(map){
         var store_id="manually-added-"+manual_add_id;
         //add the node to the array of nodes
         var newStore= new Store (lat, lng, -1, store_id, wgt);
-        var total_w = new Tot_weight(store_id, wgt); 
+        var total_w = new Tot_weight(-1, wgt); 
         stores.push(newStore);
         imported.push(newStore);
         tot_weights.push(total_w);
@@ -589,8 +596,11 @@ function addMarkers(id) {
 
 function updateWeights(){
     for (x in tot_weights){
-        weights[x].setWeight();
-        tot_weights[x].setWeight(weights[x].getWeight());
+        //-1 is for the stores that are added manually
+        if(tot_weights[x].getID()!=-1){
+            weights[x].setWeight();
+            tot_weights[x].setWeight(weights[x].getWeight());
+        }
     }
     normalizeWeights();
 }
@@ -612,27 +622,36 @@ function normalizeWeights(){
                         }
                     }
                     break;
-                }            
+                }
             }
         }
     }
-    //dividing weight by sum
+    //dividing weight by min
     for (s in stores){
         if(stores[s]!=null){
-            //if the store is not in the weights import file assign zero
+            //if the imported store from the first file
+            // is not in the second file assign zero
+            if (stores[s].getSub()!=-1){
                 stores[s].setWeight(0);
-                for (x in tot_weights){
+            }
+            else{
+                sum +=stores[s].getWeight();
+                count++;
+            }
+            for (x in tot_weights){
+                if(tot_weights[x].getID()!=-1){
                     if(stores[s].getExt()==tot_weights[x].getID()){
                         var new_weight=tot_weights[x].getWeight()/min;
                         stores[s].setWeight(new_weight);
                         sum += new_weight;
                         break;
-                    }                
+                    }   
                 }
             }
+        }
     }
     norm_weight_ave=sum/count;
-    var output = "Min of weights: "+min +", Ave of weights " + norm_weight_ave;
+    var output = "Ave of weights " + norm_weight_ave;
     document.getElementById("panel").innerHTML = output;
 }
 
