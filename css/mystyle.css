@@ -15,15 +15,24 @@ body { height: 100%; margin: 10; padding: 0 }
       }
 #panel1 {
         cursor:pointer;
+        border-bottom:2px solid #ECEBEB;
         background-color:#C8C8C8;
+        display:none;
       }
 #panel44 {
         cursor:pointer;
+        border-bottom:2px solid #ECEBEB;
+        background-color:#C8C8C8;
+        display:none;
+      }
+#header1 {
         background-color:#C8C8C8;
       }
 #panel55 {
         cursor:pointer;
+        border-bottom:2px solid #ECEBEB;
         background-color:#C8C8C8;
+        display:none;
       }
 #panel6 {
         display:none;

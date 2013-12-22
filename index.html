@@ -61,6 +61,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var aveMarker;
     var openedInfoWindow = null;
     var map;
+    var DC;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
     var w_ambient=0,w_frozen=0,w_perishable=0;
     var markers = [];
@@ -314,11 +315,10 @@ function initialize() {
         <div id="panel55"></div>
         <div id="panel5"></div>
         <div id="panel2"></div>
-        <div id="panel6">   
-            Enter DC Location:<br>
+        <div id="panel6"> Enter DC Location:<br>
             <input type="text" placeholder="latitude" id="dc-lat">
             <input type="text" placeholder="longitude" id="dc-lng">
-            <button id="add-dc">Insert</button>
+            <button id="add-dc" onclick="addDC()">Insert</button><br>
         </div>
         
     </div>

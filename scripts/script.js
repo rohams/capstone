@@ -547,10 +547,68 @@ function addNode(map){
         stores.push(newStore);
         imported.push(newStore);
         tot_weights.push(total_w);
-        
         //add marker to markers array
         markers.push(marker);
 
+      } else {
+        alert('No results found');
+      }
+    } else {
+      alert('Geocoder failed due to: ' + status);
+    }
+  });
+}
+
+
+//add a single node
+function addDC(map){
+    
+    var infowindow = new google.maps.InfoWindow();
+    var input1 = document.getElementById('dc-lat').value;
+    var input2 = document.getElementById('dc-lng').value;
+    var lat = parseFloat(input1);
+    var lng = parseFloat(input2);
+    var latlng = new google.maps.LatLng(lat, lng);
+    var info = 'DC: ';
+    alert(lat)
+    alert(lng)
+                                aveMarker = new google.maps.Marker({                              
+                                     position: new google.maps.LatLng(lat, lng),
+                                     draggable: false,
+                                     map: map,
+                                     icon:image1,
+                                     title: 'Weighted Average',
+                                     zIndex: AVE_ZINDEX,
+                                     animation: google.maps.Animation.DROP,
+                                     clickable:false
+                                     });
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if (results[1]) {
+       var dcmarker = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                fillColor:'red',
+                scale: 7
+            },
+            animation: google.maps.Animation.DROP
+        });
+        infowindow.setContent(info + results[1].formatted_address);
+        infowindow.open(map, dcmarker);
+        
+        google.maps.event.addListener(dcmarker, 'click', function() {
+                markerInfoWin(this);
+            });
+
+        //Add listeners for Removing dc
+         google.maps.event.addListener(dcmarker, 'dblclick', function() {
+           removeMarker(this);
+        });
+        DC=new Node(lat,lng);
+        //add marker to markers array
+        markers.push(dcmarker);
       } else {
         alert('No results found');
       }
@@ -686,6 +744,7 @@ function setWeightUI(){
     var title=document.createTextNode("Week days");
     //title.style.fontWeight = "bold";
     document.getElementById("panel44").appendChild(title);
+    document.getElementById("panel44").style.display = 'block'; 
     for (i=0;i<days.length; i++){
                 var node = document.createElement("DIV");
                 node.id = 'day_' + i;
@@ -700,6 +759,7 @@ function setWeightUI(){
                 document.getElementById('panel4').style.marginBottom = '10px';
             };
      var title2=document.createTextNode("Commodities");
+     document.getElementById("panel55").style.display = 'block'; 
      document.getElementById("panel55").appendChild(title2);
      for (i=0;i<cmds.length; i++){
                 var node = document.createElement("DIV");
