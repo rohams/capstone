@@ -330,8 +330,8 @@ function getEllipse(foci,map){
                             break;
                         }				
                 }
-        }
-        
+      }     
+      
       if(ellipse[ellipse.length-1]!=undefined)
       {
          var final_lat = ellipse[ellipse.length-1].getLat();
@@ -500,7 +500,7 @@ function removeMarkers(id){
 //remove a single marker
 function removeMarker(marker){
     marker_id = markers.indexOf(marker);
-    var x = "Successfully removed store at (" + stores[marker_id].getLat() + ", " + stores[marker_id].getLng() + ")";
+    var x = "Removed a store at (" + stores[marker_id].getLat() + ", " + stores[marker_id].getLng() + ")";
     marker.setMap(null);
     stores[marker_id] = null;
     markers[marker_id] = null;    
@@ -560,55 +560,50 @@ function addNode(map){
 }
 
 
-//add a single node
+//add a DC node
 function addDC(map){
-    
+    removeLastDraw();
+    var panel7=true;
+    if(typeof(dcmarker) != "undefined"){
+        dcmarker.setMap(null);
+    }  
     var infowindow = new google.maps.InfoWindow();
     var input1 = document.getElementById('dc-lat').value;
     var input2 = document.getElementById('dc-lng').value;
     var lat = parseFloat(input1);
     var lng = parseFloat(input2);
     var latlng = new google.maps.LatLng(lat, lng);
-    var info = 'DC: ';
-    alert(lat)
-    alert(lng)
-                                aveMarker = new google.maps.Marker({                              
-                                     position: new google.maps.LatLng(lat, lng),
-                                     draggable: false,
-                                     map: map,
-                                     icon:image1,
-                                     title: 'Weighted Average',
-                                     zIndex: AVE_ZINDEX,
-                                     animation: google.maps.Animation.DROP,
-                                     clickable:false
-                                     });
+    var info = 'Distribution Center: ';
     geocoder.geocode({'latLng': latlng}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
       if (results[1]) {
-       var dcmarker = new google.maps.Marker({
+         if(panel7){
+            document.getElementById("panel7").style.display = 'block';
+            panel7=false;
+        }  
+        dcmarker = new google.maps.Marker({
             position: latlng,
             map: map,
             icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                fillColor:'red',
-                scale: 7
-            },
+                        path: google.maps.SymbolPath.CIRCLE,
+                        strokeColor: 'red',
+                        fillOpacity: 0.8,
+                        scale: 6
+                      },
             animation: google.maps.Animation.DROP
         });
+
         infowindow.setContent(info + results[1].formatted_address);
         infowindow.open(map, dcmarker);
-        
-        google.maps.event.addListener(dcmarker, 'click', function() {
-                markerInfoWin(this);
-            });
-
-        //Add listeners for Removing dc
+        //Add listeners for Removing markers
          google.maps.event.addListener(dcmarker, 'dblclick', function() {
-           removeMarker(this);
+        dcmarker.setMap(null);
+        var x = "Removed the DC";
+        document.getElementById("panel").innerHTML = x;
+        document.getElementById("panel7").style.display = 'none'; 
+        panel7=true;
         });
-        DC=new Node(lat,lng);
-        //add marker to markers array
-        markers.push(dcmarker);
+        DC = new Node(lat,lng);       
       } else {
         alert('No results found');
       }
@@ -713,6 +708,37 @@ function normalizeWeights(){
     document.getElementById("panel").innerHTML = output;
 }
 
+function nodeToRemove(){
+    var max=0;
+    var mymarker;
+    var node;
+    for (x in stores){
+        if (stores[x] != null) {
+            node=new Node(stores[x].getLat(),stores[x].getLng());
+            var temp =stores[x].getWeight()*distance(node,DC);
+            if (temp>max){
+                max=temp;
+                mymarker=markers[x];
+            }
+        }
+    }
+    return mymarker;
+}
+
+function bounceNextNode(){
+    var mymarker=nodeToRemove();
+    toggleBounce(mymarker);
+    
+}
+
+function toggleBounce(mymarker) {
+
+  if (mymarker.getAnimation() != null) {
+    mymarker.setAnimation(null);
+  } else {
+    mymarker.setAnimation(google.maps.Animation.BOUNCE);
+  }
+}
 
 //info window for each marker
 function markerInfoWin(marker){
@@ -774,6 +800,5 @@ function setWeightUI(){
                 node.appendChild(textnode); 
                 document.getElementById('panel5').style.marginBottom = '10px';
             };
-    
-    
+       
 };

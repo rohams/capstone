@@ -34,7 +34,14 @@ body { height: 100%; margin: 10; padding: 0 }
         background-color:#C8C8C8;
         display:none;
       }
+#panel66 {
+        background-color:#C8C8C8;
+        margin-bottom:10px;
+      }
 #panel6 {
+        display:none;
+      }
+#panel7 {
         display:none;
       }
 .side-panel {
@@ -80,7 +87,7 @@ body { height: 100%; margin: 10; padding: 0 }
     background-color: #FFFFFF;
     }
     
-#add-dc {
+#insert-dc {
     cursor: pointer;
     float: left;
     margin: 4px 2px 5px 2px;
@@ -88,8 +95,31 @@ body { height: 100%; margin: 10; padding: 0 }
     width: 80px;
     border: 1px solid #999;
     background-color: #FFFFFF;
+    margin-right: 70px;
+    }
+    
+ #opt1 {
+    cursor: pointer;
+    float: left;
+    margin: 4px 2px 5px 2px;
+    height: 20px;
+    width: 140px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    margin-right: 70px;
     }
 
+ #opt2 {
+    cursor: pointer;
+    float: left;
+    margin: 4px 2px 5px 2px;
+    height: 20px;
+    width: 140px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    margin-right: 70px;
+    }
+    
 #upload-wrap {
     float: left;
     height: 30px;

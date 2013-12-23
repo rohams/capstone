@@ -15,9 +15,9 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 
   $(document).ready(function() {
  $('body').on("click", '#control4', function() {
-     removeLastDraw(); 
      //$("#panel6").slideToggle("fast");
-     document.getElementById("panel6").style.display = 'block'; 
+     document.getElementById("panel6").style.display = 'block';
+     
   });
   $('body').on("click", '#panel1', function() {
      $("#panel3").slideToggle("fast");
@@ -66,6 +66,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var w_ambient=0,w_frozen=0,w_perishable=0;
     var markers = [];
     var FW_marker;
+    var dcmarker;
 
     // initialize the map    
 function initialize() {
@@ -268,7 +269,7 @@ function initialize() {
                             parent.removeChild(div);
                             addAppend = false;
                             }                                
-                            }                                          
+                            } 
                                          });
        // Find Average
     google.maps.event.addDomListener(control2, 'click', function() {                        
@@ -315,12 +316,18 @@ function initialize() {
         <div id="panel55"></div>
         <div id="panel5"></div>
         <div id="panel2"></div>
-        <div id="panel6"> Enter DC Location:<br>
+        <div id="panel6"> 
+            <div id="panel66">Store Optimization</div>
+            Enter DC Location:<br>
             <input type="text" placeholder="latitude" id="dc-lat">
             <input type="text" placeholder="longitude" id="dc-lng">
-            <button id="add-dc" onclick="addDC()">Insert</button><br>
+            <button id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
+            <div id="panel7">Select the option: <br>
+                <button id="opt1" onclick="bounceNextNode()">Remove next node?</button>
+                <button id="opt2">Add next node?</button>
+                <button id="opt2">Store grouping?</button>
+            </div>
         </div>
-        
     </div>
     <div id="panel" style="margin-left: -52px"></div>
     <div id="map-canvas"></div>
