@@ -323,9 +323,14 @@ function initialize() {
             <input type="text" placeholder="longitude" id="dc-lng">
             <button id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
             <div id="panel7">Select the option: <br>
-                <button id="opt1" onclick="bounceNextNode()">Remove next node?</button>
-                <button id="opt2">Add next node?</button>
-                <button id="opt2">Store grouping?</button>
+                <div class="styled-select">
+                <select id="opts" onchange="selOption()">
+                    <option>Remove next node</option>
+                    <option>Add next node</option>  
+                    <option>Store Grouping</option>
+                  </select>
+                  </div>
+               <div id="panel8"><button id="opt1" onclick="bounceNextNode()">Indicate</button></div>
             </div>
         </div>
     </div>

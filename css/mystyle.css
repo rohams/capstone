@@ -56,6 +56,17 @@ body { height: 100%; margin: 10; padding: 0 }
         font-size:12x;
         padding: 5;
       }
+   
+select {
+    cursor: pointer;
+    float: left;
+    margin: 4px 2px 5px 2px;
+    height: 20px;
+    width: 140px;
+    border: 1px solid #999;
+    background-color: #FFFFFF;
+    margin-right: 70px;
+}
 
 #inputs {
       position: absolute;
@@ -74,6 +85,7 @@ body { height: 100%; margin: 10; padding: 0 }
     height: 20px;
     width: 80px;
     border: 1px solid #999;
+    margin-right: 70px;
     background-color: #FFFFFF;
     }
     
@@ -103,7 +115,7 @@ body { height: 100%; margin: 10; padding: 0 }
     float: left;
     margin: 4px 2px 5px 2px;
     height: 20px;
-    width: 140px;
+    width: 80px;
     border: 1px solid #999;
     background-color: #FFFFFF;
     margin-right: 70px;

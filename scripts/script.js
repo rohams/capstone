@@ -740,6 +740,21 @@ function toggleBounce(mymarker) {
   }
 }
 
+function selOption()
+{
+    var mylist=document.getElementById("opts");
+    var option=mylist.options[mylist.selectedIndex].text;
+    if (option=="Add next node"){
+        document.getElementById("panel8").style.display = 'none'; 
+    }
+    if (option=="Remove next node"){
+        document.getElementById("panel8").style.display = 'block'; 
+    }
+    if (option=="Store Grouping"){
+        document.getElementById("panel8").style.display = 'none'; 
+    }
+}
+
 //info window for each marker
 function markerInfoWin(marker){
 	if (openedInfoWindow != null) {
