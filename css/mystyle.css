@@ -19,13 +19,8 @@ body { height: 100%; margin: 10; padding: 0 }
         background-color:#C8C8C8;
         display:none;
       }
-#panel44 {
-        cursor:pointer;
-        border-bottom:2px solid #ECEBEB;
-        background-color:#C8C8C8;
-        display:none;
-      }
-#panel99 {
+
+.collapsable {
         cursor:pointer;
         border-bottom:2px solid #ECEBEB;
         background-color:#C8C8C8;
@@ -34,30 +29,12 @@ body { height: 100%; margin: 10; padding: 0 }
 #header1 {
         background-color:#C8C8C8;
       }
-#panel55 {
-        cursor:pointer;
-        border-bottom:2px solid #ECEBEB;
-        background-color:#C8C8C8;
-        display:none;
-      }
-#panel66 {
+
+.heading {
         background-color:#C8C8C8;
         margin-bottom:10px;
       }
-#panel6 {
-        display:none;
-      }
-#panel10 {
-        display:none;
-      }
-#panel22 {
-        background-color:#C8C8C8;
-        margin-bottom:10px;
-      }
-#panel2 {
-        display:none;
-      }
-#panel7 {
+.panel {
         display:none;
       }
 .side-panel {
@@ -94,58 +71,16 @@ select {
       padding: 1;
 
     }
-#draw {
-    cursor: pointer;
-    float: left;
-    margin: 4px 2px 5px 2px;
-    height: 20px;
-    width: 80px;
-    border: 1px solid #999;
-    margin-right: 70px;
-    background-color: #FFFFFF;
-    }
-    
-#add {
-    cursor: pointer;
-    float: left;
-    margin: 4px 2px 5px 2px;
-    height: 20px;
-    width: 80px;
-    border: 1px solid #999;
-    background-color: #FFFFFF;
-    }
-    
-#insert-dc {
-    cursor: pointer;
-    float: left;
-    margin: 4px 2px 5px 2px;
-    height: 20px;
-    width: 80px;
-    border: 1px solid #999;
-    background-color: #FFFFFF;
-    margin-right: 70px;
-    }
-    
- #opt1 {
-    cursor: pointer;
-    float: left;
-    margin: 4px 2px 5px 2px;
-    height: 20px;
-    width: 80px;
-    border: 1px solid #999;
-    background-color: #FFFFFF;
-    margin-right: 70px;
-    }
 
- #opt2 {
+.panel-button {
     cursor: pointer;
     float: left;
     margin: 4px 2px 5px 2px;
     height: 20px;
-    width: 140px;
+    width: 80px;
     border: 1px solid #999;
-    background-color: #FFFFFF;
     margin-right: 70px;
+    background-color: #FFFFFF;
     }
     
 #upload-wrap {
@@ -164,32 +99,9 @@ select {
     border: 1px solid #000;
     background-color: #FFFFFF;
     border-radius: 0px 0px 0px 0px;
-    }
-
-#lat {width: 136px;
-      margin-left:2px;
-      margin-right:2px;
-    }
-#lng {width: 136px;
-      margin-left:2px;
-      margin-right:2px;
-    }
-#dc-lat {width: 136px;
-      margin-left:2px;
-      margin-right:2px;
-    }
-#dc-lng {width: 136px;
-      margin-left:2px;
-      margin-right:2px;
-    }
-#weight {width: 136px;
-      margin-left:2px;
-      margin-right:2px;
-    }
-#cost {width: 136px;
-      margin-left:2px;
-    }
-#coststep {width: 136px;
+    }    
+    
+.panel-textb {width: 136px;
       margin-left:2px;
       margin-right:2px;
     }

@@ -14,24 +14,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 <script type="text/javascript">
 
   $(document).ready(function() {
- $('body').on("click", '#control3', function() {
-     //$("#panel6").slideToggle("fast");
-     document.getElementById("panel10").style.display = 'block';
-     
-  });
-  
-   $('body').on("click", '#control1', function() {
-     //$("#panel6").slideToggle("fast");
-     document.getElementById("panel2").style.display = 'block';
-     
-  });
-  
-   $('body').on("click", '#control4', function() {
-     //$("#panel6").slideToggle("fast");
-     document.getElementById("panel6").style.display = 'block';
-     
-  });
-  
+ 
   $('body').on("click", '#panel1', function() {
      $("#panel3").slideToggle("fast");
      //document.getElementById("panel6").style.display = 'block'; 
@@ -369,7 +352,7 @@ function initialize() {
 
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {                        
-                            //REMOVE STORE OPT ELEMENTs
+                            document.getElementById("panel2").style.display = 'block';
                             document.getElementById("panel6").style.display = 'none'; 
                             document.getElementById("panel10").style.display = 'none';                          
                       });
@@ -377,12 +360,14 @@ function initialize() {
                                          
     // Add a store
     google.maps.event.addDomListener(control3, 'click', function() {
+                            document.getElementById("panel10").style.display = 'block';
                             document.getElementById("panel2").style.display = 'none'; 
                             document.getElementById("panel6").style.display = 'none';  
                                          });
                                           
     // Store opt
     google.maps.event.addDomListener(control4, 'click', function() {
+                            document.getElementById("panel6").style.display = 'block';
                             document.getElementById("panel2").style.display = 'none'; 
                             document.getElementById("panel10").style.display = 'none';  
                                          });
@@ -426,32 +411,32 @@ function initialize() {
     <div class="side-panel">
         <div id="panel1"></div>
         <div id="panel3"></div>
-        <div id="panel44"></div>
+        <div class="collapsable" id="panel44"></div>
         <div id="panel4"></div>
-        <div id="panel55"></div>
+        <div class="collapsable" id="panel55"></div>
         <div id="panel5"></div>
-        <div id="panel99"></div>
+        <div class="collapsable" id="panel99"></div>
         <div id="panel9"></div>
-        <div id="panel10">
-            <div id="panel22">Add a New Store</div>
-            <input type="text" placeholder="latitude" id="lat">
-            <input type="text" placeholder="longitude" id="lng">
-            <input type="text" placeholder="weight" id="weight">
-            <button id="add">Add it</button>
+        <div class="panel" id="panel10">
+            <div class="heading">Add a New Store</div>
+            <input type="text" placeholder="latitude" class="panel-textb" id="lat">
+            <input type="text" placeholder="longitude" class="panel-textb" id="lng">
+            <input type="text" placeholder="weight" class="panel-textb" id="weight">
+            <button class="panel-button" id="add">Insert</button>
         </div>
-        <div id="panel2">
-            <div id="panel22">Draw Ellipses</div>
-            <input type="text" id="cost" placeholder="initial cost">
-            <input type="text" id="coststep" placeholder="cost step">
-            <button id="draw">Enter</button>
+        <div class="panel" id="panel2">
+            <div class="heading">Draw Ellipses</div>
+            <input type="text" class="panel-textb" id="cost" placeholder="initial cost">
+            <input type="text" class="panel-textb" id="coststep" placeholder="cost step">
+            <button class="panel-button" id="draw">Enter</button>
         </div>
-        <div id="panel6"> 
-            <div id="panel66">Store Optimization</div>
+        <div class="panel" id="panel6"> 
+            <div class="heading">Store Optimization</div>
             Enter DC Location:<br>
-            <input type="text" placeholder="latitude" id="dc-lat">
-            <input type="text" placeholder="longitude" id="dc-lng">
-            <button id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
-            <div id="panel7">Select the option: <br>
+            <input type="text" placeholder="latitude" class="panel-textb" id="dc-lat">
+            <input type="text" placeholder="longitude" class="panel-textb" id="dc-lng">
+            <button class="panel-button" id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
+            <div class="panel" id="panel7">Select the option: <br>
                 <div class="styled-select">
                 <select id="opts" onchange="selOption()">
                     <option>Remove next node</option>
@@ -459,7 +444,7 @@ function initialize() {
                     <option>Store Grouping</option>
                   </select>
                   </div>
-               <div id="panel8"><button id="opt1" onclick="bounceNextNode()">Find</button></div>
+               <div id="panel8"><button class="panel-button" id="opt1" onclick="bounceNextNode()">Find</button></div>
             </div>
         </div>
     </div>
