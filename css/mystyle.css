@@ -47,6 +47,16 @@ body { height: 100%; margin: 10; padding: 0 }
 #panel6 {
         display:none;
       }
+#panel10 {
+        display:none;
+      }
+#panel22 {
+        background-color:#C8C8C8;
+        margin-bottom:10px;
+      }
+#panel2 {
+        display:none;
+      }
 #panel7 {
         display:none;
       }

@@ -14,11 +14,24 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 <script type="text/javascript">
 
   $(document).ready(function() {
- $('body').on("click", '#control4', function() {
+ $('body').on("click", '#control3', function() {
+     //$("#panel6").slideToggle("fast");
+     document.getElementById("panel10").style.display = 'block';
+     
+  });
+  
+   $('body').on("click", '#control1', function() {
+     //$("#panel6").slideToggle("fast");
+     document.getElementById("panel2").style.display = 'block';
+     
+  });
+  
+   $('body').on("click", '#control4', function() {
      //$("#panel6").slideToggle("fast");
      document.getElementById("panel6").style.display = 'block';
      
   });
+  
   $('body').on("click", '#panel1', function() {
      $("#panel3").slideToggle("fast");
      //document.getElementById("panel6").style.display = 'block'; 
@@ -356,118 +369,22 @@ function initialize() {
 
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {                        
-                          if(!drawAppend){
                             //REMOVE STORE OPT ELEMENTs
                             document.getElementById("panel6").style.display = 'none'; 
-                            if(addAppend){
-                            //REMOVE ADD A NODE ELEMENTS
-                            var div = document.getElementById("add_node");
-                            if (div!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div);
-                            addAppend = false;
-                            }
-                            }
-                            // ADD NEW ELEMENTS
-                            var button = document.createElement("BUTTON");
-                            button.innerHTML = 'Enter';
-                            button.id = "draw";
-                            //LOADING
-                            var textnode=document.createTextNode("Loading...");                         
-                            var loadprt = document.getElementById("panel2");
-                            button.onclick = function(){
-                                document.getElementById("panel2").appendChild(textnode);
-                                setTimeout(function() {                                   
-                                    getEllipse(stores, map);
-                                    loadprt.removeChild(textnode);
-                                    
-                                }, 0);
-                              };
-                            var node = document.createElement("DIV");
-                            node.id = "draw_ellipse";
-                            var input1 = document.createElement("input");
-                            input1.type = "text";
-                            input1.id = "cost";
-                            input1.placeholder="initial cost";                          
-                            var input2 = document.createElement("input");
-                            input2.type = "text";
-                            input2.id = "coststep";
-                            input2.placeholder="cost step";
-                            
-                            node.appendChild(input1);
-                            node.appendChild(input2);
-                            node.appendChild(button);
-                            document.getElementById("panel2").appendChild(node);
-                            drawAppend = true;
-                            }
-                          
+                            document.getElementById("panel10").style.display = 'none';                          
                       });
     
                                          
     // Add a store
     google.maps.event.addDomListener(control3, 'click', function() {
-                            if(!addAppend){
-                            if(drawAppend){
-                            //REMOVE DRAW ELLIPSE ELEMENT
-                            var div = document.getElementById("draw_ellipse");
-                            if (div!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div);
-                            drawAppend = false;
-                            }
-                            }
-                            //REMOVE STORE OPT ELEMENTs
-                            document.getElementById("panel6").style.display = 'none';                         
-                            //ADD NEW ELEMENTS
-                            var node = document.createElement("DIV");
-                            node.id = "add_node";
-                            var button = document.createElement("BUTTON");
-                            button.innerHTML = 'Add it';
-                            button.id = "add";
-                            button.onclick = function(){
-                            addNode(map);
-                              };
-                            var lat = document.createElement("input");
-                            lat.type = "text";
-                            lat.placeholder="latitude";
-                            lat.id = "lat";
-                            var lng = document.createElement("input");
-                            lng.type = "text";
-                            lng.placeholder="longitude";
-                            lng.id = "lng";
-                            var weight = document.createElement("input");
-                            weight.type = "text";
-                            weight.placeholder="weight";
-                            weight.id = "weight";
-                            node.appendChild(lat);
-                            node.appendChild(lng);
-                            node.appendChild(weight);
-                            node.appendChild(button);
-                            document.getElementById("panel2").appendChild(node);
-                            addAppend = true;
-                            }
+                            document.getElementById("panel2").style.display = 'none'; 
+                            document.getElementById("panel6").style.display = 'none';  
                                          });
                                           
     // Store opt
     google.maps.event.addDomListener(control4, 'click', function() {
-                            if(drawAppend){
-                            //REMOVE DRAW ELLIPSE ELEMENT
-                            var div = document.getElementById("draw_ellipse");
-                            if (div!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div);
-                            drawAppend = false;
-                            }
-                            }
-                            if(addAppend){
-                            //REMOVE ADD A NODE ELEMENTS
-                            var div = document.getElementById("add_node");
-                            if (div!=null){
-                            var parent = document.getElementById("panel2");
-                            parent.removeChild(div);
-                            addAppend = false;
-                            }                                
-                            } 
+                            document.getElementById("panel2").style.display = 'none'; 
+                            document.getElementById("panel10").style.display = 'none';  
                                          });
        // Find Average
     google.maps.event.addDomListener(control2, 'click', function() {                        
@@ -515,7 +432,19 @@ function initialize() {
         <div id="panel5"></div>
         <div id="panel99"></div>
         <div id="panel9"></div>
-        <div id="panel2"></div>
+        <div id="panel10">
+            <div id="panel22">Add a New Store</div>
+            <input type="text" placeholder="latitude" id="lat">
+            <input type="text" placeholder="longitude" id="lng">
+            <input type="text" placeholder="weight" id="weight">
+            <button id="add">Add it</button>
+        </div>
+        <div id="panel2">
+            <div id="panel22">Draw Ellipses</div>
+            <input type="text" id="cost" placeholder="initial cost">
+            <input type="text" id="coststep" placeholder="cost step">
+            <button id="draw">Enter</button>
+        </div>
         <div id="panel6"> 
             <div id="panel66">Store Optimization</div>
             Enter DC Location:<br>
