@@ -19,13 +19,13 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
      $("#panel3").slideToggle("fast");
      //document.getElementById("panel6").style.display = 'block'; 
   });
-    $('body').on("click", '#panel44', function() {
+    $('body').on("click", '#heading4', function() {
      $("#panel4").slideToggle("fast");
   });
-    $('body').on("click", '#panel55', function() {
+    $('body').on("click", '#heading5', function() {
      $("#panel5").slideToggle("fast");
   });
-      $('body').on("click", '#panel99', function() {
+      $('body').on("click", '#heading9', function() {
      $("#panel9").slideToggle("fast");
   });
 });
@@ -255,6 +255,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var openedInfoWindow = null;
     var map;
     var DC;
+    var circle;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
     var w_ambient=0,w_frozen=0,w_perishable=0;
     var v_ambient=0,v_frozen=0,v_perishable=0;
@@ -307,7 +308,14 @@ function initialize() {
                                   infoWindow.setPosition(event.latLng);
                                   infoWindow.open(map);
                                   openedInfoWindow = infoWindow;
-                                  });                             
+                                  }); 
+    
+    circle = new google.maps.Circle({
+        center: map.getCenter(),
+        editable: true,
+        fillOpacity:0.1,
+        radius:50000 
+    });
 
     //set controls
     var control1 = document.createElement('DIV');
@@ -354,7 +362,8 @@ function initialize() {
     google.maps.event.addDomListener(control1, 'click', function() {                        
                             document.getElementById("panel2").style.display = 'block';
                             document.getElementById("panel6").style.display = 'none'; 
-                            document.getElementById("panel10").style.display = 'none';                          
+                            document.getElementById("panel10").style.display = 'none';
+                            circle.setVisible(false);
                       });
     
                                          
@@ -362,14 +371,16 @@ function initialize() {
     google.maps.event.addDomListener(control3, 'click', function() {
                             document.getElementById("panel10").style.display = 'block';
                             document.getElementById("panel2").style.display = 'none'; 
-                            document.getElementById("panel6").style.display = 'none';  
+                            document.getElementById("panel6").style.display = 'none';
+                            circle.setVisible(false);
                                          });
                                           
     // Store opt
     google.maps.event.addDomListener(control4, 'click', function() {
                             document.getElementById("panel6").style.display = 'block';
                             document.getElementById("panel2").style.display = 'none'; 
-                            document.getElementById("panel10").style.display = 'none';  
+                            document.getElementById("panel10").style.display = 'none';
+                            selOption();
                                          });
        // Find Average
     google.maps.event.addDomListener(control2, 'click', function() {                        
@@ -411,11 +422,11 @@ function initialize() {
     <div class="side-panel">
         <div id="panel1"></div>
         <div id="panel3"></div>
-        <div class="collapsable" id="panel44"></div>
+        <div class="collapsable" id="heading4"></div>
         <div id="panel4"></div>
-        <div class="collapsable" id="panel55"></div>
+        <div class="collapsable" id="heading5"></div>
         <div id="panel5"></div>
-        <div class="collapsable" id="panel99"></div>
+        <div class="collapsable" id="heading9"></div>
         <div id="panel9"></div>
         <div class="panel" id="panel10">
             <div class="heading">Add a New Store</div>
@@ -437,14 +448,13 @@ function initialize() {
             <input type="text" placeholder="longitude" class="panel-textb" id="dc-lng">
             <button class="panel-button" id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
             <div class="panel" id="panel7">Select the option: <br>
-                <div class="styled-select">
-                <select id="opts" onchange="selOption()">
-                    <option>Remove next node</option>
-                    <option>Add next node</option>  
-                    <option>Store Grouping</option>
-                  </select>
-                  </div>
-               <div id="panel8"><button class="panel-button" id="opt1" onclick="bounceNextNode()">Find</button></div>
+                    <select id="opts" onchange="selOption()">
+                        <option>Remove next node</option>
+                        <option>Add next node</option>  
+                        <option>Store Grouping</option>
+                      </select>
+               <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
+               <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
             </div>
         </div>
     </div>

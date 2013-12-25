@@ -56,9 +56,6 @@ select {
     margin: 4px 2px 5px 2px;
     height: 20px;
     width: 140px;
-    border: 1px solid #999;
-    background-color: #FFFFFF;
-    margin-right: 70px;
 }
 
 #inputs {

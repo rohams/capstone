@@ -671,7 +671,7 @@ function addMarkers(id) {
             });
 
             markers[i]=marker;
-            var ave_point = getAverage(imported);
+            var ave_point = getAverage(stores);
             var new_center = new google.maps.LatLng(ave_point.getLat(), ave_point.getLng());
             // Does this code suppose to make the ave_point as the center of the screen with proper zoom level?
             map.setCenter(new_center);
@@ -764,7 +764,7 @@ function bounceNextNode(){
     toggleBounce(mymarker);
     
 }
-
+             
 function toggleBounce(mymarker) {
 
   if (mymarker.getAnimation() != null) {
@@ -780,12 +780,20 @@ function selOption()
     var option=mylist.options[mylist.selectedIndex].text;
     if (option=="Add next node"){
         document.getElementById("panel8").style.display = 'none'; 
+        document.getElementById("panel11").style.display = 'block'; 
+        circle.setVisible(true);
+        circle.setMap(map);
     }
+    
     if (option=="Remove next node"){
         document.getElementById("panel8").style.display = 'block'; 
+        document.getElementById("panel11").style.display = 'none';
+        circle.setVisible(false);
     }
     if (option=="Store Grouping"){
-        document.getElementById("panel8").style.display = 'none'; 
+        document.getElementById("panel8").style.display = 'none';
+        document.getElementById("panel11").style.display = 'none';
+        circle.setVisible(false);
     }
 }
 
@@ -818,8 +826,8 @@ function setWeightUI(){
 
     var title=document.createTextNode("Week days");
     //title.style.fontWeight = "bold";
-    document.getElementById("panel44").appendChild(title);
-    document.getElementById("panel44").style.display = 'block'; 
+    document.getElementById("heading4").appendChild(title);
+    document.getElementById("heading4").style.display = 'block'; 
     for (i=0;i<days.length; i++){
                 var node = document.createElement("DIV");
                 node.id = 'day_' + i;
@@ -834,8 +842,8 @@ function setWeightUI(){
                 document.getElementById('panel4').style.marginBottom = '10px';
             };
      var title2=document.createTextNode("Commodity by weight");
-     document.getElementById("panel55").style.display = 'block'; 
-     document.getElementById("panel55").appendChild(title2);
+     document.getElementById("heading5").style.display = 'block'; 
+     document.getElementById("heading5").appendChild(title2);
      for (i=0;i<cmds.length; i++){
                 var node = document.createElement("DIV");
                 node.id = 'cmd_' + i;
@@ -850,8 +858,8 @@ function setWeightUI(){
                 document.getElementById('panel5').style.marginBottom = '10px';
             };
      var title3=document.createTextNode("Commodity by volume");
-     document.getElementById("panel99").style.display = 'block'; 
-     document.getElementById("panel99").appendChild(title3);
+     document.getElementById("heading9").style.display = 'block'; 
+     document.getElementById("heading9").appendChild(title3);
      for (i=0;i<cmds.length; i++){
                 var node = document.createElement("DIV");
                 node.id = 'cmd_c_' + i;
