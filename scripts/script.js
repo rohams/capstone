@@ -38,7 +38,7 @@ function Tot_weight(id,weight){
 
 
 //constructor 
-function Weight(id,A1,A2,A3,A4,A5,A6,A7,F1,F2,F3,F4,F5,F6,F7,P1,P2,P3,P4,P5,P6,P7){
+function Weight(id,A1,A2,A3,A4,A5,A6,A7,F1,F2,F3,F4,F5,F6,F7,P1,P2,P3,P4,P5,P6,P7,AC1,AC2,AC3,AC4,AC5,AC6,AC7,FC1,FC2,FC3,FC4,FC5,FC6,FC7,PC1,PC2,PC3,PC4,PC5,PC6,PC7){
     
     this.id=id;
     this.A1=A1;
@@ -65,16 +65,50 @@ function Weight(id,A1,A2,A3,A4,A5,A6,A7,F1,F2,F3,F4,F5,F6,F7,P1,P2,P3,P4,P5,P6,P
     this.P6=P6;
     this.P7=P7;
     
+    this.AC1=AC1;
+    this.AC2=AC2;
+    this.AC3=AC3;
+    this.AC4=AC4;
+    this.AC5=AC5;
+    this.AC6=AC6;
+    this.AC7=AC7;
+    
+    this.FC1=FC1;
+    this.FC2=FC2;
+    this.FC3=FC3;
+    this.FC4=FC4;
+    this.FC5=FC5;
+    this.FC6=FC6;
+    this.FC7=FC7;
+    
+    this.PC1=PC1;
+    this.PC2=PC2;
+    this.PC3=PC3;
+    this.PC4=PC4;
+    this.PC5=PC5;
+    this.PC6=PC6;
+    this.PC7=PC7;
+    
     this.A=0;
     this.F=0;
     this.P=0;
+    
+    this.AC=0;
+    this.FC=0;
+    this.PC=0;
+    
     this.total=0;
     
     this.setWeight= function(){    
         this.A=(this.A1*sun)+(this.A2*mon)+(this.A3*tue)+(this.A4*wed)+(this.A5*thu)+(this.A6*fri)+(this.A7*sat);
         this.F=(this.F1*sun)+(this.F2*mon)+(this.F3*tue)+(this.F4*wed)+(this.F5*thu)+(this.F6*fri)+(this.F7*sat);
         this.P=(this.P1*sun)+(this.P2*mon)+(this.P3*tue)+(this.P4*wed)+(this.P5*thu)+(this.P6*fri)+(this.P7*sat);
-        this.total=this.A*w_ambient+this.F*w_frozen+this.P*w_perishable;
+        
+        this.AC=(this.AC1*sun)+(this.AC2*mon)+(this.AC3*tue)+(this.AC4*wed)+(this.AC5*thu)+(this.AC6*fri)+(this.AC7*sat);
+        this.FC=(this.FC1*sun)+(this.FC2*mon)+(this.FC3*tue)+(this.FC4*wed)+(this.FC5*thu)+(this.FC6*fri)+(this.FC7*sat);
+        this.PC=(this.PC1*sun)+(this.PC2*mon)+(this.PC3*tue)+(this.PC4*wed)+(this.PC5*thu)+(this.PC6*fri)+(this.PC7*sat);
+        
+        this.total=this.A*w_ambient+this.F*w_frozen+this.P*w_perishable+this.AC*v_ambient+this.FC*v_frozen+this.PC*v_perishable;
     };
     
     this.getID = function()
@@ -799,7 +833,7 @@ function setWeightUI(){
                 node.appendChild(textnode); 
                 document.getElementById('panel4').style.marginBottom = '10px';
             };
-     var title2=document.createTextNode("Commodities");
+     var title2=document.createTextNode("Commodity by weight");
      document.getElementById("panel55").style.display = 'block'; 
      document.getElementById("panel55").appendChild(title2);
      for (i=0;i<cmds.length; i++){
@@ -814,6 +848,22 @@ function setWeightUI(){
                 node.appendChild(checkbox);
                 node.appendChild(textnode); 
                 document.getElementById('panel5').style.marginBottom = '10px';
+            };
+     var title3=document.createTextNode("Commodity by volume");
+     document.getElementById("panel99").style.display = 'block'; 
+     document.getElementById("panel99").appendChild(title3);
+     for (i=0;i<cmds.length; i++){
+                var node = document.createElement("DIV");
+                node.id = 'cmd_c_' + i;
+                var checkbox = document.createElement('input');
+                checkbox.type = "checkbox";
+                checkbox.value = i;
+                checkbox.id = 'ch_cmd_c'+ i;
+                var textnode=document.createTextNode(cmds[i]);
+                document.getElementById("panel9").appendChild(node);
+                node.appendChild(checkbox);
+                node.appendChild(textnode); 
+                document.getElementById('panel9').style.marginBottom = '10px';
             };
        
 };

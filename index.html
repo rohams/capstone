@@ -29,6 +29,203 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     $('body').on("click", '#panel55', function() {
      $("#panel5").slideToggle("fast");
   });
+      $('body').on("click", '#panel99', function() {
+     $("#panel9").slideToggle("fast");
+  });
+});
+
+   //sub-networks  
+  $('#sub_id0').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(0);
+    } else {
+        removeMarkers(0);
+    }
+});
+
+  $('#sub_id1').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(1);
+    } else {
+        removeMarkers(1);
+    }
+});
+
+  $('#sub_id2').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(2);
+    } else {
+        removeMarkers(2);
+    }
+});
+
+  $('#sub_id3').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(3);
+    } else {
+        removeMarkers(3);
+    }
+});
+
+  $('#sub_id4').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(4);
+    } else {
+        removeMarkers(4);
+    }
+});
+
+  $('#sub_id5').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(5);
+    } else {
+        removeMarkers(5);
+    }
+});
+
+  $('#sub_id6').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(6);
+    } else {
+        removeMarkers(6);
+    }
+});
+
+  $('#sub_id7').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(7);
+    } else {
+        removeMarkers(7);
+    }
+});
+
+  $('#sub_id8').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(8);
+    } else {
+        removeMarkers(8);
+    }
+});
+
+  $('#sub_id9').live('change', function(){
+    if($(this).is(':checked')){
+        addMarkers(9);
+    } else {
+        removeMarkers(9);
+    }
+});
+   //commodity
+  $('#ch_cmd_0').live('change', function(){
+    if($(this).is(':checked')){
+        w_ambient=1;
+    } else {
+        w_ambient=0;
+    }
+    updateWeights();
+});
+
+  $('#ch_cmd_1').live('change', function(){
+    if($(this).is(':checked')){
+        w_frozen =1;
+    } else {
+        w_frozen=0;
+    }
+    updateWeights();
+});
+
+  $('#ch_cmd_2').live('change', function(){
+    if($(this).is(':checked')){
+        w_perishable=1;
+    } else {
+        w_perishable=0;
+    }
+    updateWeights();
+});
+
+   //commodity by volume
+  $('#ch_cmd_c0').live('change', function(){
+    if($(this).is(':checked')){
+        v_ambient=1;
+    } else {
+        v_ambient=0;
+    }
+    updateWeights();
+});
+
+  $('#ch_cmd_c1').live('change', function(){
+    if($(this).is(':checked')){
+        v_frozen =1;
+    } else {
+        v_frozen=0;
+    }
+    updateWeights();
+});
+
+  $('#ch_cmd_c2').live('change', function(){
+    if($(this).is(':checked')){
+        v_perishable=1;
+    } else {
+        v_perishable=0;
+    }
+    updateWeights();
+});
+
+    //weekdays
+     $('#ch_day_0').live('change', function(){
+    if($(this).is(':checked')){
+        sun=1;
+    } else {
+        sun=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_1').live('change', function(){
+    if($(this).is(':checked')){
+        mon=1;
+    } else {
+        mon=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_2').live('change', function(){
+    if($(this).is(':checked')){
+        tue=1;
+    } else {
+        tue=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_3').live('change', function(){
+    if($(this).is(':checked')){
+        wed=1;
+    } else {
+        wed=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_4').live('change', function(){
+    if($(this).is(':checked')){
+        thu=1;
+    } else {
+        thu=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_5').live('change', function(){
+    if($(this).is(':checked')){
+        fri=1;
+    } else {
+        fri=0;
+    }
+    updateWeights();
+});
+     $('#ch_day_6').live('change', function(){
+    if($(this).is(':checked')){
+        sat=1;
+    } else {
+        sat=0;
+    }
+    updateWeights();
 });
             
     //****** global variables ******
@@ -64,6 +261,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var DC;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
     var w_ambient=0,w_frozen=0,w_perishable=0;
+    var v_ambient=0,v_frozen=0,v_perishable=0;
     var markers = [];
     var FW_marker;
     var dcmarker;
@@ -190,11 +388,11 @@ function initialize() {
                             var input1 = document.createElement("input");
                             input1.type = "text";
                             input1.id = "cost";
-                            input1.placeholder="initial cost, e.g. 500";                          
+                            input1.placeholder="initial cost";                          
                             var input2 = document.createElement("input");
                             input2.type = "text";
                             input2.id = "coststep";
-                            input2.placeholder="cost step, e.g. 50";
+                            input2.placeholder="cost step";
                             
                             node.appendChild(input1);
                             node.appendChild(input2);
@@ -315,6 +513,8 @@ function initialize() {
         <div id="panel4"></div>
         <div id="panel55"></div>
         <div id="panel5"></div>
+        <div id="panel99"></div>
+        <div id="panel9"></div>
         <div id="panel2"></div>
         <div id="panel6"> 
             <div id="panel66">Store Optimization</div>
@@ -330,7 +530,7 @@ function initialize() {
                     <option>Store Grouping</option>
                   </select>
                   </div>
-               <div id="panel8"><button id="opt1" onclick="bounceNextNode()">Indicate</button></div>
+               <div id="panel8"><button id="opt1" onclick="bounceNextNode()">Find</button></div>
             </div>
         </div>
     </div>

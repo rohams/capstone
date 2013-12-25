@@ -4,175 +4,6 @@
     }
   });
   
-    //TODO: make it dynamic 
-    //move this to another file
-    
-   //sub-networks  
-  $('#sub_id0').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(0);
-    } else {
-        removeMarkers(0);
-    }
-});
-
-  $('#sub_id1').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(1);
-    } else {
-        removeMarkers(1);
-    }
-});
-
-  $('#sub_id2').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(2);
-    } else {
-        removeMarkers(2);
-    }
-});
-
-  $('#sub_id3').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(3);
-    } else {
-        removeMarkers(3);
-    }
-});
-
-  $('#sub_id4').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(4);
-    } else {
-        removeMarkers(4);
-    }
-});
-
-  $('#sub_id5').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(5);
-    } else {
-        removeMarkers(5);
-    }
-});
-
-  $('#sub_id6').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(6);
-    } else {
-        removeMarkers(6);
-    }
-});
-
-  $('#sub_id7').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(7);
-    } else {
-        removeMarkers(7);
-    }
-});
-
-  $('#sub_id8').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(8);
-    } else {
-        removeMarkers(8);
-    }
-});
-
-  $('#sub_id9').live('change', function(){
-    if($(this).is(':checked')){
-        addMarkers(9);
-    } else {
-        removeMarkers(9);
-    }
-});
-   //commodity
-  $('#ch_cmd_0').live('change', function(){
-    if($(this).is(':checked')){
-        w_ambient=1;
-    } else {
-        w_ambient=0;
-    }
-    updateWeights();
-});
-
-  $('#ch_cmd_1').live('change', function(){
-    if($(this).is(':checked')){
-        w_frozen =1;
-    } else {
-        w_frozen=0;
-    }
-    updateWeights();
-});
-
-  $('#ch_cmd_2').live('change', function(){
-    if($(this).is(':checked')){
-        w_perishable=1;
-    } else {
-        w_perishable=0;
-    }
-    updateWeights();
-});
-
-    //weekdays
-     $('#ch_day_0').live('change', function(){
-    if($(this).is(':checked')){
-        sun=1;
-    } else {
-        sun=0;
-    }
-    updateWeights();
-});
-     $('#ch_day_1').live('change', function(){
-    if($(this).is(':checked')){
-        mon=1;
-    } else {
-        mon=0;
-    }
-    updateWeights();
-});
-     $('#ch_day_2').live('change', function(){
-    if($(this).is(':checked')){
-        tue=1;
-    } else {
-        tue=0;
-    }
-    updateWeights();
-});
-     $('#ch_day_3').live('change', function(){
-    if($(this).is(':checked')){
-        wed=1;
-    } else {
-        wed=0;
-    }
-    updateWeights();
-});
-     $('#ch_day_4').live('change', function(){
-    if($(this).is(':checked')){
-        thu=1;
-    } else {
-        thu=0;
-    }
-    updateWeights();
-});
-     $('#ch_day_5').live('change', function(){
-    if($(this).is(':checked')){
-        fri=1;
-    } else {
-        fri=0;
-    }
-    updateWeights();
-});
-     $('#ch_day_6').live('change', function(){
-    if($(this).is(':checked')){
-        sat=1;
-    } else {
-        sat=0;
-    }
-    updateWeights();
-});
-
   function isAPIAvailable() {
     // Check for the various File API support.
     if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -305,6 +136,31 @@
     var WT_P_5 = 20;
     var WT_P_6 = 21;
     var WT_P_7 = 22;
+    
+    var WT_A_1_C = 23;
+    var WT_A_2_C = 24;
+    var WT_A_3_C = 25;
+    var WT_A_4_C = 26;
+    var WT_A_5_C = 27;
+    var WT_A_6_C = 28;
+    var WT_A_7_C = 29;
+    
+    var WT_F_1_C = 30;
+    var WT_F_2_C = 31;
+    var WT_F_3_C = 32;
+    var WT_F_4_C = 33;
+    var WT_F_5_C = 34;
+    var WT_F_6_C = 35;
+    var WT_F_7_C = 36;
+    
+    var WT_P_1_C = 37;
+    var WT_P_2_C = 38;
+    var WT_P_3_C = 39;
+    var WT_P_4_C = 40;
+    var WT_P_5_C = 41;
+    var WT_P_6_C = 42;
+    var WT_P_7_C = 43;
+    
     var EXT = 1;
     //***********************
     var count;
@@ -322,7 +178,12 @@
                                             parseFloat(data[row][WT_A_5]),parseFloat(data[row][WT_A_6]),parseFloat(data[row][WT_A_7]),parseFloat(data[row][WT_F_1]),parseFloat(data[row][WT_F_2]),
                                             parseFloat(data[row][WT_F_3]),parseFloat(data[row][WT_F_4]),parseFloat(data[row][WT_F_5]),parseFloat(data[row][WT_F_6]),parseFloat(data[row][WT_F_7]),
                                             parseFloat(data[row][WT_P_1]),parseFloat(data[row][WT_P_2]),parseFloat(data[row][WT_P_3]),parseFloat(data[row][WT_P_4]),parseFloat(data[row][WT_P_5]),
-                                            parseFloat(data[row][WT_P_6]),parseFloat(data[row][WT_P_7]));
+                                            parseFloat(data[row][WT_P_6]),parseFloat(data[row][WT_P_7]),
+                                            parseFloat(data[row][WT_A_1_C]),parseFloat(data[row][WT_A_2_C]),parseFloat(data[row][WT_A_3_C]),parseFloat(data[row][WT_A_4_C]),parseFloat(data[row][WT_A_5_C]),
+                                            parseFloat(data[row][WT_A_6_C]),parseFloat(data[row][WT_A_7_C]),parseFloat(data[row][WT_F_1_C]),parseFloat(data[row][WT_F_2_C]),parseFloat(data[row][WT_F_3_C]),
+                                            parseFloat(data[row][WT_F_4_C]),parseFloat(data[row][WT_F_5_C]),parseFloat(data[row][WT_F_6_C]),parseFloat(data[row][WT_F_7_C]),parseFloat(data[row][WT_P_1_C]),
+                                            parseFloat(data[row][WT_P_2_C]),parseFloat(data[row][WT_P_3_C]),parseFloat(data[row][WT_P_4_C]),parseFloat(data[row][WT_P_5_C]),parseFloat(data[row][WT_P_6_C]),
+                                            parseFloat(data[row][WT_P_7_C]));
                     var total_w = new Tot_weight(data[row][EXT],0);
                     weights.push(weight);   
                     tot_weights.push(total_w);

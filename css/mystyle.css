@@ -25,6 +25,12 @@ body { height: 100%; margin: 10; padding: 0 }
         background-color:#C8C8C8;
         display:none;
       }
+#panel99 {
+        cursor:pointer;
+        border-bottom:2px solid #ECEBEB;
+        background-color:#C8C8C8;
+        display:none;
+      }
 #header1 {
         background-color:#C8C8C8;
       }
