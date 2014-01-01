@@ -15,9 +15,8 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
 
   $(document).ready(function() {
  
-  $('body').on("click", '#panel1', function() {
+    $('body').on("click", '#panel1', function() {
      $("#panel3").slideToggle("fast");
-     //document.getElementById("panel6").style.display = 'block'; 
   });
     $('body').on("click", '#heading4', function() {
      $("#panel4").slideToggle("fast");
@@ -25,7 +24,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     $('body').on("click", '#heading5', function() {
      $("#panel5").slideToggle("fast");
   });
-      $('body').on("click", '#heading9', function() {
+    $('body').on("click", '#heading9', function() {
      $("#panel9").slideToggle("fast");
   });
 });
@@ -409,6 +408,7 @@ function initialize() {
 
 
     google.maps.event.addDomListener(window, 'load', initialize);
+    var loading =document.createTextNode("Loading...");                         
 </script>
 </head>
 
@@ -433,13 +433,17 @@ function initialize() {
             <input type="text" placeholder="latitude" class="panel-textb" id="lat">
             <input type="text" placeholder="longitude" class="panel-textb" id="lng">
             <input type="text" placeholder="weight" class="panel-textb" id="weight">
-            <button class="panel-button" id="add">Insert</button>
+            <button class="panel-button" id="add" onclick="addNode(map)">Insert</button>
         </div>
         <div class="panel" id="panel2">
             <div class="heading">Draw Ellipses</div>
             <input type="text" class="panel-textb" id="cost" placeholder="initial cost">
             <input type="text" class="panel-textb" id="coststep" placeholder="cost step">
-            <button class="panel-button" id="draw">Enter</button>
+            <button class="panel-button" id="draw" onclick="document.getElementById('panel2').appendChild(loading);
+                setTimeout(function() {                   
+                    getEllipse(stores, map);
+                    document.getElementById('panel2').removeChild(loading)
+                }, 20)">Enter</button>
         </div>
         <div class="panel" id="panel6"> 
             <div class="heading">Store Optimization</div>
