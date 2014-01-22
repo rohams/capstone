@@ -231,7 +231,7 @@ for iter = 1:numIter
         end
         offDist=R-totDist;
             if (offDist>offRoutLim)                
-                fitVal(p) = cost+ offRout*offDist;
+                fitVal(p) = cost+ offRout*(offDist-offRoutLim);
             else
                 fitVal(p) = cost;
             end  
