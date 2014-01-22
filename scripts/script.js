@@ -806,13 +806,13 @@ function markerInfoWin(marker){
         var sub_name;
         var marker_id = markers.indexOf(marker);
         if (marker_id==-1){
-        	infowindow.setContent( "<Store ID<br/>" + "<br/> Latitude: " + marker.position.lat() + "<br/> Longitude: " + marker.position.lng());
+        	infowindow.setContent( "<b><Store ID<br/></b>" + "<br/> <b>Latitude: </b>" + marker.position.lat() + "<br/> <b>Longitude: </b>" + marker.position.lng());
         } else {
         	var sub_id = stores[marker_id].getSub();
                 var ext_id = stores[marker_id].getExt();                
             sub_name = subs[sub_id];
             var weight = stores[marker_id].getWeight();
-            infowindow.setContent( "Store ID: "+ ext_id +"<br/> Sub-network: " + sub_name +"<br/> Calculated Weight: " + weight + "<br/> Latitude: " + marker.position.lat() + "<br/> Longitude: " + marker.position.lng());
+            infowindow.setContent( "<b>Store ID: </b>"+ ext_id +"<br/> <b>Sub-network: </b>" + sub_name +"<br/> <b>Calculated Weight: </b>" + weight + "<br/> <b>Latitude: </b>" + marker.position.lat() + "<br/> <b>Longitude: </b>" + marker.position.lng());
         }
         infowindow.open(map,marker);
         openedInfoWindow = infowindow;
