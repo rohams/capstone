@@ -154,8 +154,8 @@ end
 
 % Run the GA
 globalMin = Inf;
-offRout = 2;
-offRoutLim = 2;
+offRout = 4;
+offRoutLim = 5;
 totalDist = zeros(1,popSize);
 distHistory = zeros(1,numIter);
 tmpPopRoute = zeros(8,n);
@@ -180,43 +180,50 @@ for iter = 1:numIter
         end
         totalDist(p) = d;
     end
-
+    %display(dmat);
      % Fitness value
     for p=1:1:popSize
-        totDist=0;
         offDist=0;
         brk_idx=1;
         cost = totalDist(p);
         f_pRoute = popRoute(p,:);
+        %display(f_pRoute);
         f_pBreak = popBreak(p,:);
+        %display(f_pBreak);
         %i indicates a route
         %j is index of visiting stores in the route
         %end_brk_idx is the index for last store in a route array
         %brk_idx is the index for first store in a route array
         
-        for i=1:1:size(f_pBreak,1)+1
-            if i==size(f_pBreak,1)+1
-                end_brk_idx=size(f_pRoute,1);
-            else                
+        for i=1:1:length(f_pBreak)+1 
+            if i==(length(f_pBreak)+1)
+                end_brk_idx=length(f_pRoute)-1;
+            else
                 end_brk_idx=f_pBreak(i)-1;
             end
+            %display(end_brk_idx);
+            %display(brk_idx);
             %%%for each route in the solution
             %R is direct distance to the destination for that route
-            R=dmat(1,end_brk_idx);
+            R=dmat(1,f_pRoute(end_brk_idx+1));
+            %display(R);
+            % depo to the first store in the route
+            totDist = dmat(1,brk_idx);
             for j=brk_idx:1:end_brk_idx                
                   totDist=totDist+ dmat(f_pRoute(j),f_pRoute(j+1));
             end
-            brk_idx=end_brk_idx+1;
+            brk_idx=end_brk_idx+2;
+            %display(totDist);
             if ((totDist-R)>offRoutLim)
                 offDist=offDist+(totDist-R)-offRoutLim;
+            %    display(offDist);
             end
         end               
         fitVal(p) = cost+ offRout*offDist;
 
     end
+    
     %display(fitVal);
-    
-    
     % Find the Best Route in the Population
     [minDist,myX] = min(totalDist);
     [minFitVal,index] = min(fitVal);
@@ -308,7 +315,7 @@ if showResult
         rte = [1 optRoute(rng(s,1):rng(s,2))];
         if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
         else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
-        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minFitVal, minDist));
+        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minDist, minFitVal));
         hold on;
     end
     if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
