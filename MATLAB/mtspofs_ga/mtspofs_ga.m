@@ -154,7 +154,7 @@ end
 
 % Run the GA
 globalMin = Inf;
-offRout = 5;
+offRout = 2;
 offRoutLim = 2;
 totalDist = zeros(1,popSize);
 distHistory = zeros(1,numIter);
@@ -218,13 +218,13 @@ for iter = 1:numIter
     
     
     % Find the Best Route in the Population
-    [myDist,myX] = min(totalDist);
-    [minDist,index] = min(fitVal);
-    display(myDist);
-    display(minDist);
-    distHistory(iter) = minDist;
-    if minDist < globalMin
-        globalMin = minDist;
+    [minDist,myX] = min(totalDist);
+    [minFitVal,index] = min(fitVal);
+    %display(minDist);
+    %display(minFitVal);
+    distHistory(iter) = minFitVal;
+    if minFitVal < globalMin
+        globalMin = minFitVal;
         optRoute = popRoute(index,:);
         optBreak = popBreak(index,:);
         rng = [[1 optBreak+1];[optBreak n]]';
@@ -235,7 +235,7 @@ for iter = 1:numIter
                 rte = [1 optRoute(rng(s,1):rng(s,2))];
                 if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
                 else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
-                title(sprintf('Total Distance = %1.4f, Fitness Value = %1.4f, Iteration = %d',myDist,minDist,iter));
+                title(sprintf('Total Distance = %1.4f, Fitness Value = %1.4f, Iteration = %d',minDist,minFitVal,iter));
                 hold on
             end
             if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
@@ -308,7 +308,7 @@ if showResult
         rte = [1 optRoute(rng(s,1):rng(s,2))];
         if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
         else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
-        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minDist, myDist));
+        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minFitVal, minDist));
         hold on;
     end
     if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
@@ -323,7 +323,7 @@ end
 if nargout
     varargout{1} = optRoute;
     varargout{2} = optBreak;
-    varargout{3} = minDist;
+    varargout{3} = minFitVal;
 end
 
     % Generate Random Set of Break Points
