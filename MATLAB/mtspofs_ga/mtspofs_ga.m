@@ -154,6 +154,8 @@ end
 
 % Run the GA
 globalMin = Inf;
+offRout = 5;
+offRoutLim = 2;
 totalDist = zeros(1,popSize);
 distHistory = zeros(1,numIter);
 tmpPopRoute = zeros(8,n);
@@ -179,35 +181,10 @@ for iter = 1:numIter
         totalDist(p) = d;
     end
 
-    % Find the Best Route in the Population
-    [minDist,index] = min(totalDist);
-    distHistory(iter) = minDist;
-    if minDist < globalMin
-        globalMin = minDist;
-        optRoute = popRoute(index,:);
-        optBreak = popBreak(index,:);
-        rng = [[1 optBreak+1];[optBreak n]]';
-        if showProg
-            % Plot the Best Route
-            figure(pfig);
-            for s = 1:nSalesmen
-                rte = [1 optRoute(rng(s,1):rng(s,2))];
-                if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
-                else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
-                title(sprintf('Total Distance = %1.4f, Iteration = %d',minDist,iter));
-                hold on
-            end
-            if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
-            else plot(xy(1,1),xy(1,2),'o','Color',pclr); end
-            hold off
-        end
-    end
-    
-    % Fitness value
-    offRout = 5;
-    offRoutLim = 6;
+     % Fitness value
     for p=1:1:popSize
         totDist=0;
+        offDist=0;
         brk_idx=1;
         cost = totalDist(p);
         f_pRoute = popRoute(p,:);
@@ -223,20 +200,51 @@ for iter = 1:numIter
             else                
                 end_brk_idx=f_pBreak(i)-1;
             end
+            %%%for each route in the solution
+            %R is direct distance to the destination for that route
             R=dmat(1,end_brk_idx);
             for j=brk_idx:1:end_brk_idx                
                   totDist=totDist+ dmat(f_pRoute(j),f_pRoute(j+1));
             end
             brk_idx=end_brk_idx+1;
-        end
-        offDist=R-totDist;
-            if (offDist>offRoutLim)                
-                fitVal(p) = cost+ offRout*(offDist-offRoutLim);
-            else
-                fitVal(p) = cost;
-            end  
+            if ((totDist-R)>offRoutLim)
+                offDist=offDist+(totDist-R)-offRoutLim;
+            end
+        end               
+        fitVal(p) = cost+ offRout*offDist;
+
     end
-    display(fitVal);
+    %display(fitVal);
+    
+    
+    % Find the Best Route in the Population
+    [myDist,myX] = min(totalDist);
+    [minDist,index] = min(fitVal);
+    display(myDist);
+    display(minDist);
+    distHistory(iter) = minDist;
+    if minDist < globalMin
+        globalMin = minDist;
+        optRoute = popRoute(index,:);
+        optBreak = popBreak(index,:);
+        rng = [[1 optBreak+1];[optBreak n]]';
+        if showProg
+            % Plot the Best Route
+            figure(pfig);
+            for s = 1:nSalesmen
+                rte = [1 optRoute(rng(s,1):rng(s,2))];
+                if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
+                else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
+                title(sprintf('Total Distance = %1.4f, Fitness Value = %1.4f, Iteration = %d',myDist,minDist,iter));
+                hold on
+            end
+            if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
+            else plot(xy(1,1),xy(1,2),'o','Color',pclr); end
+            hold off
+        end
+    end
+    
+   
     
     % Genetic Algorithm Operators - modified
     randomOrder = randperm(popSize);
@@ -245,9 +253,9 @@ for iter = 1:numIter
 %         display(rtes);
         brks = popBreak(randomOrder(p-7:p),:);
 %         display(brks);
-        dists = totalDist(randomOrder(p-7:p));
+        fitVals = fitVal(randomOrder(p-7:p));
 %         display(dists);
-        [ignore,idx] = min(dists); %#ok
+        [ignore,idx] = min(fitVals); %#ok
         bestOf8Route = rtes(idx,:);
         bestOf8Break = brks(idx,:);
         routeInsertionPoints = sort(ceil(n*rand(1,2)));
@@ -290,7 +298,7 @@ if showResult
     subplot(2,2,1);
     if dims > 2, plot3(xy(:,1),xy(:,2),xy(:,3),'.','Color',pclr);
     else plot(xy(:,1),xy(:,2),'.','Color',pclr); end
-    title('City Locations');
+    title('Store Locations');
     subplot(2,2,2);
     imagesc(dmat([1 optRoute],[1 optRoute]));
     title('Distance Matrix');
@@ -300,7 +308,7 @@ if showResult
         rte = [1 optRoute(rng(s,1):rng(s,2))];
         if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
         else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
-        title(sprintf('Total Distance = %1.4f',minDist));
+        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minDist, myDist));
         hold on;
     end
     if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
