@@ -165,17 +165,17 @@ newPopBreak = zeros(popSize,nBreaks);
 if showProg
     pfig = figure('Name','MTSPOFS_GA | Current Best Solution','Numbertitle','off');
 end
-for iter = 1:numIter
+for iter = 1 : numIter
     % Evaluate Members of the Population
-    for p = 1:popSize
-        d = 0;
+    for p = 1 : popSize
+        d      = 0;
         pRoute = popRoute(p,:);
         pBreak = popBreak(p,:);
-        rng = [[1 pBreak+1];[pBreak n]]';
+        rng    = [[1 pBreak + 1];[pBreak n]]';
         for s = 1:nSalesmen
             d = d + dmat(1,pRoute(rng(s,1))); % Add Start Distance
-            for k = rng(s,1):rng(s,2)-1
-                d = d + dmat(pRoute(k),pRoute(k+1));
+            for k = rng(s, 1) : rng(s, 2) - 1
+                d = d + dmat(pRoute(k), pRoute(k + 1));
             end
         end
         totalDist(p) = d;
@@ -183,9 +183,9 @@ for iter = 1:numIter
     %display(dmat);
      % Fitness value
     for p=1:1:popSize
-        offDist=0;
-        brk_idx=1;
-        cost = totalDist(p);
+        offDist  = 0;
+        brk_idx  = 1;
+        cost     = totalDist(p);
         f_pRoute = popRoute(p,:);
         %display(f_pRoute);
         f_pBreak = popBreak(p,:);
@@ -195,31 +195,31 @@ for iter = 1:numIter
         %end_brk_idx is the index for last store in a route array
         %brk_idx is the index for first store in a route array
         
-        for i=1:1:length(f_pBreak)+1 
-            if i==(length(f_pBreak)+1)
-                end_brk_idx=length(f_pRoute)-1;
+        for i = 1 : 1 : length(f_pBreak) + 1 
+            if i == (length(f_pBreak) + 1)
+                end_brk_idx = length(f_pRoute) - 1;
             else
-                end_brk_idx=f_pBreak(i)-1;
+                end_brk_idx = f_pBreak(i) - 1;
             end
             %display(end_brk_idx);
             %display(brk_idx);
             %%%for each route in the solution
             %R is direct distance to the destination for that route
-            R=dmat(1,f_pRoute(end_brk_idx+1));
+            R = dmat(1, f_pRoute(end_brk_idx + 1));
             %display(R);
             % depo to the first store in the route
-            totDist = dmat(1,brk_idx);
-            for j=brk_idx:1:end_brk_idx                
-                  totDist=totDist+ dmat(f_pRoute(j),f_pRoute(j+1));
+            totDist = dmat(1, brk_idx);
+            for j = brk_idx : 1 : end_brk_idx                
+                  totDist = totDist + dmat(f_pRoute(j), f_pRoute(j + 1));
             end
-            brk_idx=end_brk_idx+2;
+            brk_idx = end_brk_idx + 2;
             %display(totDist);
-            if ((totDist-R)>offRoutLim)
-                offDist=offDist+(totDist-R)-offRoutLim;
+            if ((totDist - R) > offRoutLim)
+                offDist = offDist + (totDist - R) - offRoutLim;
             %    display(offDist);
             end
         end               
-        fitVal(p) = cost+ offRout*offDist;
+        fitVal(p) = cost + offRout*offDist;
 
     end
     
