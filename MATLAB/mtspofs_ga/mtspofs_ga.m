@@ -225,8 +225,8 @@ for iter = 1 : numIter
     
     %display(fitVal);
     % Find the Best Route in the Population
-    [minDist,myX] = min(totalDist);
     [minFitVal,index] = min(fitVal);
+    minDist = totalDist(index);
     %display(minDist);
     %display(minFitVal);
     distHistory(iter) = minFitVal;
