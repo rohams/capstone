@@ -156,6 +156,8 @@ end
 globalMin = Inf;
 offRout = 4;
 offRoutLim = 0.5;
+offDist=0;
+dOffDist=0;
 totalDist = zeros(1,popSize);
 distHistory = zeros(1,numIter);
 tmpPopRoute = zeros(8,n);
@@ -232,15 +234,26 @@ for iter = 1 : numIter
     
     %display(fitVal);
     % Find the Best Route in the Population
+    
     [minFitVal,index] = min(fitVal);
     minDist = totalDist(index);
+    
+    %[minDist,index] = min(totalDist);
+    %minFitVal = fitVal(index);
+    
     offDistmin = offDists(index);
     dODistmin = dOffDists(index);
     %display(minDist);
     %display(minFitVal);
+    
     distHistory(iter) = minFitVal;
     if minFitVal < globalMin
         globalMin = minFitVal;
+    
+    %distHistory(iter) = minDist;
+    %if minDist < globalMin
+        %globalMin = minDist;
+        
         optRoute = popRoute(index,:);
         optBreak = popBreak(index,:);
         rng = [[1 optBreak+1];[optBreak n]]';
@@ -270,8 +283,12 @@ for iter = 1 : numIter
         brks = popBreak(randomOrder(p-7:p),:);
 %         display(brks);
         fitVals = fitVal(randomOrder(p-7:p));
+        dists = totalDist(randomOrder(p-7:p));
 %         display(dists);
+ 
         [ignore,idx] = min(fitVals); %#ok
+%        [ignore,idx] = min(dists); %#ok
+        
         bestOf8Route = rtes(idx,:);
         bestOf8Break = brks(idx,:);
         routeInsertionPoints = sort(ceil(n*rand(1,2)));
