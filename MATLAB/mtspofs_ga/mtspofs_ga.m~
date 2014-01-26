@@ -89,7 +89,7 @@ nargs = 8;
 for k = nargin:nargs-1
     switch k
         case 0
-            xy = 10*rand(40,2);
+            xy = 10*rand(20,2);
         case 1
             N = size(xy,1);
             a = meshgrid(1:N);
@@ -180,11 +180,11 @@ for iter = 1 : numIter
         end
         totalDist(p) = d;
     end
-    %display(dmat);
+    display(dmat);
      % Fitness value
     for p=1:1:popSize
         offDist  = 0;
-        satrt_brk_idx  = 1;
+        brk_idx  = 1;
         cost     = totalDist(p);
         f_pRoute = popRoute(p,:);
         %display(f_pRoute);
@@ -201,19 +201,19 @@ for iter = 1 : numIter
             else
                 end_brk_idx = f_pBreak(i) - 1;
             end
-            %display(end_brk_idx);
-            %display(satrt_brk_idx);
+            display(end_brk_idx);
+            display(brk_idx);
             %%%for each route in the solution
             %R is direct distance to the destination for that route
             R = dmat(1, f_pRoute(end_brk_idx + 1));
-            %display(R);
+            display(R);
             % depo to the first store in the route
-            totDist = dmat(1, f_pRoute(satrt_brk_idx));
-            for j = satrt_brk_idx : 1 : end_brk_idx                
+            totDist = dmat(1, f_pRoute(brk_idx);
+            for j = brk_idx : 1 : end_brk_idx                
                   totDist = totDist + dmat(f_pRoute(j), f_pRoute(j + 1));
             end
-            satrt_brk_idx = end_brk_idx + 2;
-            %display(totDist);
+            brk_idx = end_brk_idx + 2;
+            display(totDist);
             if (totDist - R)<0
                 msgbox('Negative off distance', 'Error','error');
                 break
