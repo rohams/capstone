@@ -529,6 +529,8 @@ function removeMarkers(id){
                 }
             }
         }
+        
+        updateDistMatrix(stores);
 }
 
 //remove a single marker
@@ -539,6 +541,8 @@ function removeMarker(marker){
     stores[marker_id] = null;
     markers[marker_id] = null;    
     document.getElementById("panel").innerHTML = x;
+    
+    updateDistMatrix(stores);
 }
 
 //add a single node
@@ -583,7 +587,9 @@ function addNode(map){
         tot_weights.push(total_w);
         //add marker to markers array
         markers.push(marker);
-
+        
+        updateDistMatrix(stores);
+        
       } else {
         alert('No results found');
       }
@@ -679,6 +685,8 @@ function addMarkers(id) {
         }
     }
 
+    var distMat = distanceMatrix(stores);
+    
 }
 
 function updateWeights(){

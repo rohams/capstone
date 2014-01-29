@@ -104,11 +104,13 @@
                 node.appendChild(textnode); 
                 document.getElementById('panel3').style.marginBottom = '10px';
             };
-        alert(row+' stores imported!');
+		
+		alert(row+' stores imported!');
         //set the import button for the second import.
         setFile2();
     };
     reader.onerror = function(){ alert('Unable to read ' + file.fileName); };
+	
   }
   
   function readFile2(file){
