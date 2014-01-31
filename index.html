@@ -30,7 +30,11 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     $('body').on("click", '#heading9', function() {
      $("#panel9").slideToggle("fast");
   });
+    $('body').on("click", '#heading10', function() {
+     $("#panel0").slideToggle("fast");
+  });
 });
+
 
    //sub-networks  
   $('#sub_id0').live('change', function(){
@@ -435,6 +439,8 @@ function initialize() {
         <div id="panel5"></div>
         <div class="collapsable" id="heading9"></div>
         <div id="panel9"></div>
+        <div class="collapsable" id="heading10"></div>
+        <div id="panel0"></div>
         <div class="panel" id="panel10">
             <div class="heading">Add a New Store</div>
             <input type="text" placeholder="latitude" class="panel-textb" id="lat">
@@ -467,8 +473,8 @@ function initialize() {
                <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
                <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
                <div class="panel" id="panel12">
-                    <input type="text" placeholder="off-route milage" class="panel-textb" id="off-lim">
-                    <input type="text" placeholder="off-route charge" class="panel-textb" id="off-chrg">
+                    <input type="text" placeholder="off-route limit" class="panel-textb" id="off-lim">
+                    <input type="text" placeholder="off-route rate" class="panel-textb" id="off-rate">
                     <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
                    <button class="panel-button" onclick="group_progress()">OK</button>
                </div>

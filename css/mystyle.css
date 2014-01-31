@@ -19,6 +19,9 @@ body { height: 100%; margin: 10; padding: 0 }
         background-color:#C8C8C8;
         display:none;
       }
+#panel0 {
+        display:none;
+      }
 
 .collapsable {
         cursor:pointer;

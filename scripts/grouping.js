@@ -30,14 +30,13 @@ function distanceMatrix(stores)
 			{
 				if (stores[j] != null)
 				{
-					var dist = distance(stores[i], stores[j]);					
+					var dist = distHaversine(stores[i], stores[j]);					
 					distMat[i][j] = dist;
 					distMat[j][i] = dist;
 					
 					/* check */
 					console.log("dist[" + i + "][" + j + "] = " + distMat[i][j]);
-					console.log("dist[" + j + "][" + i + "] = " + distMat[j][i]);
-					
+					console.log("store id[" + i + "]=" + stores[i].getExt() +"store id[" + j + "] = " + stores[j].getExt());
 				} else {
 					distMat[i][j] = null;
 					distMat[j][i] = null;
@@ -56,4 +55,20 @@ function distanceMatrix(stores)
 	console.log("Total selected stores = " + totSelectedStores );
 	
 	return distMat;
+}
+
+//calculating distance in km
+rad = function(x) {return x*Math.PI/180;}
+
+distHaversine = function(p1, p2) {
+  var R = 6371; // earth's mean radius in km
+  var dLat  = rad(p2.getLat() - p1.getLat());
+  var dLong = rad(p2.getLng() - p1.getLng());
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(rad(p1.getLat())) * Math.cos(rad(p2.getLat())) * Math.sin(dLong/2) * Math.sin(dLong/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+
+  return d.toFixed(3);
 }

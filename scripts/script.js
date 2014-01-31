@@ -522,12 +522,16 @@ function removeLastDraw(){
 
 //remove markers by sub-network id
 function removeMarkers(id){
+        var elem= document.getElementById("panel0");
         for (var i = 0; i < stores.length; i++) {
             if(stores[i]!=null){
                 if(stores[i].getSub()==id){
                     markers[i].setMap(null);
                     markers[i] = null;
                     stores[i] = null;
+                    var lstid = 'store_lst' + i; 
+                    var lststore =document.getElementById(lstid);
+                    elem.removeChild(lststore);
                 }
             }
         }
@@ -696,11 +700,16 @@ function addMarkers(id) {
             // Does this code suppose to make the ave_point as the center of the screen with proper zoom level?
             map.setCenter(new_center);
             map.setZoom(6);
+            //update the acive store list
+            var node = document.createElement("DIV");
+            node.id = 'store_lst' + i;
+            var textnode=document.createTextNode(stores[i].getExt());
+            node.appendChild(textnode); 
+            document.getElementById("panel0").appendChild(node);
         }
     }
 
     var distMat = distanceMatrix(stores);
-    
 }
 
 function updateWeights(){

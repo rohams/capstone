@@ -91,6 +91,9 @@
             var title=document.createTextNode("Sub-networks");
             document.getElementById("panel1").style.display = 'block'; 
             document.getElementById("panel1").appendChild(title);
+            var title2=document.createTextNode("Active Stores");
+            document.getElementById("heading10").style.display = 'block'; 
+            document.getElementById("heading10").appendChild(title2);
             for (x in subs){
                 var node = document.createElement("DIV");
                 node.id = 'sub_name' + x;
@@ -104,7 +107,6 @@
                 node.appendChild(textnode); 
                 document.getElementById('panel3').style.marginBottom = '10px';
             };
-		
 		alert(row+' stores imported!');
         //set the import button for the second import.
         setFile2();
