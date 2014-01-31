@@ -172,7 +172,7 @@ function Store(lat,lng,sub_id,ext_id,weight){
 
 //constructor
 function Cost(input){
-    var MAX_COST = 2000000;
+    var MAX_COST = 1000000000;
     this.cost=input;
     this.getCost = function()
     {
@@ -274,8 +274,8 @@ function getEllipse(foci,map){
 //GRANULARITY
     var height = 0;
     var set_grl = true;
-    var THERESHOLD= 0.009;
-    var STEPSIZE = 0.004;
+    var THERESHOLD= 0.0045;
+    var STEPSIZE = 0.002;
     var ellipse = [];
     var lngs = [];
     var point;

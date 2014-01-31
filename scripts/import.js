@@ -53,9 +53,9 @@
 
   function readFile1(file){
     //******configure file1 columns*****
-    var SUB = 15;
-    var LAT = 16;
-    var LNG = 17;
+    var SUB = 17;
+    var LAT = 6;
+    var LNG = 7;
     var EXT = 2;
     //***********************
     var reader = new FileReader();
