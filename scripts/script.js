@@ -442,12 +442,14 @@ function getEllipse(foci,map){
                     position: new google.maps.LatLng(FW_point.getLat(), FW_point.getLng()),
                     draggable: false,
                     map: map,
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 6
-                      },
                     title: 'Fermat-Weber Point',
                     zIndex: AVE_ZINDEX,
+                    icon: {
+                            path: google.maps.SymbolPath.CIRCLE,
+                            strokeColor: 'green',
+                            fillOpacity: 0.8,
+                            scale: 6
+                      },
                     animation: google.maps.Animation.DROP
                     }); 
       var x="Minimum Distance: " + min + " granularity: " + steps;
@@ -564,7 +566,13 @@ function addNode(map){
        var marker = new google.maps.Marker({
             position: latlng,
             map: map,
-            animation: google.maps.Animation.DROP
+            animation: google.maps.Animation.DROP,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                strokeColor: 'red',
+                fillOpacity: 0.8,
+                scale: 5
+          },
         });
 
         infowindow.setContent(info + results[1].formatted_address);
@@ -626,7 +634,7 @@ function addDC(map){
             map: map,
             icon: {
                         path: google.maps.SymbolPath.CIRCLE,
-                        strokeColor: 'red',
+                        strokeColor: 'blue',
                         fillOpacity: 0.8,
                         scale: 6
                       },
@@ -662,7 +670,13 @@ function addMarkers(id) {
                                                 position: new google.maps.LatLng(stores[i].getLat(), stores[i].getLng()),
                                                 draggable: false,
 						optimized: false,
-                                                map: map
+                                                map: map,
+                                                icon: {
+                                                    path: google.maps.SymbolPath.CIRCLE,
+                                                    strokeColor: 'red',
+                                                    fillOpacity: 0.8,
+                                                    scale: 5
+                                                  }
                                                 });
  
             //Add info window
@@ -789,6 +803,7 @@ function selOption()
     if (option=="Add next node"){
         document.getElementById("panel8").style.display = 'none'; 
         document.getElementById("panel11").style.display = 'block'; 
+        document.getElementById("panel12").style.display = 'none'; 
         circle.setVisible(true);
         circle.setMap(map);
     }
@@ -796,13 +811,28 @@ function selOption()
     if (option=="Remove next node"){
         document.getElementById("panel8").style.display = 'block'; 
         document.getElementById("panel11").style.display = 'none';
+        document.getElementById("panel12").style.display = 'none'; 
         circle.setVisible(false);
     }
     if (option=="Store Grouping"){
         document.getElementById("panel8").style.display = 'none';
         document.getElementById("panel11").style.display = 'none';
+        document.getElementById("panel12").style.display = 'block'; 
         circle.setVisible(false);
     }
+}
+
+function group_progress(){
+    document.getElementById('panel12').appendChild(progress);
+        setInterval(function(){updateProgress(myp)},1000);
+            myp++;
+}
+
+
+function updateProgress(value) {
+  var pBar = document.getElementById('p');
+  pBar.value = value;
+//pBar.getElementsByTagName('span')[0].innerHTML = Math.floor(value);
 }
 
 //info window for each marker

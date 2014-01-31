@@ -256,6 +256,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var aveMarker;
     var openedInfoWindow = null;
     var map;
+    var myp = 0;
     var DC;
     var circle;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
@@ -409,11 +410,12 @@ function initialize() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control3);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control4);
 }
-
-
     google.maps.event.addDomListener(window, 'load', initialize);
     var loading =document.createTextNode("Loading...");
-	
+    var progress = document.createElement("progress");
+    progress.max=70;
+    progress.id='p';
+    progress.value=0;
 </script>
 </head>
 
@@ -464,6 +466,12 @@ function initialize() {
                       </select>
                <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
                <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
+               <div class="panel" id="panel12">
+                    <input type="text" placeholder="off-route milage" class="panel-textb" id="off-lim">
+                    <input type="text" placeholder="off-route charge" class="panel-textb" id="off-chrg">
+                    <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
+                   <button class="panel-button" onclick="group_progress()">OK</button>
+               </div>
             </div>
         </div>
     </div>
