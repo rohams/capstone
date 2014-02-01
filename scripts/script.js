@@ -545,9 +545,12 @@ function removeMarker(marker){
     var x = "Removed a store at (" + stores[marker_id].getLat() + ", " + stores[marker_id].getLng() + ")";
     marker.setMap(null);
     stores[marker_id] = null;
-    markers[marker_id] = null;    
+    markers[marker_id] = null;  
+    var elem= document.getElementById("panel0");
     document.getElementById("panel").innerHTML = x;
-    
+    var lstid = 'store_lst' + marker_id; 
+    var lststore =document.getElementById(lstid);
+    elem.removeChild(lststore);
     updateDistMatrix(stores);
 }
 
@@ -702,9 +705,13 @@ function addMarkers(id) {
             map.setZoom(6);
             //update the acive store list
             var node = document.createElement("DIV");
-            node.id = 'store_lst' + i;
+            node.id = 'store_lst' +i;
+            node.markerid = i;
             var textnode=document.createTextNode(stores[i].getExt());
-            node.appendChild(textnode); 
+            node.appendChild(textnode);
+            node.addEventListener("click", function() {
+            markerInfoWin(markers[this.markerid]);
+            }, false);
             document.getElementById("panel0").appendChild(node);
         }
     }
