@@ -4,6 +4,22 @@ function updateDistMatrix(stores)
 	distMat = distanceMatrix(stores);
 }
 
+function distFromDCToStores (DC, stores)
+{
+	var dcDist = new Array(stores.length);
+	
+	for (var i = 0; i < stores.length; i++)
+	{
+		if (stores[i] != null)
+		{
+			dcDist[i] = distHaversine(DC, stores[i]);
+		}
+		else
+			dcDist[i] = null;
+	}
+	return dcDist;
+}
+
 function distanceMatrix(stores)
 {	
 	/* Calculates the Euclidean distance between the stores and returns it in a matrix.
@@ -36,7 +52,7 @@ function distanceMatrix(stores)
 					
 					/* check */
 					console.log("dist[" + i + "][" + j + "] = " + distMat[i][j]);
-					console.log("store id[" + i + "]=" + stores[i].getExt() +"store id[" + j + "] = " + stores[j].getExt());
+					console.log("store id[" + i + "] = " + stores[i].getExt() +"\nstore id[" + j + "] = " + stores[j].getExt());
 				} else {
 					distMat[i][j] = null;
 					distMat[j][i] = null;
