@@ -20,6 +20,8 @@ body { height: 100%; margin: 10; padding: 0 }
         display:none;
       }
 #panel0 {
+        overflow-y:scroll;
+        height:100px;
         display:none;
       }
 
