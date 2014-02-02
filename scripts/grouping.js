@@ -160,3 +160,24 @@ distHaversine = function(p1, p2) {
 
   return d.toFixed(3);
 }
+
+// generating random breaks
+function rand_breaks (trucks, stores, min_tour){
+	var breaks = new Array(trucks - 1);
+        
+	var start = min_tour - 1;
+        var end = 0;
+        
+	for (var i = 0; i < trucks - 1; i++)
+	{
+            end  = (stores - 1) - (min_tour * (trucks - 1 - i));
+            breaks[i] = random_int (start, end);
+            start = breaks[i] + min_tour;
+	}
+	return breaks;
+}
+
+// generating a random integer between min and max inclusive
+function random_int (min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
