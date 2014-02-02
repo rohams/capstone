@@ -20,6 +20,78 @@ function distFromDCToStores (DC, stores)
 	return dcDist;
 }
 
+function graph_groups(map, routes, brks)
+{	
+	/*** Unfinished. See (1) ***/
+	
+	/* Draws the paths based on the given routes and brks.
+	   Must make sure that the content of brks is in increasing order */
+	
+	/* Test data */
+	// empty array
+//	routes = new Array();
+	// one data
+//	routes = [9]; // AB North
+	// multiple data
+    routes = new Array(0, 9, 35, 36, 43, 64, 92, 96, 103, 104, 105, 106, 108, 110, 111, 112, 113, 114, 115, 116, 117);
+	brks = new Array(4, 7, routes.length-1);
+	
+	if (routes <= 0)
+	{	
+		alert("Error in array length in graph_groups()");
+		return 0;
+	}
+	
+	// no. of paths will always be 1 more than no. of breaks.
+	// If the last element in brks is the last index of routes, the last path will draw nothing
+	var paths = new Array(brks.length + 1);
+
+	var j = 0;
+	
+	for (var i = 0; i < paths.length; i++)
+	{
+		paths[i] = new Array();
+		
+		/** (1) Hardcoded DC. Later need to find DC in array and add them here, 
+		 * or make sure that routes take care of DC in the paths
+		 **/
+		paths[i].push(new google.maps.LatLng(49.06277778, -121.52638890000003));
+		
+		for (j; j < routes.length; j++)
+		{
+			if (j != brks[i]) // brks must be in increasing order!
+			{	
+				if (stores[routes[j]] != null)
+				{
+					paths[i].push( new google.maps.LatLng(stores[routes[j]].getLat(), stores[routes[j]].getLng() ));
+				}
+			} else {
+				// brks indicate where is the last store of the current path.
+				if (stores[routes[j]] != null)
+					paths[i].push( new google.maps.LatLng(stores[routes[j]].getLat(), stores[routes[j]].getLng() ));
+				j++;
+				break;
+			}
+		}
+	}
+	
+	// Paths color
+	var colorCode = ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#808080', '#800000', '#808000', '#008000', '#800080', '#008080', '#0000880', '#FF4500'];
+	
+	for (var i = 0; i < paths.length; i++)
+	{
+		var drawPath = new google.maps.Polyline({
+			path: paths[i],
+			geodesic: true,
+			strokeColor: colorCode[i % colorCode.length],
+			strokeOpacity: 1.0,
+			strokeWeight: 2
+		});
+		
+		drawPath.setMap(map);
+	}
+}
+
 function distanceMatrix(stores)
 {	
 	/* Calculates the Euclidean distance between the stores and returns it in a matrix.
@@ -51,8 +123,8 @@ function distanceMatrix(stores)
 					distMat[j][i] = dist;
 					
 					/* check */
-					console.log("dist[" + i + "][" + j + "] = " + distMat[i][j]);
-					console.log("store id[" + i + "] = " + stores[i].getExt() +"\nstore id[" + j + "] = " + stores[j].getExt());
+				//	console.log("dist[" + i + "][" + j + "] = " + distMat[i][j]);
+				//	console.log("store id[" + i + "] = " + stores[i].getExt() +"\nstore id[" + j + "] = " + stores[j].getExt());
 				} else {
 					distMat[i][j] = null;
 					distMat[j][i] = null;

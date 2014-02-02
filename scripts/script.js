@@ -537,6 +537,12 @@ function removeMarkers(id){
         }
         
         updateDistMatrix(stores);
+        
+        /* testing graph_groups */
+        var routes;
+        var brks;
+    	graph_groups(map, routes, brks);
+    	/* end test */
 }
 
 //remove a single marker
@@ -549,6 +555,12 @@ function removeMarker(marker){
     document.getElementById("panel").innerHTML = x;
     
     updateDistMatrix(stores);
+    
+    /* testing graph_groups */
+    var routes;
+    var brks;
+	graph_groups(map, routes, brks);
+	/* end test */
 }
 
 //add a single node
@@ -601,6 +613,13 @@ function addNode(map){
         markers.push(marker);
         
         updateDistMatrix(stores);
+        
+        /* testing graph_groups */
+        var routes;
+        var brks;
+    	graph_groups(map, routes, brks);
+    	/* end test */
+    	
         
       } else {
         alert('No results found');
@@ -709,7 +728,13 @@ function addMarkers(id) {
         }
     }
 
-    var distMat = distanceMatrix(stores);
+    distMat = distanceMatrix(stores);
+    
+    /* testing graph_groups */
+    var routes;
+    var brks;
+	graph_groups(map, routes, brks);
+	/* end test */
 }
 
 function updateWeights(){
