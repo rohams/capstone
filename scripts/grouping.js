@@ -243,28 +243,29 @@ function group_progress(){
     var pBreaks = new Array(popSize);
     var pRoutes = new Array(popSize);
     var not_null_stores = non_null_indices(stores);
+    var k = popSize;
+    var k1;
     var grouping =setInterval(function(){
         
-        
-        var k = popSize;
-
-        while (k--){
-
+             k1=k-(popSize/10);
+             while(k>k1){
              pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
              pRoutes[k] = rand_routes (trucks, not_null_stores);
              progbar = (myprog++/popSize)*100;
+             k--;
+            }
+            
              updateProgress(progbar);
-        }
+             if (k<0){
+                clearInterval(grouping);
+                progbar = 100;
+                updateProgress(progbar);
+                console.log(pRoutes[5]);
+                console.log(pBreaks[5]);
+                graph_groups(map, pRoutes[5], pBreaks[5]);
+             }
 
-    console.log(pRoutes[5]);
-    console.log(pBreaks[5]);
-    graph_groups(map, pRoutes[5], pBreaks[5]);
-
-
-    progbar = 100;
-    clearInterval(grouping);
-    updateProgress(progbar);
-
-    },200);
+    },0);
+    
 
 }
