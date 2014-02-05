@@ -161,6 +161,37 @@ distHaversine = function(p1, p2) {
   return d.toFixed(3);
 }
 
+
+function rand_stores()
+{
+	/* Generates random array of stores indices that are not null. Cannot have repeated values */
+	
+	var rand_arr = [];
+	var k = stores.length;
+	
+	// generate an array filled with stores indices that are not null
+	while(k--)
+	{
+		if (stores[k] != null)
+			rand_arr.push(k);
+	}
+	
+	// Shuffle the rand_arr based on Fisher-Yates Shuffle Modern Algorithm
+	var i = rand_arr.length, j, temp;
+	while (i--)
+	{
+		j = Math.floor(Math.random() * (i+1));
+		temp = rand_arr[j];
+		rand_arr[j] = rand_arr[i];
+		rand_arr[i] = temp;
+	}
+	
+	/* check */
+	console.log(rand_arr);
+	
+	return rand_arr;
+}
+
 // generating random breaks
 function rand_breaks (trucks, stores, min_tour){
 	var breaks = new Array(trucks - 1);

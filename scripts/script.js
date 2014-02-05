@@ -557,6 +557,7 @@ function removeMarker(marker){
     var lstid = 'store_lst' + marker_id; 
     var lststore =document.getElementById(lstid);
     elem.removeChild(lststore);
+    
     updateDistMatrix(stores);
     
     /* testing graph_groups */
@@ -688,7 +689,7 @@ function addDC(map){
 }
 
 //add markers by sub-network id
-function addMarkers(id) {
+function addMarkers(id) {	
     for (var i = 0; i < imported.length; i++) {
         if(imported[i].getSub()==id){
             stores[i]=imported[i];
@@ -737,10 +738,12 @@ function addMarkers(id) {
 
     distMat = distanceMatrix(stores);
     
-    /* testing graph_groups */
+    /* testing function */
     var routes;
     var brks;
 	graph_groups(map, routes, brks);
+	
+	rand_stores();
 	/* end test */
 }
 
