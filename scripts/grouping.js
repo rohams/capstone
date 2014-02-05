@@ -31,8 +31,10 @@ function graph_groups(map, routes, brks)
 	// one data
 //	routes = [9]; // AB North
 	// multiple data
-    routes = new Array(0, 9, 35, 36, 43, 64, 92, 96, 103, 104, 105, 106, 108, 110, 111, 112, 113, 114, 115, 116, 117);
-	brks = new Array(4, 7, routes.length-1);
+        
+        
+        //routes = new Array(0, 9, 35, 36, 43, 64, 92, 96, 103, 104, 105, 106, 108, 110, 111, 112, 113, 114, 115, 116, 117);
+	//brks = new Array(4, 7, routes.length-1);
 	
 	if (routes <= 0)
 	{	
@@ -45,18 +47,16 @@ function graph_groups(map, routes, brks)
 	var paths = new Array(brks.length + 1);
 
 	var j = 0;
-	
+        
+//        if(DC=undefined){
+//                // Hardcode DC
+//                DC = new Node(49.06277778, -121.52638890000003);
+//        }
+        
 	for (var i = 0; i < paths.length; i++)
 	{
 		paths[i] = new Array();
-		
-                if(DC!=undefined){
-                    paths[i].push(new google.maps.LatLng(DC.getLat(), DC.getLng()));
-                }
-                else{
-                    // Hardcode DC
-                    paths[i].push(new google.maps.LatLng(49.06277778, -121.52638890000003));
-                }
+                paths[i].push(new google.maps.LatLng(DC.getLat(), DC.getLng()));
 				
 		for (j; j < routes.length; j++)
 		{
@@ -74,6 +74,7 @@ function graph_groups(map, routes, brks)
 				break;
 			}
 		}
+                console.log(paths[i]);
 	}
 	
 	// Paths color
@@ -163,20 +164,8 @@ distHaversine = function(p1, p2) {
 }
 
 
-function rand_stores()
+function rand_routes(trucks, rand_arr)
 {
-	/* Generates random array of stores indices that are not null. Cannot have repeated values */
-	
-	var rand_arr = [];
-	var k = stores.length;
-	
-	// generate an array filled with stores indices that are not null
-	while(k--)
-	{
-		if (stores[k] != null)
-			rand_arr.push(k);
-	}
-	
 	// Shuffle the rand_arr based on Fisher-Yates Shuffle Modern Algorithm
 	var i = rand_arr.length, j, temp;
 	while (i--)
@@ -188,7 +177,7 @@ function rand_stores()
 	}
 	
 	/* check */
-	console.log(rand_arr);
+	//console.log(rand_arr);
 	
 	return rand_arr;
 }
@@ -202,10 +191,11 @@ function rand_breaks (trucks, length, min_tour){
         
 	for (var i = 0; i < trucks - 1; i++)
 	{
-            end  = (stores - 1) - (min_tour * (trucks - 1 - i));
+            end  = (length - 1) - (min_tour * (trucks - 1 - i));
             breaks[i] = random_int (start, end);
             start = breaks[i] + min_tour;
 	}
+        //console.log(breaks);
 	return breaks;
 }
 
@@ -215,9 +205,12 @@ function random_int (min, max) {
 }
 
 function non_null_size(myArray){
+    
     var length = 0;
     for (var i=0; i<myArray.length; i++){
+        
         if (myArray[i] != null){
+            
             length++;
         }
     }
@@ -225,19 +218,53 @@ function non_null_size(myArray){
 }
 
 function non_null_indices(stores){
+    
         var length = non_null_size(stores);
-        var active_stores = new Array(length);
-        for (var i=0; i<stores.length; i++){
-            if (stores[i] != null){
-                active_stores.push(i);
-            }
-        }
+        var active_stores = []; 
+        var k = stores.length;
+	
+	// generate an array filled with stores indices that are not null
+	while(k--)
+	{
+		if (stores[k] != null)
+			active_stores.push(k);
+	}
+
        return active_stores;
 }
 
-function group_progress2(){
-    popSize = new Cost(document.getElementById('pop-size').value);
-    trucks = new Cost(document.getElementById('no-trks').value);
-    var pBreaks = rand_breaks (trucks, non_null_size(stores), min_tour);
-    //var pRoute = rand_routes (trucks, stores);
+function group_progress(){
+    
+    var progbar = 0;
+    var myprog = 0;
+    document.getElementById('panel12').appendChild(progress);
+    popSize = document.getElementById('pop-size').value; 
+    trucks = document.getElementById('no-trks').value;
+    var pBreaks = new Array(popSize);
+    var pRoutes = new Array(popSize);
+    var not_null_stores = non_null_indices(stores);
+    var grouping =setInterval(function(){
+        
+        
+        var k = popSize;
+
+        while (k--){
+
+             pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
+             pRoutes[k] = rand_routes (trucks, not_null_stores);
+             progbar = (myprog++/popSize)*100;
+             updateProgress(progbar);
+        }
+
+    console.log(pRoutes[5]);
+    console.log(pBreaks[5]);
+    graph_groups(map, pRoutes[5], pBreaks[5]);
+
+
+    progbar = 100;
+    clearInterval(grouping);
+    updateProgress(progbar);
+
+    },200);
+
 }

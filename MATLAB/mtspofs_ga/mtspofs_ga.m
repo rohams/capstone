@@ -312,6 +312,24 @@ for iter = 1 : numIter
         [ignore,idx] = min(fitVals); %#ok
 %        [ignore,idx] = min(dists); %#ok
         
+
+%%%%%%%%%corssover%%%%%%%%%%%%%%
+% [sFitVals, IX] = sort(fitVals);
+% par1_route = rtes(IX(1),:);
+% par1_brks = brks(IX(1),:);
+% par2_route = rtes(IX(2),:);
+% par2_brks = brks(IX(2),:);
+% os_route=rtes(IX(1),:);
+% os_brks=brks(IX(1),:);
+% subRouteStart=par2_brks(ceil((length(par2_brks)-1)*rand(1,1)));
+% subRouteEnd=par2_brks(subRouteStart+1);
+% for i=subRouteStart:1:subRouteEnd
+%     os_route[find(par1_route(i))]=[];
+% end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
         bestOf8Route = rtes(idx,:);
         bestOf8Break = brks(idx,:);
         routeInsertionPoints = sort(ceil(n*rand(1,2)));

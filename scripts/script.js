@@ -539,9 +539,9 @@ function removeMarkers(id){
         updateDistMatrix(stores);
         
         /* testing graph_groups */
-        var routes;
-        var brks;
-    	graph_groups(map, routes, brks);
+//        var routes;
+//        var brks;
+//    	graph_groups(map, routes, brks);
     	/* end test */
 }
 
@@ -561,9 +561,9 @@ function removeMarker(marker){
     updateDistMatrix(stores);
     
     /* testing graph_groups */
-    var routes;
-    var brks;
-	graph_groups(map, routes, brks);
+//    var routes;
+//    var brks;
+//	graph_groups(map, routes, brks);
 	/* end test */
 }
 
@@ -617,12 +617,6 @@ function addNode(map){
         markers.push(marker);
         
         updateDistMatrix(stores);
-        
-        /* testing graph_groups */
-        var routes;
-        var brks;
-    	graph_groups(map, routes, brks);
-    	/* end test */
     	
         
       } else {
@@ -739,13 +733,6 @@ function addMarkers(id) {
 
     distMat = distanceMatrix(stores);
     
-    /* testing function */
-    var routes;
-    var brks;
-	graph_groups(map, routes, brks);
-	
-	rand_stores();
-	/* end test */
 }
 
 function updateWeights(){
@@ -867,11 +854,10 @@ function selOption()
     }
 }
 
-function group_progress(){
-    document.getElementById('panel12').appendChild(progress);
-        setInterval(function(){updateProgress(myp)},1000);
-            myp++;
-}
+//function group_progress(){
+//    document.getElementById('panel12').appendChild(progress);
+//        setInterval(function(){updateProgress(myp)},1000);
+//}
 
 
 function updateProgress(value) {
