@@ -108,3 +108,11 @@ select {
       margin-left:2px;
       margin-right:2px;
     }
+.stores_lst {
+    cursor: pointer;
+    border: 1px solid #ECEBEB;
+    }
+    
+ .stores_lst:hover{
+  border: 1px solid #C8C8C8;
+}

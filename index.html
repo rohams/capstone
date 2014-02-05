@@ -258,6 +258,9 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var image2 = 'images/marker2.png';
     var geocoder;
     var aveMarker;
+    var trucks = 1;
+    var min_tour =1;
+    var popSize = 80;
     var openedInfoWindow = null;
     var map;
     var myp = 0;
@@ -476,6 +479,7 @@ function initialize() {
                     <input type="text" placeholder="off-route limit" class="panel-textb" id="off-lim">
                     <input type="text" placeholder="off-route rate" class="panel-textb" id="off-rate">
                     <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
+                    <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
                    <button class="panel-button" onclick="group_progress()">OK</button>
                </div>
             </div>

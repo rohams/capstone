@@ -22,8 +22,6 @@ function distFromDCToStores (DC, stores)
 
 function graph_groups(map, routes, brks)
 {	
-	/*** Unfinished. See (1) ***/
-	
 	/* Draws the paths based on the given routes and brks.
 	   Must make sure that the content of brks is in increasing order */
 	
@@ -52,11 +50,14 @@ function graph_groups(map, routes, brks)
 	{
 		paths[i] = new Array();
 		
-		/** (1) Hardcoded DC. Later need to find DC in array and add them here, 
-		 * or make sure that routes take care of DC in the paths
-		 **/
-		paths[i].push(new google.maps.LatLng(49.06277778, -121.52638890000003));
-		
+                if(DC!=undefined){
+                    paths[i].push(new google.maps.LatLng(DC.getLat(), DC.getLng()));
+                }
+                else{
+                    // Hardcode DC
+                    paths[i].push(new google.maps.LatLng(49.06277778, -121.52638890000003));
+                }
+				
 		for (j; j < routes.length; j++)
 		{
 			if (j != brks[i]) // brks must be in increasing order!
@@ -193,7 +194,7 @@ function rand_stores()
 }
 
 // generating random breaks
-function rand_breaks (trucks, stores, min_tour){
+function rand_breaks (trucks, length, min_tour){
 	var breaks = new Array(trucks - 1);
         
 	var start = min_tour - 1;
@@ -211,4 +212,32 @@ function rand_breaks (trucks, stores, min_tour){
 // generating a random integer between min and max inclusive
 function random_int (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function non_null_size(myArray){
+    var length = 0;
+    for (var i=0; i<myArray.length; i++){
+        if (myArray[i] != null){
+            length++;
+        }
+    }
+    return length;
+}
+
+function non_null_indices(stores){
+        var length = non_null_size(stores);
+        var active_stores = new Array(length);
+        for (var i=0; i<stores.length; i++){
+            if (stores[i] != null){
+                active_stores.push(i);
+            }
+        }
+       return active_stores;
+}
+
+function group_progress2(){
+    popSize = new Cost(document.getElementById('pop-size').value);
+    trucks = new Cost(document.getElementById('no-trks').value);
+    var pBreaks = rand_breaks (trucks, non_null_size(stores), min_tour);
+    //var pRoute = rand_routes (trucks, stores);
 }

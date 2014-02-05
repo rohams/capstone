@@ -135,14 +135,37 @@ for k = 2:nBreaks
 end
 cumProb = cumsum(addto)/sum(addto);
 
-% Initialize the Populations
+% Initialize the Populations - modified
 popRoute = zeros(popSize,n);         % population of routes
 popBreak = zeros(popSize,nBreaks);   % population of breaks
 popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
-for k = 2:popSize
+for k = 2:popSize/2
     popRoute(k,:) = randperm(n) + 1;
     popBreak(k,:) = rand_breaks();
+end
+for k = (popSize/2)+1:popSize
+    popBreak(k,:) = rand_breaks();
+    % pick the first store randomly
+    store_id = ceil((n-1)*rand(1,1))+1;
+    popRoute(k,1) = store_id;
+    % because 1 is depo
+    str_indices = (1:n) + 1;
+    str_indices = str_indices(str_indices~=store_id);
+    %str_indices(store_id-1) = []  % remove
+    mindist= inf;
+    for j=2:n
+        for i=1:length(str_indices);
+            if dmat(store_id,str_indices(i))<mindist;
+               mindist= dmat(store_id,str_indices(i));
+               idx=i;
+            end
+        end
+        mindist= inf;
+        popRoute(k,j)= str_indices(idx);
+        store_id = str_indices(idx);
+        str_indices(idx) = [];
+    end
 end
 
 % Select the Colors for the Plotted Routes

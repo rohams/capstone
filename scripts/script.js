@@ -723,8 +723,9 @@ function addMarkers(id) {
             // Does this code suppose to make the ave_point as the center of the screen with proper zoom level?
             map.setCenter(new_center);
             map.setZoom(6);
-            //update the acive store list
+            //update the active store list
             var node = document.createElement("DIV");
+            node.className = 'stores_lst';
             node.id = 'store_lst' +i;
             node.markerid = i;
             var textnode=document.createTextNode(stores[i].getExt());
