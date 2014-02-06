@@ -31,10 +31,11 @@ function graph_groups(map, routes, brks)
 	// one data
 //	routes = [9]; // AB North
 	// multiple data
-        
-        
-        //routes = new Array(0, 9, 35, 36, 43, 64, 92, 96, 103, 104, 105, 106, 108, 110, 111, 112, 113, 114, 115, 116, 117);
-	//brks = new Array(4, 7, routes.length-1);
+        if (drawPath!= undefined){
+            
+            drawPath.setMap(null);
+            
+        }
 	
 	if (routes <= 0)
 	{	
@@ -74,12 +75,20 @@ function graph_groups(map, routes, brks)
 				break;
 			}
 		}
-                console.log(paths[i]);
+                //console.log(paths[i]);
 	}
 	
 	// Paths color
-	var colorCode = ['#000000', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#00FFFF', '#FF00FF', '#808080', '#800000', '#808000', '#008000', '#800080', '#008080', '#0000880', '#FF4500'];
-	
+	var colorCode = ['#000000', '#336699', '#339933', '#660066', '#9966FF', '#663300', '#660066', '#A366A3', '#800000', '#808000', '#008000', '#800080', '#008080', '#0000880', '#FF4500'];
+
+        if (oldPath){
+            
+            for (x in oldPath)
+            oldPath[x].setMap(null);
+
+        }
+        oldPath = [];
+        
 	for (var i = 0; i < paths.length; i++)
 	{
 		var drawPath = new google.maps.Polyline({
@@ -90,8 +99,11 @@ function graph_groups(map, routes, brks)
 			strokeWeight: 2
 		});
 		
-		drawPath.setMap(map);
+		oldPath.push(drawPath);
+                drawPath.setMap(map);
+                
 	}
+        
 }
 
 function distanceMatrix(stores)
