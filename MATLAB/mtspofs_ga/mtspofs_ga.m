@@ -177,8 +177,6 @@ end
 
 % Run the GA
 globalMin = Inf;
-offRout = 4;
-offRoutLim = 0.5;
 offDist=0;
 dOffDist=0;
 totalDist = zeros(1,popSize);
@@ -193,23 +191,15 @@ end
 for iter = 1 : numIter
     % Evaluate Members of the Population
     for p = 1 : popSize
-        d      = 0;
         pRoute = popRoute(p,:);
         pBreak = popBreak(p,:);
-        rng    = [[1 pBreak + 1];[pBreak n]]';
-        for s = 1:nSalesmen
-            d = d + dmat(1,pRoute(rng(s,1))); % Add Start Distance
-            for k = rng(s, 1) : rng(s, 2) - 1
-                d = d + dmat(pRoute(k), pRoute(k + 1));
-            end
-        end
-        totalDist(p) = d;
+        totalDist(p) = tot_Dist(pRoute, pBreak,n,dmat,nSalesmen);
     end
+
     %display(dmat);
      % Fitness value
     for p=1:1:popSize
         offDist  = 0;
-        satrt_brk_idx  = 1;
         cost     = totalDist(p);
         f_pRoute = popRoute(p,:);
         %display(f_pRoute);
@@ -220,38 +210,8 @@ for iter = 1 : numIter
         %end_brk_idx is the index for last store in a route array
         %brk_idx is the index for first store in a route array
         
-        for i = 1 : 1 : length(f_pBreak) + 1 
-            if i == (length(f_pBreak) + 1)
-                end_brk_idx = length(f_pRoute) - 1;
-            else
-                end_brk_idx = f_pBreak(i) - 1;
-            end
-            %display(end_brk_idx);
-            %display(satrt_brk_idx);
-            %%%for each route in the solution
-            %R is direct distance to the destination for that route
-            R = dmat(1, f_pRoute(end_brk_idx + 1));
-            %display(R);
-            % depo to the first store in the route
-            totDist = dmat(1, f_pRoute(satrt_brk_idx));
-            for j = satrt_brk_idx : 1 : end_brk_idx                
-                  totDist = totDist + dmat(f_pRoute(j), f_pRoute(j + 1));
-            end
-            satrt_brk_idx = end_brk_idx + 2;
-            %display(totDist);
-            if (totDist - R)<0
-                msgbox('Negative off distance', 'Error','error');
-                break
-            end
-            if ((totDist - R) > offRoutLim)
-                offDist = offDist + (totDist - R) - offRoutLim;
-                dOffDist= offDist + (totDist - R);
-            %    display(offDist);
-            end
-        end               
-        fitVal(p) = cost + offRout*offDist;
-        offDists(p) = offDist;
-        dOffDists(p) = dOffDist;
+        [fitVal(p), offDists(p), dOffDists(p)] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost);      
+
 
     end
     
@@ -306,7 +266,7 @@ for iter = 1 : numIter
         brks = popBreak(randomOrder(p-7:p),:);
 %         display(brks);
         fitVals = fitVal(randomOrder(p-7:p));
-        dists = totalDist(randomOrder(p-7:p));
+%        dists = totalDist(randomOrder(p-7:p));
 %         display(dists);
  
         [ignore,idx] = min(fitVals); %#ok
@@ -314,27 +274,68 @@ for iter = 1 : numIter
         
 
 %%%%%%%%%corssover%%%%%%%%%%%%%%
-% [sFitVals, IX] = sort(fitVals);
-% par1_route = rtes(IX(1),:);
-% par1_brks = brks(IX(1),:);
-% par2_route = rtes(IX(2),:);
-% par2_brks = brks(IX(2),:);
-% os_route=rtes(IX(1),:);
-% os_brks=brks(IX(1),:);
-% subRouteStart=par2_brks(ceil((length(par2_brks)-1)*rand(1,1)));
-% subRouteEnd=par2_brks(subRouteStart+1);
-% for i=subRouteStart:1:subRouteEnd
-%     os_route[find(par1_route(i))]=[];
-% end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
         bestOf8Route = rtes(idx,:);
         bestOf8Break = brks(idx,:);
         routeInsertionPoints = sort(ceil(n*rand(1,2)));
         I = routeInsertionPoints(1);
         J = routeInsertionPoints(2);
+        
+        
+        [sFitVals, IX] = sort(fitVals);
+        par1_route = rtes(IX(1),:);
+        par1_brks = brks(IX(1),:);
+        par2_route = rtes(IX(2),:);
+        par2_brks = brks(IX(2),:);
+        ch1_route = par1_route;
+        ch1_brks = par1_brks;
+        %removing the duplicate elements
+        for i=I:1:J
+            ch1_route(find(ch1_route==(par2_route(i)))) = [];
+        end
+        
+        permchild1 = [ch1_route,par2_route(I:J)];
+        old_cost = tot_Dist(permchild1, ch1_brks,n,dmat,nSalesmen);
+        [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch1_brks, permchild1, dmat, old_cost);
+        
+        %find the best possible location to insert the new part
+        for i=2:n-(J-I)-2
+            perm1= [ch1_route(1:i),par2_route(I:J),ch1_route(i+1:length(ch1_route))];
+            cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
+            [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch1_brks, perm1, dmat, cost);
+            if(nfitVal<old_fitVal)
+                permchild1=perm1;
+                old_fitVal = fitVal;
+            end
+        end
+        ch2_route = par2_route;
+        ch2_brks = par2_brks;
+        %removing the duplicate elements
+        for i=I:1:J
+            ch2_route(find(ch2_route==(par1_route(i)))) = [];
+        end
+        %permchild2 = [ch2_route,par1_route(I:J)];
+        
+        
+        permchild2 = [ch1_route,par2_route(I:J)];
+        old_cost = tot_Dist(permchild2, ch2_brks,n,dmat,nSalesmen);
+        [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch2_brks, permchild2, dmat, old_cost);
+        
+        %find the best possible location to insert the new part
+        for i=2:n-(J-I)-2
+            perm2= [ch2_route(1:i),par1_route(I:J),ch2_route(i+1:length(ch2_route))];
+            cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
+            [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch2_brks, perm2, dmat, cost);
+            if(nfitVal<old_fitVal)
+                permchild2=perm2;
+                old_fitVal = fitVal;
+            end
+        end
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
         for k = 1:8 % Generate New Solutions
             tmpPopRoute(k,:) = bestOf8Route;
             tmpPopBreak(k,:) = bestOf8Break;
@@ -346,7 +347,9 @@ for iter = 1 : numIter
                 case 4 % Slide
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
                 case 5 % Modify Breaks
-                    tmpPopBreak(k,:) = rand_breaks();
+                    %tmpPopBreak(k,:) = rand_breaks();
+                    tmpPopRoute(k,:) = permchild1;
+                    tmpPopBreak(k,:) = ch1_brks;
                 case 6 % Flip, Modify Breaks
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                     tmpPopBreak(k,:) = rand_breaks();
@@ -354,8 +357,10 @@ for iter = 1 : numIter
                     tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
                     tmpPopBreak(k,:) = rand_breaks();
                 case 8 % Slide, Modify Breaks
-                    tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
-                    tmpPopBreak(k,:) = rand_breaks();
+                    %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                    %tmpPopBreak(k,:) = rand_breaks();
+                    tmpPopRoute(k,:) = permchild2;
+                    tmpPopBreak(k,:) = ch2_brks;
                 otherwise % Do Nothing
             end
         end
@@ -416,3 +421,54 @@ end
         end
     end
 end
+
+
+    %fitness Value function
+    function [fitVal, offDist, dOffDist] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost)
+        satrt_brk_idx  = 1;
+        offDist=0;
+        offRout = 4;
+        offRoutLim = 0.5;
+            for i = 1 : 1 : length(f_pBreak) + 1 
+                if i == (length(f_pBreak) + 1)
+                    end_brk_idx = length(f_pRoute) - 1;
+                else
+                    end_brk_idx = f_pBreak(i) - 1;
+                end
+                %display(end_brk_idx);
+                %display(satrt_brk_idx);
+                %%%for each route in the solution
+                %R is direct distance to the destination for that route
+                R = dmat(1, f_pRoute(end_brk_idx + 1));
+                %display(R);
+                % depo to the first store in the route
+                totDist = dmat(1, f_pRoute(satrt_brk_idx));
+                for j = satrt_brk_idx : 1 : end_brk_idx                
+                      totDist = totDist + dmat(f_pRoute(j), f_pRoute(j + 1));
+                end
+                satrt_brk_idx = end_brk_idx + 2;
+                %display(totDist);
+                if (totDist - R)<0
+                    msgbox('Negative off distance', 'Error','error');
+                    break
+                end
+                if ((totDist - R) > offRoutLim)
+                    offDist = offDist + (totDist - R) - offRoutLim;
+                    dOffDist= offDist + (totDist - R);
+                %    display(offDist);
+                end
+            end 
+        fitVal = cost + offRout*offDist;
+    end
+
+
+    function d = tot_Dist(pRoute, pBreak,n,dmat,nSalesmen)
+        d      = 0;
+        rng    = [[1 pBreak + 1];[pBreak n]]';
+        for s = 1:nSalesmen
+                d = d + dmat(1,pRoute(rng(s,1))); % Add Start Distance
+                for k = rng(s, 1) : rng(s, 2) - 1
+                    d = d + dmat(pRoute(k), pRoute(k + 1));
+                end
+        end
+    end
