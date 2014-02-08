@@ -82,7 +82,7 @@
 % Email: jdkirk630@gmail.com
 % Release: 1.4
 % Release Date: 11/07/11
-function varargout = mtspofs_ga(xy,dmat,nSalesmen,minTour,popSize,numIter,showProg,showResult)
+function varargout = mtspofs_ga_24(xy,dmat,nSalesmen,minTour,popSize,numIter,showProg,showResult)
 
 % Process Inputs and Initialize Defaults
 nargs = 8;
@@ -140,11 +140,9 @@ popRoute = zeros(popSize,n);         % population of routes
 popBreak = zeros(popSize,nBreaks);   % population of breaks
 popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
-for k = 2:popSize/2
-    popRoute(k,:) = randperm(n) + 1;
-    popBreak(k,:) = rand_breaks();
-end
-for k = (popSize/2)+1:popSize
+
+% use nearest neighbour algorithm for a quarter of the solutions
+for k = 2:popSize/4
     popBreak(k,:) = rand_breaks();
     % pick the first store randomly
     store_id = ceil((n-1)*rand(1,1))+1;
@@ -167,6 +165,12 @@ for k = (popSize/2)+1:popSize
         str_indices(idx) = [];
     end
 end
+
+for k = (popSize/4)+1:popSize
+    popRoute(k,:) = randperm(n) + 1;
+    popBreak(k,:) = rand_breaks();
+end
+
 
 % Select the Colors for the Plotted Routes
 pclr = ~get(0,'DefaultAxesColor');
@@ -199,7 +203,6 @@ for iter = 1 : numIter
     %display(dmat);
      % Fitness value
     for p=1:1:popSize
-        offDist  = 0;
         cost     = totalDist(p);
         f_pRoute = popRoute(p,:);
         %display(f_pRoute);
@@ -260,23 +263,23 @@ for iter = 1 : numIter
     
     % Genetic Algorithm Operators - modified
     randomOrder = randperm(popSize);
-    for p = 16:16:popSize
-        rtes = popRoute(randomOrder(p-15:p),:);
+    for p = 24:24:popSize
+        rtes = popRoute(randomOrder(p-23:p),:);
 %         display(rtes);
-        brks = popBreak(randomOrder(p-15:p),:);
+        brks = popBreak(randomOrder(p-23:p),:);
 %         display(brks);
-        fitVals = fitVal(randomOrder(p-15:p));
+        fitVals = fitVal(randomOrder(p-23:p));
 %        dists = totalDist(randomOrder(p-7:p));
 %         display(dists);
  
-        [ignore,idx] = min(fitVals); %#ok
+%        [ignore,idx] = min(fitVals); %#ok
 %        [ignore,idx] = min(dists); %#ok
         
 
 %%%%%%%%%corssover%%%%%%%%%%%%%%
 
-        bestOf8Route = rtes(idx,:);
-        bestOf8Break = brks(idx,:);
+%        bestOf8Route = rtes(idx,:);
+%        bestOf8Break = brks(idx,:);
         routeInsertionPoints = sort(ceil(n*rand(1,2)));
         I = routeInsertionPoints(1);
         J = routeInsertionPoints(2);
@@ -336,22 +339,32 @@ for iter = 1 : numIter
 
 
 
-        for k = 1:16 % Generate New Solutions
-            tmpPopRoute(k,:) = bestOf8Route;
-            tmpPopBreak(k,:) = bestOf8Break;
+        for k = 1:24 % Generate New Solutions
             switch k
+                case 1 % Best solution
+                    tmpPopRoute(k,:) = par1_route;
+                    tmpPopBreak(k,:) = par1_brks;
                 case 2 % Flip
+                    tmpPopRoute(k,:) = par1_route;
+                    tmpPopBreak(k,:) = par1_brks;
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                 case 3 % Swap
+                    tmpPopRoute(k,:) = par1_route;
+                    tmpPopBreak(k,:) = par1_brks;                    
                     tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
                 case 4 % Slide
+                    tmpPopRoute(k,:) = par1_route;
+                    tmpPopBreak(k,:) = par1_brks;                    
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
                 case 5 % Modify Breaks
+                    tmpPopRoute(k,:) = par1_route;
                     tmpPopBreak(k,:) = rand_breaks();
                 case 6 % Flip, Modify Breaks
+                    tmpPopRoute(k,:) = par1_route;                
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                     tmpPopBreak(k,:) = rand_breaks();
                 case 7 % Swap, Modify Breaks
+                    tmpPopRoute(k,:) = par1_route;
                     tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
                     tmpPopBreak(k,:) = rand_breaks();
                 case 8 % Second child
@@ -385,11 +398,43 @@ for iter = 1 : numIter
                       tmpPopRoute(k,:) = permchild1;
                       tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                       tmpPopBreak(k,:) = ch1_brks;
+                case 17 % First Child, Slide
+                      tmpPopRoute(k,:) = permchild1;
+                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                      tmpPopBreak(k,:) = ch1_brks;
+                case 18 % Second best, Slide 
+                      tmpPopRoute(k,:) = par2_route;
+                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                      tmpPopBreak(k,:) = par2_brks;
+                case 19 % Second Child, Swap
+                      tmpPopRoute(k,:) = permchild2;
+                      %tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
+                      tmpPopBreak(k,:) = ch2_brks;
+                case 20 % Seond Child, Flip
+                      tmpPopRoute(k,:) = permchild2;
+                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
+                      tmpPopBreak(k,:) = ch2_brks;
+                case 21 % Seond Child, Slide
+                      tmpPopRoute(k,:) = permchild2;
+                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                      tmpPopBreak(k,:) = ch2_brks;
+                case 22 % Second best, Flip, modify breaks
+                      tmpPopRoute(k,:) = par2_route;
+                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
+                      tmpPopBreak(k,:) = rand_breaks();
+                case 23 % Second best, Swap, modify breaks
+                      tmpPopRoute(k,:) = par2_route;
+                      %tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
+                      tmpPopBreak(k,:) = rand_breaks();
+                case 24 % First Child, Flip, modify breaks
+                      tmpPopRoute(k,:) = permchild1;
+                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
+                      tmpPopBreak(k,:) = rand_breaks();
                 otherwise % Do Nothing
             end
         end
-        newPopRoute(p-15:p,:) = tmpPopRoute;
-        newPopBreak(p-15:p,:) = tmpPopBreak;
+        newPopRoute(p-23:p,:) = tmpPopRoute;
+        newPopBreak(p-23:p,:) = tmpPopBreak;
     end
     popRoute = newPopRoute;
     popBreak = newPopBreak;

@@ -140,33 +140,34 @@ popRoute = zeros(popSize,n);         % population of routes
 popBreak = zeros(popSize,nBreaks);   % population of breaks
 popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
-for k = 2:popSize/2
+for k = 2:popSize
     popRoute(k,:) = randperm(n) + 1;
     popBreak(k,:) = rand_breaks();
 end
-for k = (popSize/2)+1:popSize
-    popBreak(k,:) = rand_breaks();
-    % pick the first store randomly
-    store_id = ceil((n-1)*rand(1,1))+1;
-    popRoute(k,1) = store_id;
-    % because 1 is depo
-    str_indices = (1:n) + 1;
-    str_indices = str_indices(str_indices~=store_id);
-    %str_indices(store_id-1) = []  % remove
-    mindist= inf;
-    for j=2:n
-        for i=1:length(str_indices);
-            if dmat(store_id,str_indices(i))<mindist;
-               mindist= dmat(store_id,str_indices(i));
-               idx=i;
-            end
-        end
-        mindist= inf;
-        popRoute(k,j)= str_indices(idx);
-        store_id = str_indices(idx);
-        str_indices(idx) = [];
-    end
-end
+
+% for k = (popSize/2)+1:popSize
+%     popBreak(k,:) = rand_breaks();
+%     % pick the first store randomly
+%     store_id = ceil((n-1)*rand(1,1))+1;
+%     popRoute(k,1) = store_id;
+%     % because 1 is depo
+%     str_indices = (1:n) + 1;
+%     str_indices = str_indices(str_indices~=store_id);
+%     %str_indices(store_id-1) = []  % remove
+%     mindist= inf;
+%     for j=2:n
+%         for i=1:length(str_indices);
+%             if dmat(store_id,str_indices(i))<mindist;
+%                mindist= dmat(store_id,str_indices(i));
+%                idx=i;
+%             end
+%         end
+%         mindist= inf;
+%         popRoute(k,j)= str_indices(idx);
+%         store_id = str_indices(idx);
+%         str_indices(idx) = [];
+%     end
+% end
 
 % Select the Colors for the Plotted Routes
 pclr = ~get(0,'DefaultAxesColor');
@@ -273,68 +274,66 @@ for iter = 1 : numIter
 %        [ignore,idx] = min(dists); %#ok
         
 
-%%%%%%%%%corssover%%%%%%%%%%%%%%
+        
+%         %%%%%%%%%corssover%%%%%%%%%%%%%%
+%         [sFitVals, IX] = sort(fitVals);
+%         par1_route = rtes(IX(1),:);
+%         par1_brks = brks(IX(1),:);
+%         par2_route = rtes(IX(2),:);
+%         par2_brks = brks(IX(2),:);
+%         ch1_route = par1_route;
+%         ch1_brks = par1_brks;
+%         %removing the duplicate elements
+%         for i=I:1:J
+%             ch1_route(find(ch1_route==(par2_route(i)))) = [];
+%         end
+%         
+%         permchild1 = [ch1_route,par2_route(I:J)];
+%         old_cost = tot_Dist(permchild1, ch1_brks,n,dmat,nSalesmen);
+%         [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch1_brks, permchild1, dmat, old_cost);
+%         
+%         %find the best possible location to insert the new part
+%         for i=2:n-(J-I)-2
+%             perm1= [ch1_route(1:i),par2_route(I:J),ch1_route(i+1:length(ch1_route))];
+%             cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
+%             [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch1_brks, perm1, dmat, cost);
+%             if(nfitVal<old_fitVal)
+%                 permchild1=perm1;
+%                 old_fitVal = fitVal;
+%             end
+%         end
+%         ch2_route = par2_route;
+%         ch2_brks = par2_brks;
+%         %removing the duplicate elements
+%         for i=I:1:J
+%             ch2_route(find(ch2_route==(par1_route(i)))) = [];
+%         end
+%         %permchild2 = [ch2_route,par1_route(I:J)];
+%         
+%         
+%         permchild2 = [ch1_route,par2_route(I:J)];
+%         old_cost = tot_Dist(permchild2, ch2_brks,n,dmat,nSalesmen);
+%         [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch2_brks, permchild2, dmat, old_cost);
+%         
+%         %find the best possible location to insert the new part
+%         for i=2:n-(J-I)-2
+%             perm2= [ch2_route(1:i),par1_route(I:J),ch2_route(i+1:length(ch2_route))];
+%             cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
+%             [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch2_brks, perm2, dmat, cost);
+%             if(nfitVal<old_fitVal)
+%                 permchild2=perm2;
+%                 old_fitVal = fitVal;
+%             end
+%         end
+% 
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
         bestOf8Route = rtes(idx,:);
         bestOf8Break = brks(idx,:);
         routeInsertionPoints = sort(ceil(n*rand(1,2)));
         I = routeInsertionPoints(1);
         J = routeInsertionPoints(2);
-        
-        
-        [sFitVals, IX] = sort(fitVals);
-        par1_route = rtes(IX(1),:);
-        par1_brks = brks(IX(1),:);
-        par2_route = rtes(IX(2),:);
-        par2_brks = brks(IX(2),:);
-        ch1_route = par1_route;
-        ch1_brks = par1_brks;
-        %removing the duplicate elements
-        for i=I:1:J
-            ch1_route(find(ch1_route==(par2_route(i)))) = [];
-        end
-        
-        permchild1 = [ch1_route,par2_route(I:J)];
-        old_cost = tot_Dist(permchild1, ch1_brks,n,dmat,nSalesmen);
-        [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch1_brks, permchild1, dmat, old_cost);
-        
-        %find the best possible location to insert the new part
-        for i=2:n-(J-I)-2
-            perm1= [ch1_route(1:i),par2_route(I:J),ch1_route(i+1:length(ch1_route))];
-            cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
-            [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch1_brks, perm1, dmat, cost);
-            if(nfitVal<old_fitVal)
-                permchild1=perm1;
-                old_fitVal = fitVal;
-            end
-        end
-        ch2_route = par2_route;
-        ch2_brks = par2_brks;
-        %removing the duplicate elements
-        for i=I:1:J
-            ch2_route(find(ch2_route==(par1_route(i)))) = [];
-        end
-        %permchild2 = [ch2_route,par1_route(I:J)];
-        
-        
-        permchild2 = [ch1_route,par2_route(I:J)];
-        old_cost = tot_Dist(permchild2, ch2_brks,n,dmat,nSalesmen);
-        [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch2_brks, permchild2, dmat, old_cost);
-        
-        %find the best possible location to insert the new part
-        for i=2:n-(J-I)-2
-            perm2= [ch2_route(1:i),par1_route(I:J),ch2_route(i+1:length(ch2_route))];
-            cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
-            [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch2_brks, perm2, dmat, cost);
-            if(nfitVal<old_fitVal)
-                permchild2=perm2;
-                old_fitVal = fitVal;
-            end
-        end
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 
         for k = 1:8 % Generate New Solutions
             tmpPopRoute(k,:) = bestOf8Route;
@@ -347,9 +346,7 @@ for iter = 1 : numIter
                 case 4 % Slide
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
                 case 5 % Modify Breaks
-                    %tmpPopBreak(k,:) = rand_breaks();
-                    tmpPopRoute(k,:) = permchild1;
-                    tmpPopBreak(k,:) = ch1_brks;
+                    tmpPopBreak(k,:) = rand_breaks();
                 case 6 % Flip, Modify Breaks
                     tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                     tmpPopBreak(k,:) = rand_breaks();
@@ -357,10 +354,8 @@ for iter = 1 : numIter
                     tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
                     tmpPopBreak(k,:) = rand_breaks();
                 case 8 % Slide, Modify Breaks
-                    %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
-                    %tmpPopBreak(k,:) = rand_breaks();
-                    tmpPopRoute(k,:) = permchild2;
-                    tmpPopBreak(k,:) = ch2_brks;
+                    tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                    tmpPopBreak(k,:) = rand_breaks();
                 otherwise % Do Nothing
             end
         end
