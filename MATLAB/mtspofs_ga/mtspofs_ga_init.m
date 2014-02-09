@@ -82,7 +82,7 @@
 % Email: jdkirk630@gmail.com
 % Release: 1.4
 % Release Date: 11/07/11
-function varargout = mtspofs_ga(xy,dmat,nSalesmen,minTour,popSize,numIter,showProg,showResult)
+function varargout = mtspofs_ga_init(xy,dmat,nSalesmen,minTour,popSize,numIter,showProg,showResult)
 
 % Process Inputs and Initialize Defaults
 nargs = 8;
@@ -141,7 +141,32 @@ popBreak = zeros(popSize,nBreaks);   % population of breaks
 popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
 
-for k = 2:popSize
+% use nearest neighbour algorithm for a quarter of the solutions
+for k = 2:popSize/48
+    popBreak(k,:) = rand_breaks();
+    % pick the first store randomly
+    store_id = ceil((n-1)*rand(1,1))+1;
+    popRoute(k,1) = store_id;
+    % because 1 is depo
+    str_indices = (1:n) + 1;
+    str_indices = str_indices(str_indices~=store_id);
+    %str_indices(store_id-1) = []  % remove
+    mindist= inf;
+    for j=2:n
+        for i=1:length(str_indices);
+            if dmat(store_id,str_indices(i))<mindist;
+               mindist= dmat(store_id,str_indices(i));
+               idx=i;
+            end
+        end
+        mindist= inf;
+        popRoute(k,j)= str_indices(idx);
+        store_id = str_indices(idx);
+        str_indices(idx) = [];
+    end
+end
+
+for k = (popSize/48)+1:popSize
     popRoute(k,:) = randperm(n) + 1;
     popBreak(k,:) = rand_breaks();
 end
@@ -184,10 +209,6 @@ for iter = 1 : numIter
         %display(f_pRoute);
         f_pBreak = popBreak(p,:);
         %display(f_pBreak);
-        %i indicates a route
-        %j is index of visiting stores in the route
-        %end_brk_idx is the index for last store in a route array
-        %brk_idx is the index for first store in a route array
         
         [fitVal(p), offDists(p), dOffDists(p)] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost);      
 
@@ -241,70 +262,10 @@ for iter = 1 : numIter
     randomOrder = randperm(popSize);
     for p = 8:8:popSize
         rtes = popRoute(randomOrder(p-7:p),:);
-%         display(rtes);
         brks = popBreak(randomOrder(p-7:p),:);
-%         display(brks);
         fitVals = fitVal(randomOrder(p-7:p));
-%        dists = totalDist(randomOrder(p-7:p));
-%         display(dists);
  
-        [ignore,idx] = min(fitVals); %#ok
-%        [ignore,idx] = min(dists); %#ok
-        
-
-        
-%         %%%%%%%%%corssover%%%%%%%%%%%%%%
-%         [sFitVals, IX] = sort(fitVals);
-%         par1_route = rtes(IX(1),:);
-%         par1_brks = brks(IX(1),:);
-%         par2_route = rtes(IX(2),:);
-%         par2_brks = brks(IX(2),:);
-%         ch1_route = par1_route;
-%         ch1_brks = par1_brks;
-%         %removing the duplicate elements
-%         for i=I:1:J
-%             ch1_route(find(ch1_route==(par2_route(i)))) = [];
-%         end
-%         
-%         permchild1 = [ch1_route,par2_route(I:J)];
-%         old_cost = tot_Dist(permchild1, ch1_brks,n,dmat,nSalesmen);
-%         [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch1_brks, permchild1, dmat, old_cost);
-%         
-%         %find the best possible location to insert the new part
-%         for i=2:n-(J-I)-2
-%             perm1= [ch1_route(1:i),par2_route(I:J),ch1_route(i+1:length(ch1_route))];
-%             cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
-%             [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch1_brks, perm1, dmat, cost);
-%             if(nfitVal<old_fitVal)
-%                 permchild1=perm1;
-%                 old_fitVal = fitVal;
-%             end
-%         end
-%         ch2_route = par2_route;
-%         ch2_brks = par2_brks;
-%         %removing the duplicate elements
-%         for i=I:1:J
-%             ch2_route(find(ch2_route==(par1_route(i)))) = [];
-%         end
-%         %permchild2 = [ch2_route,par1_route(I:J)];
-%         
-%         
-%         permchild2 = [ch1_route,par2_route(I:J)];
-%         old_cost = tot_Dist(permchild2, ch2_brks,n,dmat,nSalesmen);
-%         [old_fitVal, old_offDist, old_dOffDist] = calced_fitVal(ch2_brks, permchild2, dmat, old_cost);
-%         
-%         %find the best possible location to insert the new part
-%         for i=2:n-(J-I)-2
-%             perm2= [ch2_route(1:i),par1_route(I:J),ch2_route(i+1:length(ch2_route))];
-%             cost = tot_Dist(perm1, ch1_brks,n,dmat,nSalesmen);
-%             [nfitVal, noffDist, ndOffDist] = calced_fitVal(ch2_brks, perm2, dmat, cost);
-%             if(nfitVal<old_fitVal)
-%                 permchild2=perm2;
-%                 old_fitVal = fitVal;
-%             end
-%         end
-% 
-% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        [ignore,idx] = min(fitVals); %#ok      
 
 
         bestOf8Route = rtes(idx,:);
@@ -408,10 +369,6 @@ end
                 else
                     end_brk_idx = f_pBreak(i) - 1;
                 end
-                %display(end_brk_idx);
-                %display(satrt_brk_idx);
-                %%%for each route in the solution
-                %R is direct distance to the destination for that route
                 R = dmat(1, f_pRoute(end_brk_idx + 1));
                 %display(R);
                 % depo to the first store in the route

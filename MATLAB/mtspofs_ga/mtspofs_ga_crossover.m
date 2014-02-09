@@ -82,7 +82,7 @@
 % Email: jdkirk630@gmail.com
 % Release: 1.4
 % Release Date: 11/07/11
-function varargout = mtspofs_ga_24(xy,dmat,nSalesmen,minTour,popSize,numIter,showProg,showResult)
+function varargout = mtspofs_ga_crossover(xy,dmat,nSalesmen,minTour,popSize,numIter,showProg,showResult)
 
 % Process Inputs and Initialize Defaults
 nargs = 8;
@@ -142,31 +142,8 @@ popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
 
 % use nearest neighbour algorithm for a quarter of the solutions
-for k = 2:popSize/4
-    popBreak(k,:) = rand_breaks();
-    % pick the first store randomly
-    store_id = ceil((n-1)*rand(1,1))+1;
-    popRoute(k,1) = store_id;
-    % because 1 is depo
-    str_indices = (1:n) + 1;
-    str_indices = str_indices(str_indices~=store_id);
-    %str_indices(store_id-1) = []  % remove
-    mindist= inf;
-    for j=2:n
-        for i=1:length(str_indices);
-            if dmat(store_id,str_indices(i))<mindist;
-               mindist= dmat(store_id,str_indices(i));
-               idx=i;
-            end
-        end
-        mindist= inf;
-        popRoute(k,j)= str_indices(idx);
-        store_id = str_indices(idx);
-        str_indices(idx) = [];
-    end
-end
 
-for k = (popSize/4)+1:popSize
+for k = 2:popSize
     popRoute(k,:) = randperm(n) + 1;
     popBreak(k,:) = rand_breaks();
 end
@@ -207,11 +184,6 @@ for iter = 1 : numIter
         f_pRoute = popRoute(p,:);
         %display(f_pRoute);
         f_pBreak = popBreak(p,:);
-        %display(f_pBreak);
-        %i indicates a route
-        %j is index of visiting stores in the route
-        %end_brk_idx is the index for last store in a route array
-        %brk_idx is the index for first store in a route array
         
         [fitVal(p), offDists(p), dOffDists(p)] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost);      
 
@@ -235,10 +207,6 @@ for iter = 1 : numIter
     distHistory(iter) = minFitVal;
     if minFitVal < globalMin
         globalMin = minFitVal;
-    
-    %distHistory(iter) = minDist;
-    %if minDist < globalMin
-        %globalMin = minDist;
         
         optRoute = popRoute(index,:);
         optBreak = popBreak(index,:);
@@ -259,7 +227,6 @@ for iter = 1 : numIter
         end
     end
     
-   
     
     % Genetic Algorithm Operators - modified
     randomOrder = randperm(popSize);
@@ -400,35 +367,35 @@ for iter = 1 : numIter
                       tmpPopBreak(k,:) = ch1_brks;
                 case 17 % First Child, Slide
                       tmpPopRoute(k,:) = permchild1;
-                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                      tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
                       tmpPopBreak(k,:) = ch1_brks;
                 case 18 % Second best, Slide 
                       tmpPopRoute(k,:) = par2_route;
-                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                      tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
                       tmpPopBreak(k,:) = par2_brks;
                 case 19 % Second Child, Swap
                       tmpPopRoute(k,:) = permchild2;
-                      %tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
+                      tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
                       tmpPopBreak(k,:) = ch2_brks;
                 case 20 % Seond Child, Flip
                       tmpPopRoute(k,:) = permchild2;
-                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
+                      tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                       tmpPopBreak(k,:) = ch2_brks;
                 case 21 % Seond Child, Slide
                       tmpPopRoute(k,:) = permchild2;
-                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
+                      tmpPopRoute(k,I:J) = tmpPopRoute(k,[I+1:J I]);
                       tmpPopBreak(k,:) = ch2_brks;
                 case 22 % Second best, Flip, modify breaks
                       tmpPopRoute(k,:) = par2_route;
-                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
+                      tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                       tmpPopBreak(k,:) = rand_breaks();
                 case 23 % Second best, Swap, modify breaks
                       tmpPopRoute(k,:) = par2_route;
-                      %tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
+                      tmpPopRoute(k,[I J]) = tmpPopRoute(k,[J I]);
                       tmpPopBreak(k,:) = rand_breaks();
                 case 24 % First Child, Flip, modify breaks
                       tmpPopRoute(k,:) = permchild1;
-                      %tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
+                      tmpPopRoute(k,I:J) = tmpPopRoute(k,J:-1:I);
                       tmpPopBreak(k,:) = rand_breaks();
                 otherwise % Do Nothing
             end
