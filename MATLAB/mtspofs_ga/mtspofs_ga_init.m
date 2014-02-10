@@ -142,7 +142,7 @@ popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
 
 % use nearest neighbour algorithm for a quarter of the solutions
-for k = 2:popSize/48
+for k = 2:popSize/4
     popBreak(k,:) = rand_breaks();
     % pick the first store randomly
     store_id = ceil((n-1)*rand(1,1))+1;
@@ -166,7 +166,7 @@ for k = 2:popSize/48
     end
 end
 
-for k = (popSize/48)+1:popSize
+for k = (popSize/4)+1:popSize
     popRoute(k,:) = randperm(n) + 1;
     popBreak(k,:) = rand_breaks();
 end
@@ -305,7 +305,134 @@ for iter = 1 : numIter
     popBreak = newPopBreak;
 end
 
+
+%%%%%%%post processing%%%%%%%%%%
+
+% we will check if the stores in each route of the most opt solution are 
+% better to be placed in another route 
+% in other words: inserting nodes of one route (primary) into other routes (secondary)
+
+
+
+post_fitVal= minFitVal;
+post_offDist = offDistmin;
+post_dOffDist = dODistmin;
+fitValHist = post_fitVal;
+run = 1;
+% for all the primary routes 
+while (run)
+    
+    %this helps us better deal with the scanning through the routes 
+    start_navigator_brk=[1,optBreak+1];
+    end_navigator_brk=[optBreak,length(optRoute)];
+    
+    for i=1:length(start_navigator_brk)
+        tempRoute = optRoute;
+        newRoute= optRoute;
+        % for all the secondary routes 
+        for j=1:length(start_navigator_brk)
+            tempBreak = optBreak;
+
+            % for the last primary route non of the break elements decrease 
+            if i< length(start_navigator_brk)
+                tempBreak(i) = optBreak(i)-1;
+            end
+
+            % we do not compare a route against itself
+            if (j~=i)
+              % add one to the break of the secondary route (because we are
+              % inserting the store into this route)
+              if (j<length(start_navigator_brk))
+                tempBreak(j) = optBreak(j)+1;
+              end
+
+              start_new_nav_brk=[1,tempBreak+1];
+              end_new_nav_brk=[tempBreak,length(optRoute)];
+              %%%% so far we have taken care of all the breaks %%%
+
+              %scan through the primary route
+              for k=start_navigator_brk(i):end_navigator_brk(i)
+
+                  %scan through the new secondary route                
+                  for x = start_new_nav_brk(j):end_new_nav_brk(j)
+
+                      %remove the node from the primary route
+                      tempRoute(k)=[];
+                      %insert the node to the secondary route
+                      if (x>1)
+                        newRoute = [tempRoute(1:x-1),optRoute(k),tempRoute(x:end)];
+                      else
+                        newRoute = [optRoute(k),tempRoute(x:end)];
+                      end
+    %                   newRoute(1:x) = tempRoute(1:x);
+    %                   newRoute(x+1) = optRoute(k);
+    %                   newRoute(x+2:end) = tempRoute(x+1:end);
+                      newBreak = tempBreak;
+
+                      % calculating the opt fitVal
+                      opt_cost = tot_Dist(optRoute, optBreak,n,dmat,nSalesmen);
+                      [opt_fitVal, opt_offDist, opt_dOffDist] = calced_fitVal(optBreak, optRoute, dmat, opt_cost);
+                      % calculating the new fitVal
+                      new_cost = tot_Dist(newRoute, newBreak,n,dmat,nSalesmen);
+                      [new_fitVal, new_offDist, new_dOffDist] = calced_fitVal(newBreak, newRoute, dmat, new_cost);
+
+                      if (new_fitVal<opt_fitVal)
+                          % replace the better solution
+                          display(optRoute);
+                          display(optBreak);
+                          display (post_fitVal);
+                          display(newRoute);
+                          display (newBreak);
+                          display (new_fitVal);                         
+                          
+                          optRoute = newRoute;
+                          optBreak = newBreak;
+                          post_fitVal = new_fitVal;
+                          post_offDist = new_offDist;
+                          post_dOffDist = new_dOffDist;
+
+                      end
+                      tempRoute = optRoute;
+                      newRoute= optRoute;
+                  end
+
+              end
+
+            end 
+
+        end
+
+    end
+    display (fitValHist);
+    % if there was an improvement run the post processing again!
+    if(fitValHist==post_fitVal)
+        run = 0;
+    else
+        fitValHist=post_fitVal;
+    end
+    
+end
+
+
+%%%%%%%%
+
 if showResult
+    
+% post processed route
+pfig2 = figure('Name','MTSPOFS_GA | Post Processed Solution','Numbertitle','off');
+figure(pfig2);
+for s = 1:nSalesmen
+    rte = [1 newRoute(rng(s,1):rng(s,2))];
+    if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
+    else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
+    title(sprintf('Total Distance = %1.4f, Fitness Value = %1.4f, OffDist = %1.4f, dOffDist= %1.4f',minDist,post_fitVal,post_offDist,post_dOffDist));
+    hold on
+end
+if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
+else plot(xy(1,1),xy(1,2),'o','Color',pclr); end
+hold off
+
+
 % Plots
     figure('Name','MTSPOFS_GA | Results','Numbertitle','off');
     subplot(2,2,1);

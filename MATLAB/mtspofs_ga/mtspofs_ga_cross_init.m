@@ -142,7 +142,7 @@ popRoute(1,:) = (1:n) + 1;
 popBreak(1,:) = rand_breaks();
 
 % use nearest neighbour algorithm for a quarter of the solutions
-for k = 2:popSize/48
+for k = 2:popSize/4
     popBreak(k,:) = rand_breaks();
     % pick the first store randomly
     store_id = ceil((n-1)*rand(1,1))+1;
@@ -166,7 +166,7 @@ for k = 2:popSize/48
     end
 end
 
-for k = (popSize/48)+1:popSize
+for k = (popSize/4)+1:popSize
     popRoute(k,:) = randperm(n) + 1;
     popBreak(k,:) = rand_breaks();
 end
