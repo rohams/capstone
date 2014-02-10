@@ -342,29 +342,44 @@ while (run)
               % if removed from rightside and inserted into left, plus one
               % if removed from right and inserted into right, no change
               
-              %removed from their leftside
-              for b=i:length(optBreak)
-                  tempBreak(b)= optBreak(b)-1;
-              end
               
-              for b=j:length(optBreak)
-                  tempBreak(b)= tempBreak(b)+1;
-              end
-              
-              start_new_nav_brk=[1,tempBreak+1];
-              end_new_nav_brk=[tempBreak,length(optRoute)];
-              %%%% so far we have taken care of all the breaks %%%
-                    
-                  % do not remove more nodes from the primary route if it
-                  % is already at minimum
-                  if(end_navigator_brk(i)-start_navigator_brk(i))>minTour
-                      
+
+                  %removed from their leftside
+                  
+                  
+                  for b=i:length(optBreak)
+                            tempBreak(b)= optBreak(b)-1;
+                  end
+
+                  for b=j:length(optBreak)
+                            tempBreak(b)= tempBreak(b)+1;
+                  end
+                  
+                  %sanity checks
+                  if(tempBreak(1)==0)
+                      tempBreak(1)=1;
+                  end
+                  if(tempBreak(length(optBreak))==length(optRoute)+1)
+                      tempBreak(length(optBreak))=length(optRoute);
+                  end
+                  
+
+                  start_new_nav_brk=[1,tempBreak+1];
+                  end_new_nav_brk=[tempBreak,length(optRoute)];
+                  %%%% so far we have taken care of all the breaks %%%
+
+
+                % do not remove more nodes from the primary route if it
+                % is already at minimum
+                if(end_navigator_brk(i)-start_navigator_brk(i))>minTour
                       %scan through the primary route
                       for k=start_navigator_brk(i):end_navigator_brk(i)
-
+                      allNewRoutes = [];
+                      allNewFitVals = [];
+                      row = 1;
                           %scan through the new secondary route                
                           for x = start_new_nav_brk(j):end_new_nav_brk(j)
-
+                              
                               %remove the node from the primary route
                               tempRoute(k)=[];
                               %insert the node to the secondary route
@@ -373,35 +388,46 @@ while (run)
                               else
                                 newRoute = [optRoute(k),tempRoute(x:end)];
                               end
-
-
+                              
                               newBreak = tempBreak;
 
                               % calculating the opt fitVal
                               opt_cost = tot_Dist(optRoute, optBreak,n,dmat,nSalesmen);
                               [opt_fitVal, opt_offDist, opt_dOffDist] = calced_fitVal(optBreak, optRoute, dmat, opt_cost);
                               % calculating the new fitVal
+                              display(newBreak);
                               new_cost = tot_Dist(newRoute, newBreak,n,dmat,nSalesmen);
                               [new_fitVal, new_offDist, new_dOffDist] = calced_fitVal(newBreak, newRoute, dmat, new_cost);
-
+                                  
                               if (new_fitVal<opt_fitVal)
-                                  % replace the better solution
-                                  display(optRoute);
-                                  display(optBreak);
-                                  display (post_fitVal);
-                                  display(newRoute);
-                                  display (newBreak);
-                                  display (new_fitVal);                         
-
-                                  optRoute = newRoute;
-                                  optBreak = newBreak;
-                                  post_fitVal = new_fitVal;
-                                  post_offDist = new_offDist;
-                                  post_dOffDist = new_dOffDist;
-
+                                  %push the new route into array
+                                  allNewRoutes(row,:) = newRoute;
+                                  %push the new fitVal into array
+                                  allNewFitVals = [allNewFitVals,new_fitVal];
+                                  row= row+1;
+%                                   display(optRoute);
+%                                   display(optBreak);
+%                                   display (post_fitVal);
+%                                   display(newRoute);
+%                                   display (newBreak);
+%                                   display (new_fitVal);                                                          
                               end
+                              
                               tempRoute = optRoute;
-                              newRoute= optRoute;
+
+                          end
+                          [bestFitVal,best_idx] = min(allNewFitVals);
+                          if (bestFitVal<opt_fitVal)
+                              % replace the best solution
+                              display (best_idx);
+%                               display (allNewRoutes);
+%                               display (allNewFitVals);
+                              display (bestFitVal);
+                              optRoute = allNewRoutes(best_idx,:);
+                              optBreak = newBreak;
+                              post_fitVal = bestFitVal;
+                              post_offDist = new_offDist;
+                              post_dOffDist = new_dOffDist;
                           end
 
                       end
@@ -414,10 +440,11 @@ while (run)
 
     end
     
-    display (fitValHist);
+    %display (fitValHist);
     % if there was an improvement run the post processing again!
     if(fitValHist==post_fitVal)
         run = 0;
+        display(optBreak);
     else
         fitValHist=post_fitVal;
     end
@@ -517,12 +544,12 @@ end
                 end
                 satrt_brk_idx = end_brk_idx + 2;
                 %display(totDist);
-                if (totDist - R)<0
-                    display(f_pRoute);
-                    display(f_pBreak);
-                    msgbox('Negative off distance', 'Error','error');
-                    break
-                end
+%                 if (totDist - R)<0
+%                     display(f_pRoute);
+%                     display(f_pBreak);
+%                     msgbox('Negative off distance', 'Error','error');
+%                     break
+%                 end
                 if ((totDist - R) > offRoutLim)
                     offDist = offDist + (totDist - R) - offRoutLim;
                     dOffDist= offDist + (totDist - R);
