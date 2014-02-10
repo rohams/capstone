@@ -332,24 +332,27 @@ while (run)
         % for all the secondary routes 
         for j=1:length(start_navigator_brk)
             tempBreak = optBreak;
-            
+
+            % for the last primary route non of the break elements decrease 
+            if i< length(start_navigator_brk)
+                %tempBreak(i) = optBreak(i)-1;
+            end
+
             % we do not compare a route against itself
             if (j~=i)
-
+              % add one to the break of the secondary route (because we are
+              % inserting the store into this route)
+              if (j<length(start_navigator_brk))
+                %tempBreak(j) = optBreak(j)+1;
+              end
               % to adjust the breaks:
               % if removed from leftside and inserted into leftside, no change
               % if removed from leftside and inserted into right, less one
               % if removed from rightside and inserted into left, plus one
               % if removed from right and inserted into right, no change
               
-              %removed from their leftside
-              for b=i:length(optBreak)
-                  tempBreak(b)= optBreak(b)-1;
-              end
+              for b=i:
               
-              for b=j:length(optBreak)
-                  tempBreak(b)= tempBreak(b)+1;
-              end
               
               start_new_nav_brk=[1,tempBreak+1];
               end_new_nav_brk=[tempBreak,length(optRoute)];
@@ -369,7 +372,9 @@ while (run)
                       else
                         newRoute = [optRoute(k),tempRoute(x:end)];
                       end
-
+    %                   newRoute(1:x) = tempRoute(1:x);
+    %                   newRoute(x+1) = optRoute(k);
+    %                   newRoute(x+2:end) = tempRoute(x+1:end);
                       newBreak = tempBreak;
 
                       % calculating the opt fitVal
@@ -406,7 +411,6 @@ while (run)
         end
 
     end
-    
     display (fitValHist);
     % if there was an improvement run the post processing again!
     if(fitValHist==post_fitVal)
@@ -426,8 +430,7 @@ if showResult
 pfig2 = figure('Name','MTSPOFS_GA | Post Processed Solution','Numbertitle','off');
 figure(pfig2);
 for s = 1:nSalesmen
-    rng = [[1 optBreak+1];[optBreak n]]';
-    rte = [1 optRoute(rng(s,1):rng(s,2))];
+    rte = [1 newRoute(rng(s,1):rng(s,2))];
     if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
     else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
     title(sprintf('Total Distance = %1.4f, Fitness Value = %1.4f, OffDist = %1.4f, dOffDist= %1.4f',minDist,post_fitVal,post_offDist,post_dOffDist));
@@ -453,7 +456,7 @@ hold off
         rte = [1 optRoute(rng(s,1):rng(s,2))];
         if dims > 2, plot3(xy(rte,1),xy(rte,2),xy(rte,3),'.-','Color',clr(s,:));
         else plot(xy(rte,1),xy(rte,2),'.-','Color',clr(s,:)); end
-        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minDist, post_fitVal));
+        title(sprintf('Total Distance = %1.4f Fitness Value = %1.4f',minDist, minFitVal));
         hold on;
     end
     if dims > 2, plot3(xy(1,1),xy(1,2),xy(1,3),'o','Color',pclr);
