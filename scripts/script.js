@@ -671,6 +671,7 @@ function addDC(map){
         document.getElementById("panel").innerHTML = x;
         document.getElementById("panel7").style.display = 'none'; 
         panel7=true;
+        DC = null;
         });
         DC = new Node(lat,lng);       
       } else {
@@ -732,7 +733,6 @@ function addMarkers(id) {
     }
 
     distMat = distanceMatrix(stores);
-    
 }
 
 function updateWeights(){

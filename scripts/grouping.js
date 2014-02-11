@@ -6,31 +6,119 @@ function updateDistMatrix(stores)
 
 function distFromDCToStores (DC, stores)
 {
-	var dcDist = new Array(stores.length);
-	
-	for (var i = 0; i < stores.length; i++)
+	if (DC == null)
+		return null;
+	else
 	{
-		if (stores[i] != null)
+		var dcDist = new Array(stores.length);
+		
+		for (var i = 0; i < stores.length; i++)
 		{
-			dcDist[i] = distHaversine(DC, stores[i]);
+			if (stores[i] != null)
+			{
+				dcDist[i] = distHaversine(DC, stores[i]);
+			}
+			else
+				dcDist[i] = null;
 		}
-		else
-			dcDist[i] = null;
+		return dcDist;
 	}
-	return dcDist;
 }
 
-function graph_groups(map, routes, brks)
-{	
-	/* Draws the paths based on the given routes and brks.
-	   Must make sure that the content of brks is in increasing order */
+/* 	Calculates the total distance of the routes solution. 
+	For now it uses the one DC that user input */
+function totalDistance(routes, brks)
+{
 	
-	/* Test data */
-	// empty array
-//	routes = new Array();
-	// one data
-//	routes = [9]; // AB North
-	// multiple data
+	/* test */
+	//routes = [1, 5, 4];
+	//brks = [];
+	//routes = [1, 5, 4, 2, 3, 6, 7, 9, 8];
+	//brks = [2, 4];
+	/* end test */	
+	
+	// paths will store the list of stores indices of each path
+	var paths = new Array(brks.length + 1);
+	
+	if (brks.length == 0)
+	{
+		paths[0] = new Array(DC);
+		paths[0] = paths[0].concat(routes);
+	} else {
+		paths[0] = new Array(DC);
+		paths[0] = paths[0].concat(routes.slice(0, brks[0]+1));
+		for (var i = 1; i < brks.length; i++)
+		{
+			paths[i] = new Array(DC);
+			paths[i] = paths[i].concat(routes.slice(brks[i-1]+1, brks[i]+1));  
+		}
+		// last path
+		paths[brks.length] = new Array(DC);
+		paths[brks.length] = paths[brks.length].concat(routes.slice(brks[brks.length-1]+1)); 
+	}
+	
+	// distances will store the distances that need to be travelled in each paths
+	var distances = new Array(paths.length);
+	
+	// If DC is defined, get the distance from DC to the first store
+	if (DC != null)
+	{
+		var DCStoresDist = distFromDCToStores(DC, stores);
+	//	console.log(DCStoresDist);
+		for (var i = 0; i < distances.length; i++)
+		{
+			distances[i] = new Array();
+		//	console.log("DCToStores-" + paths[i][1] + "dist = " + DCStoresDist[paths[i][1]]);
+			distances[i].push(DCStoresDist[paths[i][1]]);
+		}
+	} else {
+	// else just create a blank array
+		for (var i = 0; i < paths.length; i++)
+		{
+			distances[i] = new Array();
+		}
+	}
+	
+	// using the global variable distMat
+	distMat = distanceMatrix(stores);
+	
+	for (var i = 0; i < paths.length; i++) // traverse each path
+	{		
+		for (var j = 1; j < paths[i].length - 1; j++) // traverse paths[i]
+		{
+		//	console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]); // showing all the distances involve to check if it's correct
+			distances[i].push(distMat[paths[i][j]][paths[i][j+1]]);
+		}
+	}
+	
+	// total will store the total distance of each path
+	var total = new Array(distances.length);
+	for (var i = 0; i < distances.length; i++)
+	{
+		var sum = new Number(0);
+		for (var j = 0; j < distances[i].length; j++)
+		{
+			sum += Number(distances[i][j]);
+		}
+	//	console.log("sum" + i + "= " + sum);
+		total[i] = sum;
+	}
+	
+	// totSum stores the total distance of all the paths
+	var totSum = new Number(0);
+	for (var i = 0; i < total.length; i++)
+	{
+		totSum += Number(total[i]);
+	}
+	
+	//console.log("totSum = " + totSum);
+	return totSum;
+}
+
+/*	Draws the paths based on the given routes and brks.
+	Must make sure that the content of brks is in increasing order */
+function graph_groups(map, routes, brks)
+{
         if (drawPath!= undefined){
             
             drawPath.setMap(null);
@@ -57,7 +145,7 @@ function graph_groups(map, routes, brks)
 	for (var i = 0; i < paths.length; i++)
 	{
 		paths[i] = new Array();
-                paths[i].push(new google.maps.LatLng(DC.getLat(), DC.getLng()));
+        paths[i].push(new google.maps.LatLng(DC.getLat(), DC.getLng()));
 				
 		for (j; j < routes.length; j++)
 		{
@@ -106,11 +194,10 @@ function graph_groups(map, routes, brks)
         
 }
 
+/*	Calculates the Euclidean distance between the stores and returns it in a matrix.
+	Have to call updateDistMatrix() every time the markers (ie. the stores) change. */
 function distanceMatrix(stores)
-{	
-	/* Calculates the Euclidean distance between the stores and returns it in a matrix.
-	   Have to call updateDistMatrix() every time the markers (ie. the stores) change. */
-	
+{		
 	var totSelectedStores = 0;
 	
 	// Create a two dimensional array of stores.length by stores.length
@@ -178,7 +265,7 @@ distHaversine = function(p1, p2) {
 
 function rand_routes(trucks, rand_arr)
 {
-	// Shuffle the rand_arr based on Fisher-Yates Shuffle Modern Algorithm
+	/* Shuffle the rand_arr based on Fisher-Yates Shuffle Modern Algorithm */
 	var i = rand_arr.length, j, temp;
 	while (i--)
 	{
