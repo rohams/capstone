@@ -683,8 +683,8 @@ end
 %                     break
                  end
                 if ((totDist - R) > offRoutLim)
-                    %offDist = offDist + (totDist - R) - offRoutLim;
-                    %dOffDist= offDist + (totDist - R);
+                    offDist = offDist + (totDist - R) - offRoutLim;
+                    dOffDist= offDist + (totDist - R);
                 %    display(offDist);
                 end
             end 
