@@ -330,9 +330,11 @@ distHaversine = function(p1, p2) {
 }
 
 
-function rand_routes(trucks, rand_arr)
+function rand_routes(myArr)
 {
 	/* Shuffle the rand_arr based on Fisher-Yates Shuffle Modern Algorithm */
+        // copy the array instead of reference
+        var rand_arr = myArr.slice();
 	var i = rand_arr.length, j, temp;
 	while (i--)
 	{
@@ -411,14 +413,19 @@ function group_progress(){
     var not_null_stores = non_null_indices(stores);
     var k = popSize;
     var k1;
+    var min_dist=1000000;
+    var temp_dist;
+    var min_brk;
+    var min_route;
     var grouping =setInterval(function(){
         
              k1=k-(popSize/10);
              while(k>k1){
-             pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
-             pRoutes[k] = rand_routes (trucks, not_null_stores);
-             progbar = (myprog++/popSize)*100;
-             k--;
+                //randomly initialize the population
+                 pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
+                 pRoutes[k] = rand_routes (not_null_stores);
+                 progbar = (myprog++/popSize)*100;
+                 k--;
             }
             
              updateProgress(progbar);
@@ -426,12 +433,24 @@ function group_progress(){
                 clearInterval(grouping);
                 progbar = 100;
                 updateProgress(progbar);
-                console.log(pRoutes[5]);
-                console.log(pBreaks[5]);
-                graph_groups(map, pRoutes[5], pBreaks[5]);
+                for (var i=1; i<popSize; i++){
+                temp_dist=totalDistance(pRoutes[i],pBreaks[i]);
+                //console.log(pRoutes[i]);
+                if(temp_dist<min_dist){
+                    min_dist=temp_dist;
+                    //console.log(min_dist);
+                    min_route=pRoutes[i];
+                    min_brk=pBreaks[i];
+                    }
+                graph_groups(map, min_route, min_brk);
+                var x = "Total Distance: " + min_dist;
+                document.getElementById("panel").innerHTML = x;
+                //console.log(pRoutes[5]);
+                //console.log(pBreaks[5]);
+
              }
+         }
 
     },0);
     
-
 }
