@@ -25,19 +25,11 @@ function distFromDCToStores (DC, stores)
 	}
 }
 
-/* 	Calculates the total distance of the routes solution. 
-	For now it uses the one DC that user input */
-function totalDistance(routes, brks)
+/* Calculates the fitness value of each route.
+ * Has a lot of similarity with totalDistance().
+ * DC must be already defined. */
+function off_routing_distance(routes, brks)
 {
-	
-	/* test */
-	//routes = [1, 5, 4];
-	//brks = [];
-	//routes = [1, 5, 4, 2, 3, 6, 7, 9, 8];
-	//brks = [2, 4];
-	/* end test */	
-	
-	// paths will store the list of stores indices of each path
 	var paths = new Array(brks.length + 1);
 	
 	if (brks.length == 0)
@@ -57,7 +49,82 @@ function totalDistance(routes, brks)
 		paths[brks.length] = paths[brks.length].concat(routes.slice(brks[brks.length-1]+1)); 
 	}
 	
-	// distances will store the distances that need to be travelled in each paths
+	// distances will store the distances that need to be traveled in each paths
+	var distances = new Array(paths.length);
+	
+	var DCStoresDist = distFromDCToStores(DC, stores);
+	for (var i = 0; i < distances.length; i++)
+	{
+		distances[i] = new Array();
+		distances[i].push(DCStoresDist[paths[i][1]]); // first distance
+	}
+	
+	// using the global variable distMat
+	distMat = distanceMatrix(stores);
+	
+	for (var i = 0; i < paths.length; i++) // traverse each path
+	{		
+		for (var j = 1; j < paths[i].length - 1; j++) // traverse paths[i]
+		{
+		//	console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]); // showing all the distances involve to check if it's correct
+			distances[i].push(distMat[paths[i][j]][paths[i][j+1]]);
+		}
+	}
+	
+	// total will store the total distance of each path (ie each truck's total distance)
+	var total = new Array(distances.length);
+	for (var i = 0; i < distances.length; i++)
+	{
+		var sum = new Number(0);
+		for (var j = 0; j < distances[i].length; j++)
+		{
+			sum += Number(distances[i][j]);
+		}
+		total[i] = sum;
+	}
+	
+	var offRouteDist = new Array(total.length);
+	for (var i = 0; i < offRouteDist.length; i++)
+	{
+		offRouteDist[i] = total[i] - DCStoresDist[paths[i][ paths[i].length - 1 ]];
+	}
+	
+	return offRouteDist;
+}
+
+/* 	Calculates the total distance of the routes solution. 
+	For now it uses the one DC that user input */
+function totalDistance(routes, brks)
+{
+	
+	/* test */
+	//routes = [1, 5, 4];
+	//brks = [];
+	//routes = [1, 5, 4, 2, 3, 6, 7, 9, 8];
+	//brks = [2, 4];
+	/* end test */	
+	
+	// paths will store the list of stores' indices of each path
+	var paths = new Array(brks.length + 1);
+	
+	if (brks.length == 0)
+	{
+		paths[0] = new Array(DC);
+		paths[0] = paths[0].concat(routes);
+	} else {
+		paths[0] = new Array(DC);
+		paths[0] = paths[0].concat(routes.slice(0, brks[0]+1));
+		for (var i = 1; i < brks.length; i++)
+		{
+			paths[i] = new Array(DC);
+			paths[i] = paths[i].concat(routes.slice(brks[i-1]+1, brks[i]+1));  
+		}
+		// last path
+		paths[brks.length] = new Array(DC);
+		paths[brks.length] = paths[brks.length].concat(routes.slice(brks[brks.length-1]+1)); 
+	}
+	
+	// distances will store the distances that need to be traveled in each paths
 	var distances = new Array(paths.length);
 	
 	// If DC is defined, get the distance from DC to the first store
@@ -116,7 +183,7 @@ function totalDistance(routes, brks)
 }
 
 /*	Draws the paths based on the given routes and brks.
-	Must make sure that the content of brks is in increasing order */
+	The content of brks must be in increasing order */
 function graph_groups(map, routes, brks)
 {
         if (drawPath!= undefined){
