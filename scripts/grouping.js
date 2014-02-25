@@ -407,14 +407,18 @@ function group_progress(){
     var myprog = 0;
     document.getElementById('panel12').appendChild(progress);
     popSize = document.getElementById('pop-size').value; 
-    trucks = document.getElementById('no-trks').value;
+    trucks = document.getElementById('no-trks').value;    
+    off_route_rate = document.getElementById('off-rate').value;
+    off_route_lim = document.getElementById('off-lim').value;
     var pBreaks = new Array(popSize);
     var pRoutes = new Array(popSize);
     var not_null_stores = non_null_indices(stores);
     var k = popSize;
     var k1;
-    var min_dist=1000000;
+    var min_cost=10000000;
     var temp_dist;
+    var off_r;
+    var tot_dist;
     var min_brk;
     var min_route;
     var grouping =setInterval(function(){
@@ -434,16 +438,26 @@ function group_progress(){
                 progbar = 100;
                 updateProgress(progbar);
                 for (var i=1; i<popSize; i++){
-                temp_dist=totalDistance(pRoutes[i],pBreaks[i]);
+                
+                off_r=off_routing_distance(pRoutes[i],pBreaks[i]);
+                tot_dist=totalDistance(pRoutes[i],pBreaks[i]);
+                if (off_r>off_route_lim)
+                {
+                    temp_dist= tot_dist + off_route_rate*(off_r);
+                }
+                else{
+                    temp_dist= tot_dist;
+                }
+                        
                 //console.log(pRoutes[i]);
-                if(temp_dist<min_dist){
-                    min_dist=temp_dist;
+                if(temp_dist<min_cost){
+                    min_cost=temp_dist;
                     //console.log(min_dist);
                     min_route=pRoutes[i];
                     min_brk=pBreaks[i];
                     }
                 graph_groups(map, min_route, min_brk);
-                var x = "Total Distance: " + min_dist;
+                var x = "Total cost: " + min_cost + " Total distance: " + totalDistance(min_route,min_brk);
                 document.getElementById("panel").innerHTML = x;
                 //console.log(pRoutes[5]);
                 //console.log(pBreaks[5]);
