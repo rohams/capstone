@@ -25,35 +25,84 @@ function distFromDCToStores (DC, stores)
 	}
 }
 
+/*
+ * Helper function
+ * Break the given routes and brks into paths.
+ * Return paths array.
+ */
+function get_paths(routes, brks)
+{
+	// save brks.length
+	var brksLength = brks.length;
+	var paths = new Array(brksLength + 1);
+	
+	if (brksLength == 0)
+	{
+		// Have to use concat method. 
+		// Assignment operator will assign the reference of the array, not copy it.
+		paths[0] = new Array();
+		paths[0] = paths[0].concat(routes); 
+	} else {
+		paths[0] = new Array();
+		paths[0] = paths[0].concat(routes.slice(0, brks[0] + 1));
+		for (var i = 1; i < brksLength; i++)
+		{
+			paths[i] = new Array();
+			paths[i] = paths[i].concat(routes.slice(brks[i-1]+1, brks[i]+1));
+		}
+		// last path
+		paths[brksLength] = new Array();
+		paths[brksLength] = paths[brksLength].concat(routes.slice(brks[brksLength-1] + 1));
+	}
+	
+	return paths;
+}
+
+/*
+ * Calculate the total stores' weight of each path.
+ * Return an array of each path's total weight
+ */
+function route_cap(routes, brks)
+{
+	var paths = get_paths(routes, brks);
+	var pathsLength = paths.length;
+	var pathsWeight = new Array(pathsLength);
+	
+	// Now paths contain the stores' indices of of each path
+	// Calculate sum of path weight
+	for (var i = 0; i < pathsLength; i++)
+	{
+		var paths_iLength = paths[i].length;
+		var sum = new Number(0);
+		for (var j = 0; j < paths_iLength; j++)
+		{
+			sum += Stores(paths[i][j]).getWeight();
+		}
+		pathsWeight[i] = sum;
+	}
+	
+	return pathsWeight;
+}
+
 /* Calculates the fitness value of each route.
  * Has a lot of similarity with totalDistance().
  * DC must be already defined. */
 function off_routing_distance(routes, brks)
 {
-	var paths = new Array(brks.length + 1);
-	
-	if (brks.length == 0)
+	var paths = get_paths(routes, brks);
+	// save paths.length
+	var pathsLength = paths.length;
+	// Add DC as the starting point of each path
+	for (var i = 0; i < pathsLength; i++)
 	{
-		paths[0] = new Array(DC);
-		paths[0] = paths[0].concat(routes);
-	} else {
-		paths[0] = new Array(DC);
-		paths[0] = paths[0].concat(routes.slice(0, brks[0]+1));
-		for (var i = 1; i < brks.length; i++)
-		{
-			paths[i] = new Array(DC);
-			paths[i] = paths[i].concat(routes.slice(brks[i-1]+1, brks[i]+1));  
-		}
-		// last path
-		paths[brks.length] = new Array(DC);
-		paths[brks.length] = paths[brks.length].concat(routes.slice(brks[brks.length-1]+1)); 
+		paths[i].unshift(DC);
 	}
 	
 	// distances will store the distances that need to be traveled in each paths
-	var distances = new Array(paths.length);
+	var distances = new Array(pathsLength);
 	
 	var DCStoresDist = distFromDCToStores(DC, stores);
-	for (var i = 0; i < distances.length; i++)
+	for (var i = 0; i < pathsLength; i++)
 	{
 		distances[i] = new Array();
 		distances[i].push(DCStoresDist[paths[i][1]]); // first distance
@@ -62,9 +111,10 @@ function off_routing_distance(routes, brks)
 	// using the global variable distMat
 	distMat = distanceMatrix(stores);
 	
-	for (var i = 0; i < paths.length; i++) // traverse each path
-	{		
-		for (var j = 1; j < paths[i].length - 1; j++) // traverse paths[i]
+	for (var i = 0; i < pathsLength; i++) // traverse each path
+	{
+		var path_iLength = paths[i].length;
+		for (var j = 1; j < path_iLength - 1; j++) // traverse paths[i]
 		{
 		//	console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]); // showing all the distances involve to check if it's correct
 			distances[i].push(distMat[paths[i][j]][paths[i][j+1]]);
@@ -72,21 +122,24 @@ function off_routing_distance(routes, brks)
 	}
 	
 	// total will store the total distance of each path (ie each truck's total distance)
-	var total = new Array(distances.length);
-	for (var i = 0; i < distances.length; i++)
+	var distancesLength = distances.length;
+	var total = new Array(distancesLength);
+	for (var i = 0; i < distancesLength; i++)
 	{
 		var sum = new Number(0);
-		for (var j = 0; j < distances[i].length; j++)
+		var distances_iLength = distances[i].length;
+		for (var j = 0; j < distances_iLength; j++)
 		{
 			sum += Number(distances[i][j]);
 		}
 		total[i] = sum;
 	}
 	
-	var totOffRouteDist = 0;
-	for (var i = 0; i < total.length; i++)
+	var totOffRouteDist = new Number(0);
+	var totalLength = total.length;
+	for (var i = 0; i < totalLength; i++)
 	{
-		totOffRouteDist += total[i] - DCStoresDist[paths[i][ paths[i].length - 1 ]];
+		totOffRouteDist += Number( total[i] - DCStoresDist[paths[i][ paths[i].length - 1 ]] );
 	}
 	
 	return totOffRouteDist;
@@ -105,42 +158,30 @@ function totalDistance(routes, brks)
 	/* end test */	
 	
 	// paths will store the list of stores' indices of each path
-	var paths = new Array(brks.length + 1);
-	
-	if (brks.length == 0)
+	var paths = get_paths(routes, brks);
+	// save paths.length
+	var pathsLength = paths.length;
+	// Add DC as the starting point of each path
+	for (var i = 0; i < pathsLength; i++)
 	{
-		paths[0] = new Array(DC);
-		paths[0] = paths[0].concat(routes);
-	} else {
-		paths[0] = new Array(DC);
-		paths[0] = paths[0].concat(routes.slice(0, brks[0]+1));
-		for (var i = 1; i < brks.length; i++)
-		{
-			paths[i] = new Array(DC);
-			paths[i] = paths[i].concat(routes.slice(brks[i-1]+1, brks[i]+1));  
-		}
-		// last path
-		paths[brks.length] = new Array(DC);
-		paths[brks.length] = paths[brks.length].concat(routes.slice(brks[brks.length-1]+1)); 
+		paths[i].unshift(DC);
 	}
 	
 	// distances will store the distances that need to be traveled in each paths
-	var distances = new Array(paths.length);
+	var distances = new Array(pathsLength);
 	
 	// If DC is defined, get the distance from DC to the first store
 	if (DC != null)
 	{
 		var DCStoresDist = distFromDCToStores(DC, stores);
-	//	console.log(DCStoresDist);
-		for (var i = 0; i < distances.length; i++)
+		for (var i = 0; i < pathsLength; i++)
 		{
 			distances[i] = new Array();
-		//	console.log("DCToStores-" + paths[i][1] + "dist = " + DCStoresDist[paths[i][1]]);
 			distances[i].push(DCStoresDist[paths[i][1]]);
 		}
 	} else {
 	// else just create a blank array
-		for (var i = 0; i < paths.length; i++)
+		for (var i = 0; i < pathsLength; i++)
 		{
 			distances[i] = new Array();
 		}
@@ -149,9 +190,10 @@ function totalDistance(routes, brks)
 	// using the global variable distMat
 	distMat = distanceMatrix(stores);
 	
-	for (var i = 0; i < paths.length; i++) // traverse each path
-	{		
-		for (var j = 1; j < paths[i].length - 1; j++) // traverse paths[i]
+	for (var i = 0; i < pathsLength; i++) // traverse each path
+	{	
+		var paths_iLength = paths[i].length;
+		for (var j = 1; j < paths_iLength - 1; j++) // traverse paths[i]
 		{
 		//	console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]); // showing all the distances involve to check if it's correct
 			distances[i].push(distMat[paths[i][j]][paths[i][j+1]]);
@@ -159,11 +201,12 @@ function totalDistance(routes, brks)
 	}
 	
 	// total will store the total distance of each path
-	var total = new Array(distances.length);
-	for (var i = 0; i < distances.length; i++)
+	var total = new Array(pathsLength);
+	for (var i = 0; i < pathsLength; i++)
 	{
 		var sum = new Number(0);
-		for (var j = 0; j < distances[i].length; j++)
+		var distances_iLength = distances[i].length;
+		for (var j = 0; j < distances_iLength; j++)
 		{
 			sum += Number(distances[i][j]);
 		}
@@ -173,7 +216,8 @@ function totalDistance(routes, brks)
 	
 	// totSum stores the total distance of all the paths
 	var totSum = new Number(0);
-	for (var i = 0; i < total.length; i++)
+	var totalLength = total.length;
+	for (var i = 0; i < totalLength; i++)
 	{
 		totSum += Number(total[i]);
 	}
@@ -308,7 +352,7 @@ function distanceMatrix(stores)
 	}
 	
 	/* Check */
-	console.log("Total selected stores = " + totSelectedStores );
+	// console.log("Total selected stores = " + totSelectedStores );
 	
 	return distMat;
 }
@@ -457,7 +501,7 @@ function group_progress(){
                     min_brk=pBreaks[i];
                     }
                 graph_groups(map, min_route, min_brk);
-                var x = "Total cost: " + min_cost + " Total distance: " + totalDistance(min_route,min_brk);
+                var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
                 document.getElementById("panel").innerHTML = x;
                 //console.log(pRoutes[5]);
                 //console.log(pBreaks[5]);
