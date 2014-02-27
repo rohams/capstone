@@ -229,6 +229,15 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     }
     updateWeights();
 });
+
+     $('#capacity').live('change', function(){
+    if($(this).is(':checked')){
+        is_capacity_on=1;
+    } else {
+        is_capacity_on=0;
+    }
+    updateCap();
+});
             
     //****** global variables ******
     var CANADA = new google.maps.LatLng(54.36775852406841, -97.20703125); 
@@ -266,6 +275,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var openedInfoWindow = null;
     var map;
     var DC;
+    var is_capacity_on;
     var circle;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
     var w_ambient=0,w_frozen=0,w_perishable=0;
@@ -371,7 +381,8 @@ function initialize() {
     control4.index = 4;
 
     //draw ellipses
-    google.maps.event.addDomListener(control1, 'click', function() {                        
+    google.maps.event.addDomListener(control1, 'click', function() {   
+                            document.getElementById("panel").innerHTML = "Draw a series of conturs based on the fixed transportation cost";
                             document.getElementById("panel2").style.display = 'block';
                             document.getElementById("panel6").style.display = 'none'; 
                             document.getElementById("panel10").style.display = 'none';
@@ -381,6 +392,7 @@ function initialize() {
                                          
     // Add a store
     google.maps.event.addDomListener(control3, 'click', function() {
+                            document.getElementById("panel").innerHTML = "Add a new store to the network";
                             document.getElementById("panel10").style.display = 'block';
                             document.getElementById("panel2").style.display = 'none'; 
                             document.getElementById("panel6").style.display = 'none';
@@ -389,10 +401,10 @@ function initialize() {
                                           
     // Store opt
     google.maps.event.addDomListener(control4, 'click', function() {
+                            document.getElementById("panel").innerHTML = "Optimizations based on fixed DC locations";
                             document.getElementById("panel6").style.display = 'block';
                             document.getElementById("panel2").style.display = 'none'; 
                             document.getElementById("panel10").style.display = 'none';
-                            selOption();
                                          });
        // Find Average
     google.maps.event.addDomListener(control2, 'click', function() {                        
@@ -477,10 +489,12 @@ function initialize() {
                <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
                <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
                <div class="panel" id="panel12">
+                    <input type="checkbox" name="capacity" value="cap" id="capacity">capacity<br>
                     <input type="text" placeholder="off-route limit" class="panel-textb" id="off-lim">
                     <input type="text" placeholder="off-route rate" class="panel-textb" id="off-rate">
                     <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
                     <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
+                    <div class="panel" id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
                    <button class="panel-button" onclick="group_progress()">OK</button>
                </div>
             </div>

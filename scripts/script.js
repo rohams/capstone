@@ -657,6 +657,7 @@ function addDC(map){
     if (status == google.maps.GeocoderStatus.OK) {
       if (results[1]) {
          if(panel7){
+            selOption();
             document.getElementById("panel7").style.display = 'block';
             panel7=false;
         }  
@@ -844,6 +845,8 @@ function selOption()
     var mylist=document.getElementById("opts");
     var option=mylist.options[mylist.selectedIndex].text;
     if (option=="Add next node"){
+        var output = "Indicates a point within the boundaries that imposes the least transportation cost";
+        document.getElementById("panel").innerHTML = output;  
         document.getElementById("panel8").style.display = 'none'; 
         document.getElementById("panel11").style.display = 'block'; 
         document.getElementById("panel12").style.display = 'none'; 
@@ -852,12 +855,16 @@ function selOption()
     }
     
     if (option=="Remove next node"){
+        var output = "Indicates the store that imposes the highest transportation cost";
+        document.getElementById("panel").innerHTML = output;        
         document.getElementById("panel8").style.display = 'block'; 
         document.getElementById("panel11").style.display = 'none';
         document.getElementById("panel12").style.display = 'none'; 
         circle.setVisible(false);
     }
     if (option=="Store Grouping"){
+        var output = "Groups the stores for delivery";
+        document.getElementById("panel").innerHTML = output;       
         document.getElementById("panel8").style.display = 'none';
         document.getElementById("panel11").style.display = 'none';
         document.getElementById("panel12").style.display = 'block'; 
@@ -955,4 +962,12 @@ function setWeightUI(){
                 document.getElementById('panel9').style.marginBottom = '10px';
             };
        
+};
+
+function updateCap(){
+    if(is_capacity_on){
+        document.getElementById("panel13").style.display = 'block'; 
+    }
+    else
+        document.getElementById("panel13").style.display = 'none'; 
 };
