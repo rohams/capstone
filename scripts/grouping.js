@@ -76,7 +76,7 @@ function route_cap(routes, brks)
 		var sum = new Number(0);
 		for (var j = 0; j < paths_iLength; j++)
 		{
-			sum += Stores(paths[i][j]).getWeight();
+			sum += Stores(paths[i][j]).getDemand();
 		}
 		pathsWeight[i] = sum;
 	}
