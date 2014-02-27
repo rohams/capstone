@@ -122,12 +122,13 @@ function Weight(id,A1,A2,A3,A4,A5,A6,A7,F1,F2,F3,F4,F5,F6,F7,P1,P2,P3,P4,P5,P6,P
 }
 
 //constructor 
-function Store(lat,lng,sub_id,ext_id,weight){
+function Store(lat,lng,sub_id,ext_id,weight,demand){
     this.lat=lat;
     this.lng=lng;
     this.sub=sub_id;
     this.ext=ext_id;
     this.w=weight;
+    this.d=demand;
     
     this.getLat = function()
     {
@@ -154,19 +155,28 @@ function Store(lat,lng,sub_id,ext_id,weight){
         return this.w;
     };
     
+    this.getDemand = function()
+    {
+        return this.d;
+    };
+    
     this.setSub = function(id)
     {
-     this.sub = id;;
+     this.sub = id;
     };
     
     this.setExt = function(id)
     {
-     this.ext = id;;
+     this.ext = id;
     };
     
     this.setWeight = function(weight)
     {
-     this.w = weight;;
+     this.w = weight;
+    };
+    this.setDemand = function(demand)
+    {
+     this.d = demand;
     };
 }
 
@@ -784,6 +794,7 @@ function normalizeWeights(){
                     if(stores[s].getExt()==tot_weights[x].getID()){
                         var new_weight=tot_weights[x].getWeight()/min;
                         stores[s].setWeight(new_weight);
+                        stores[s].setDemand(tot_weights[x].getWeight());
                         sum += new_weight;
                         break;
                     }   
@@ -881,7 +892,8 @@ function markerInfoWin(marker){
                 var ext_id = stores[marker_id].getExt();                
             sub_name = subs[sub_id];
             var weight = stores[marker_id].getWeight();
-            infowindow.setContent( "<b>Store ID: </b>"+ ext_id +"<br/> <b>Sub-network: </b>" + sub_name +"<br/> <b>Calculated Weight: </b>" + weight + "<br/> <b>Latitude: </b>" + marker.position.lat() + "<br/> <b>Longitude: </b>" + marker.position.lng());
+            var demand = stores[marker_id].getDemand();
+            infowindow.setContent( "<b>Store ID: </b>"+ ext_id +"<br/> <b>Sub-network: </b>" + sub_name + "<br/> <b>Store Demand: </b>" + demand + "<br/> <b>Normalized Weight: </b>" + weight + "<br/> <b>Latitude: </b>" + marker.position.lat() + "<br/> <b>Longitude: </b>" + marker.position.lng());
         }
         infowindow.open(map,marker);
         openedInfoWindow = infowindow;

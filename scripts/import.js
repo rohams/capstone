@@ -67,7 +67,7 @@
             if(row>0){ 
                 if (data[row][LAT]!=undefined && data[row][LNG]!=undefined)
                 {                
-                    var store = new Store(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]),0,0,1);
+                    var store = new Store(parseFloat(data[row][LAT]),parseFloat(data[row][LNG]),0,0,1,1);
                     
                     if(data[row][EXT]!=undefined ){
                         store.setExt(data[row][EXT]);
