@@ -210,7 +210,7 @@ for iter = 1 : numIter
         f_pBreak = popBreak(p,:);
         %display(f_pBreak);
         
-        [fitVal(p), offDists(p), dOffDists(p)] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost);      
+        [fitVal(p), offDists(p), dOffDists(p)] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost,N);      
 
 
     end
@@ -380,12 +380,12 @@ while (run)
 
                               % calculating the opt fitVal
                               opt_cost = tot_Dist(optRoute, optBreak,n,dmat,nSalesmen);
-                              [opt_fitVal, opt_offDist, opt_dOffDist] = calced_fitVal(optBreak, optRoute, dmat, opt_cost);
+                              [opt_fitVal, opt_offDist, opt_dOffDist] = calced_fitVal(optBreak, optRoute, dmat, opt_cost,N);
                               % calculating the new fitVal
                               %display(newBreak);
                               %display(newRoute);
                               new_cost = tot_Dist(newRoute, newBreak,n,dmat,nSalesmen);
-                              [new_fitVal, new_offDist, new_dOffDist] = calced_fitVal(newBreak, newRoute, dmat, new_cost);
+                              [new_fitVal, new_offDist, new_dOffDist] = calced_fitVal(newBreak, newRoute, dmat, new_cost,N);
                                   
                               if (new_fitVal<opt_fitVal)
                                   %push the new route into array
@@ -656,11 +656,14 @@ end
 
 
     %fitness Value function
-    function [fitVal, offDist, dOffDist] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost)
+    function [fitVal, offDist, dOffDist] = calced_fitVal(f_pBreak, f_pRoute, dmat, cost,N)
         satrt_brk_idx  = 1;
         offDist=0;
         offRout = 4;
         offRoutLim = 0.5;
+        
+        demand=randi(10,1,N);
+        Truck=50;
             for i = 1 : 1 : length(f_pBreak) + 1 
                 if i == (length(f_pBreak) + 1)
                     end_brk_idx = length(f_pRoute) - 1;
@@ -685,10 +688,41 @@ end
                 if ((totDist - R) > offRoutLim)
                     offDist = offDist + (totDist - R) - offRoutLim;
                     dOffDist= offDist + (totDist - R);
-                %    display(offDist);
+                   %display(offDist);
                 end
-            end 
-        fitVal = cost + offRout*offDist;
+                
+                
+            end
+            
+        for m=1:1:(length(f_pBreak)+1)
+            
+            if m==1;
+                    T(m)=sum(demand(f_pRoute(1:(f_pBreak(1)))));
+            elseif  m  == (length(f_pBreak)+1)
+            
+                    T(m)=sum(demand(f_pRoute(((f_pBreak(m-1))+1):(length(f_pRoute)))));
+            else
+         
+                    T(m)=sum(demand(f_pRoute(((f_pBreak(m-1))+1):(f_pBreak(m)))));
+            end
+    
+    
+    
+        end
+
+
+        for v=1:(length(f_pBreak)+1)
+            if T(v) <= Truck
+                    X(v)=0;
+            else
+                    X(v)=(T(v)-Truck)*offRout;
+            end
+   
+        end
+        
+        Cap_Penalty=sum(X);
+ 
+        fitVal = cost + offRout*offDist+Cap_Penalty;
     end
 
 
