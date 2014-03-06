@@ -45,6 +45,9 @@ body { height: 100%; margin: 10; padding: 0 }
 #panel13 {
         display:none;
       }
+#panel14 {
+        display:block;
+      }
 .side-panel {
         position: absolute;
         top: 75px;

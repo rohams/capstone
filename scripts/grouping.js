@@ -503,6 +503,7 @@ function group_progress(){
                 graph_groups(map, min_route, min_brk);
                 var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
                 document.getElementById("panel").innerHTML = x;
+                document.getElementById("panel14").style.display = 'block';
                 //console.log(pRoutes[5]);
                 //console.log(pBreaks[5]);
 
@@ -512,3 +513,8 @@ function group_progress(){
     },0);
     
 }
+    
+function openWin(){
+    var myWindow = window.open("","Report", "_self");
+    myWindow.document.write("<p>" + myWindow.name + "</p>");
+};
