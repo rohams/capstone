@@ -465,8 +465,8 @@ function insertion(optRoute, optBreak, post_fitVal){
 	while(run)
 	{
                 //this helps us better deal with the scanning through the routes 
-		var start_navigator_brk = [0, optBreak];
-		var end_navigator_brk = [optBreak, optRoute.length - 1];
+		var start_navigator_brk = [0].concat(optBreak);
+		var end_navigator_brk = optBreak.concat(optRoute.length - 1);
 		
 		for (var fi = 0; fi < start_navigator_brk.length; fi++){
 			var tempRoute = optRoute;
@@ -493,16 +493,16 @@ function insertion(optRoute, optBreak, post_fitVal){
 						}
 					}	
                                         
-					var start_new_nav_brk = [0, tempBreak];
-					var end_new_nav_brk = [tempBreak, optRoute.length];
+					var start_new_nav_brk = [0].concat(tempBreak);
+					var end_new_nav_brk = tempBreak.concat(optRoute.length);
 					
                                         //so far we have taken care of all the breaks 
                                         //do not remove more nodes from the primary route is already at minimum 
 					if((end_navigator_brk[fi] - start_navigator_brk[fi]) > min_tour){
                                             //scan through the primary route
 						for (var fk = start_navigator_brk[fi]; fk <= end_navigator_brk[fi]; fk++){
-							var allNewRoutes;
-							var allNewFitVals;
+							var allNewRoutes = new Array();
+							var allNewFitVals = new Array();
 							var row = 1;
                                                         //scan through the new secondary route  
 							for (var x = start_new_nav_brk[fj]; x <= end_new_nav_brk[fj]; x++){
@@ -512,10 +512,10 @@ function insertion(optRoute, optBreak, post_fitVal){
                                                                 }
                                                                 //insert the node to the secondary route
 								if (x > 1){
-									newRoute = [tempRoute.slice(0, x-2), optRoute[fk], tempRoute.slice(x, tempRoute.length - 1)];
+									newRoute = tempRoute.slice(0, x-2).concat(optRoute[fk]).concat(tempRoute.slice(x, tempRoute.length - 1));
 								}
 								else{
-									newRoute = [optRoute[fk], tempRoute.slice(x, tempRoute.length - 1)];
+									newRoute = optRoute[fk].concat(tempRoute.slice(x, tempRoute.length - 1));
 								}
 								newBreak = tempBreak;
 								
@@ -532,7 +532,7 @@ function insertion(optRoute, optBreak, post_fitVal){
                                                                     {
                                                                       allNewRoutes[best_idx][i] = newRoute[i];
                                                                     }									
-									allNewFitVals = [allNewFitVals,new_fitVal];
+									allNewFitVals.push(new_fitVal);
 									row = row + 1;
                                                                         console.log(optRoute);
                                                                         console.log(optBreak);
@@ -545,7 +545,7 @@ function insertion(optRoute, optBreak, post_fitVal){
 							}
 							//[bestFitVal,best_idx] = min(allNewFitVals);
                                                         bestFitVal = Math.min.apply(Math,allNewFitVals);
-                                                        var best_idx = x.indexOf(bestFitVal);
+                                                        var best_idx = allNewFitVals.indexOf(bestFitVal);
                                                         
 							if (bestFitVal < opt_fitVal){
                                                                 //optRoute = allNewRoutes(best_idx,:);
