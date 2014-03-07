@@ -445,11 +445,13 @@ function non_null_indices(stores){
        return active_stores;
 }
 
-function insertion(optRoute, optBreak, post_fitVal){
-	
+function insertion(Route, Break, post_fitVal){
+	optRoute = Route;
+        optBreak = Break;
 	var fitValHist = post_fitVal;
         var run = 1;
 	var newBreak;
+        var newRoute;
         
         var opt_cost;
         var opt_fitVal;
@@ -469,10 +471,12 @@ function insertion(optRoute, optBreak, post_fitVal){
 		var end_navigator_brk = optBreak.concat(optRoute.length - 1);
 		
 		for (var fi = 0; fi < start_navigator_brk.length; fi++){
-			var tempRoute = optRoute;
+			//var tempRoute = optRoute;
+                        var tempRoute = optRoute.slice();
                         //for all the secondary routes
 			for (var fj = 0; fj < start_navigator_brk.length; fj++){
-				var tempBreak = optBreak;
+				//var tempBreak = optBreak;
+                                var tempBreak = optBreak.slice();
                                 //we do not compare a route against itself
 				if (fj != fi){					
 					for (var b = fi; b < optBreak.length; b++){
@@ -494,7 +498,7 @@ function insertion(optRoute, optBreak, post_fitVal){
 					}	
                                         
 					var start_new_nav_brk = [0].concat(tempBreak);
-					var end_new_nav_brk = tempBreak.concat(optRoute.length);
+					var end_new_nav_brk = tempBreak.concat(optRoute.length-1);
 					
                                         //so far we have taken care of all the breaks 
                                         //do not remove more nodes from the primary route is already at minimum 
@@ -503,7 +507,7 @@ function insertion(optRoute, optBreak, post_fitVal){
 						for (var fk = start_navigator_brk[fi]; fk <= end_navigator_brk[fi]; fk++){
 							var allNewRoutes = new Array();
 							var allNewFitVals = new Array();
-							var row = 1;
+							var row = 0;
                                                         //scan through the new secondary route  
 							for (var x = start_new_nav_brk[fj]; x <= end_new_nav_brk[fj]; x++){
                                                             //remove the node from the primary route
@@ -511,37 +515,38 @@ function insertion(optRoute, optBreak, post_fitVal){
                                                                     tempRoute.splice(fk, 1);
                                                                 }
                                                                 //insert the node to the secondary route
-								if (x > 1){
-									newRoute = tempRoute.slice(0, x-2).concat(optRoute[fk]).concat(tempRoute.slice(x, tempRoute.length - 1));
+								if (x > 0){
+									newRoute = tempRoute.slice(0, x).concat(optRoute[fk]).concat(tempRoute.slice(x, tempRoute.length));
 								}
 								else{
-									newRoute = optRoute[fk].concat(tempRoute.slice(x, tempRoute.length - 1));
+									newRoute = optRoute.slice(fk,fk+1).concat(tempRoute.slice(x, tempRoute.length));
 								}
-								newBreak = tempBreak;
-								
+                                                                newBreak = tempBreak.slice();
+								//newBreak = tempBreak;
+								 
+                                                                 //console.log(newRoute);
                                                                 //calculating the opt fitVal
                                                                 opt_cost = totalDistance(optRoute, optBreak);
                                                                 opt_off_r=off_routing_distance(optRoute,optBreak);
                                                                 opt_fitVal = opt_cost + (off_route_rate*opt_off_r);
 								//calculating the opt fitVal
-                                                                new_cost = totalDistance(optRoute, optBreak);
+                                                                new_cost = totalDistance(newRoute, newBreak);
                                                                 new_off_r=off_routing_distance(newRoute,newBreak);
                                                                 new_fitVal = new_cost + (off_route_rate*new_off_r);
+                                                                //allNewRoutes(row,:) = newRoute;
 								if (new_fitVal<opt_fitVal){
-                                                                    for(var i = 0; i < allNewRoutes[0].length; i++)
-                                                                    {
-                                                                      allNewRoutes[best_idx][i] = newRoute[i];
-                                                                    }									
+                                                                        allNewRoutes.push(newRoute);								
 									allNewFitVals.push(new_fitVal);
 									row = row + 1;
-                                                                        console.log(optRoute);
-                                                                        console.log(optBreak);
-                                                                        console.log(post_fitVal);
-                                                                        console.log(newRoute);
-                                                                        console.log(newBreak);
-                                                                        console.log(new_fitVal);
+//                                                                        console.log(optRoute);
+//                                                                        console.log(optBreak);
+//                                                                        console.log(post_fitVal);
+//                                                                        console.log(newRoute);
+//                                                                        console.log(newBreak);
+//                                                                        console.log(new_fitVal);
 								}
-								tempRoute = optRoute;
+                                                                tempRoute = optRoute.slice();
+								//tempRoute = optRoute;
 							}
 							//[bestFitVal,best_idx] = min(allNewFitVals);
                                                         bestFitVal = Math.min.apply(Math,allNewFitVals);
@@ -549,16 +554,11 @@ function insertion(optRoute, optBreak, post_fitVal){
                                                         
 							if (bestFitVal < opt_fitVal){
                                                                 //optRoute = allNewRoutes(best_idx,:);
-                                                                var optRoute = new Array();
-                                                                for(var i = 0; i < allNewRoutes[0].length; i++)
-                                                                {
-                                                                  optRoute[i] = allNewRoutes[best_idx][i]  
-                                                                } 
-								optBreak = newBreak;
-								tempRoute = optRoute;
+                                                                optRoute = allNewRoutes[best_idx].slice();  
+                                                                //console.log(optRoute);
+								optBreak = newBreak.slice();
+								tempRoute = optRoute.slice();
 								post_fitVal = bestFitVal;
-								fpost_offDist = new_offDist;
-								fpost_dOffDist = new_dOffDist;
 							}
 						}
 						
@@ -566,7 +566,6 @@ function insertion(optRoute, optBreak, post_fitVal){
 				}				
 			}
 		}
-	}
         //if there was no improvment
 	if(fitValHist == post_fitVal){
 		run = 0;
@@ -574,6 +573,7 @@ function insertion(optRoute, optBreak, post_fitVal){
         else{
 		fitValHist = post_fitVal;
 	}
+    }
 }
 
 /*
@@ -669,32 +669,26 @@ function group_progress(){
     var pBreaks = new Array(popSize);
     var pRoutes = new Array(popSize);
     var not_null_stores = non_null_indices(stores);
-    var k = popSize;
-    var k1;
+    var k = 0;
+    var i = 0;
     var min_cost=10000000;
     var temp_dist;
     var off_r;
     var tot_dist;
     var min_brk;
     var min_route;
-    var grouping =setInterval(function(){
+    //randomly initialize the population
+    updateProgress(progbar);
+    while(k<popSize){
+        pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
+        pRoutes[k] = rand_routes (not_null_stores);
         
-             k1=k-(popSize/10);
-             while(k>k1){
-                //randomly initialize the population
-                 pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
-                 pRoutes[k] = rand_routes (not_null_stores);
-                 progbar = (myprog++/popSize)*100;
-                 k--;
-            }
-            
+        k++;
+    }
+   var grouping =setInterval(function(){ 
+             progbar = (myprog++/popSize)*100;
              updateProgress(progbar);
-             if (k<0){
-                clearInterval(grouping);
-                progbar = 100;
-                updateProgress(progbar);
-                
-                for (var i=1; i<popSize; i++){
+
                 off_r=off_routing_distance(pRoutes[i],pBreaks[i]);
                 tot_dist=totalDistance(pRoutes[i],pBreaks[i]);
                 if (off_r>off_route_lim)
@@ -705,7 +699,6 @@ function group_progress(){
                     temp_fit= tot_dist;
                 }
                 insertion(pRoutes[i], pBreaks[i], temp_fit);        
-                //console.log(pRoutes[i]);
                 
                 //off route
                 pp_off_r=off_routing_distance(optRoute,optBreak);
@@ -720,19 +713,24 @@ function group_progress(){
                 
                 if(pp_fit<min_cost){
                     min_cost=pp_fit;
-                    //console.log(min_dist);
                     min_route=optRoute;
                     min_brk=optBreak;
+                    graph_groups(map, min_route, min_brk);
+                    var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
+                    document.getElementById("panel").innerHTML = x;
+                    document.getElementById("panel14").style.display = 'block';
                     }
-                graph_groups(map, min_route, min_brk);
-                var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
-                document.getElementById("panel").innerHTML = x;
-                document.getElementById("panel14").style.display = 'block';
-                //console.log(pRoutes[5]);
-                //console.log(pBreaks[5]);
 
-             }
-         }
+                if (i== popSize-1){
+                    clearInterval(grouping);
+                    progbar = 100;
+                    updateProgress(progbar);
+                    graph_groups(map, min_route, min_brk);
+//                    var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
+//                    document.getElementById("panel").innerHTML = x;
+//                    document.getElementById("panel14").style.display = 'block';
+                }
+                i++;
 
     },0);
     
