@@ -576,8 +576,86 @@ function insertion(optRoute, optBreak, post_fitVal){
 	}
 }
 
+/*
+ * Return the demand of each path.
+ */
+function pathsCap(routes, brks)
+{
+	var paths = getPaths(route, brks);
+	var pathsL = paths.length;
+	var pathsD = new Array(pathsL);
+	var weightSum;
+	// Traverse paths
+	for (var i = 0; i < pathsL; i++)
+	{
+		weightSum = 0;
+		var paths_i_L = paths[i].length;
+		// Traverse paths[i]
+		for (var j = 0; j < paths_i_L; j++)
+		{
+			weightSum += stores[ paths[i][j] ].getDemand();
+		}
+		pathsD.push(weightSum);
+	}
+	
+	return pathsD;
+}
 
-
+/*
+ * Return the fitness value.
+ * 
+ * Fitness value is calculated like this:
+ *		fitnessValue = temp_dist + totWeight
+ *	where
+ *		if tot_off_route is bigger than off_route_lim,
+ *   		temp_dist = tot_dist + tot_off_route*off_route_rate,
+ *   	or
+ *   		temp_dist = tot_dist otherwise.
+ *	and 
+ *  	totWeight is the sum of the difference between the path's capacity 
+ *  	and the truck capacity times the capacity_rate if the path capacity 
+ *  	is bigger than the truck capacity and only if the capacity binary flag is on (checked), 
+ *   	otherwise totWeight is 0.
+ * 
+ * Currently there is only one value for truck capacity
+ */
+function fitVal(routes, brks, off_route_lim, off_route_rate)
+{
+	var temp_dist;
+	var w_temp = 0;
+	var totWeight = 0;
+	var fitVal = 0;
+	var capacity_rate = 10*off_route_rate;
+	var tot_off_r = off_routing_distance(routes, brks);
+	var tot_dist = totalDistance(routes, brks);
+	
+	if (is_capacity_on)
+	{
+		var trkCap = document.getElementById('trk-cap').value;
+		var pathsCap = pathsCap(routes, brks);
+		var pathsCapL = pathsCap.length;
+		for (var i = 0; i < pathsCapL; i++)
+		{
+			var diff = pathsCap[i] - trkCap;
+			
+			if (diff <= 0)
+				w_temp = 0;
+			else
+				w_temp = diff*capacity_rate;
+			
+			totWeight += w_temp;
+		}	
+	}
+	
+	if (tot_off_r > off_route_lim)
+		temp_dist = tot_dist + tot_off_r*off_route_rate;
+	else
+		temp_dist = tot_dist;
+	
+	fitVal = temp_dist + totWeight;
+	
+	return fitVal;
+}
 
 function group_progress(){
     
