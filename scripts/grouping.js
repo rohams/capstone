@@ -446,6 +446,7 @@ function non_null_indices(stores){
 }
 
 function insertion(Route, Break, post_fitVal){
+    
 	optRoute = Route;
         optBreak = Break;
 	var fitValHist = post_fitVal;
@@ -503,12 +504,12 @@ function insertion(Route, Break, post_fitVal){
                                         //so far we have taken care of all the breaks 
                                         //do not remove more nodes from the primary route is already at minimum 
 					if((end_navigator_brk[fi] - start_navigator_brk[fi]) > min_tour){
-                                            //scan through the primary route
+                                            //traverse through the primary route
 						for (var fk = start_navigator_brk[fi]; fk <= end_navigator_brk[fi]; fk++){
 							var allNewRoutes = new Array();
 							var allNewFitVals = new Array();
 							var row = 0;
-                                                        //scan through the new secondary route  
+                                                        //traverse through the new secondary route  
 							for (var x = start_new_nav_brk[fj]; x <= end_new_nav_brk[fj]; x++){
                                                             //remove the node from the primary route
                                                                 if (fk > -1) {
@@ -538,12 +539,6 @@ function insertion(Route, Break, post_fitVal){
                                                                         allNewRoutes.push(newRoute);								
 									allNewFitVals.push(new_fitVal);
 									row = row + 1;
-//                                                                        console.log(optRoute);
-//                                                                        console.log(optBreak);
-//                                                                        console.log(post_fitVal);
-//                                                                        console.log(newRoute);
-//                                                                        console.log(newBreak);
-//                                                                        console.log(new_fitVal);
 								}
                                                                 tempRoute = optRoute.slice();
 								//tempRoute = optRoute;
@@ -661,6 +656,7 @@ function group_progress(){
     
     var progbar = 0;
     var myprog = 0;
+    document.getElementById("panel14").style.display = 'none';
     document.getElementById('panel12').appendChild(progress);
     popSize = document.getElementById('pop-size').value; 
     trucks = document.getElementById('no-trks').value;    
@@ -701,24 +697,15 @@ function group_progress(){
                 insertion(pRoutes[i], pBreaks[i], temp_fit);        
                 
                 //off route
-                pp_off_r=off_routing_distance(optRoute,optBreak);
-                pp_tot_dist=totalDistance(optRoute,optBreak);
-                if (pp_off_r>off_route_lim)
-                {
-                    pp_fit= pp_tot_dist + off_route_rate*(pp_off_r);
-                }
-                else{
-                    pp_fit= pp_tot_dist;
-                }
+                pp_fit= fitVal(optRoute, optBreak, off_route_lim, off_route_rate);
                 
                 if(pp_fit<min_cost){
                     min_cost=pp_fit;
-                    min_route=optRoute;
-                    min_brk=optBreak;
+                    min_route=optRoute.slice();
+                    min_brk=optBreak.slice();
                     graph_groups(map, min_route, min_brk);
                     var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
                     document.getElementById("panel").innerHTML = x;
-                    document.getElementById("panel14").style.display = 'block';
                     }
 
                 if (i== popSize-1){
@@ -726,6 +713,9 @@ function group_progress(){
                     progbar = 100;
                     updateProgress(progbar);
                     graph_groups(map, min_route, min_brk);
+                    optRoute=min_route.slice();
+                    optBreak=min_brk.slice();
+                    document.getElementById("panel14").style.display = 'block';
 //                    var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
 //                    document.getElementById("panel").innerHTML = x;
 //                    document.getElementById("panel14").style.display = 'block';
@@ -737,8 +727,47 @@ function group_progress(){
 }
     
 function openWin(){
-    var myWindow = window.open("","Report", "_self");
-    myWindow.document.write("<p>" + myWindow.name + "</p>");
+    var myWindow = window.open("","Scheduling Report", "_self");
+    myWindow.document.write('<link rel="stylesheet" type="text/css" href="css/mystyle.css">');
+    myWindow.document.write("<p><b>" + myWindow.name + "</b></p>");
+    var myTable= "<table><tr>";
+    myTable+="<td>Number of trucks</td>";
+    myTable+="<td>" + trucks + "</td></tr>";
+    myTable+="<td>Truck capacity</td>";
+    myTable+="<td>" + truck_cap + "</td></tr>";
+    myTable+="<td>Off-routing rate</td>";
+    myTable+="<td>$" + off_route_rate + " per km</td></tr>";
+    myTable+="<td>Off-routing limit</td>";
+    myTable+="<td>" + off_route_lim + " km</td></tr>";
+    myTable+="<td>DC latitude</td>";
+    myTable+="<td>" + DC.getLat() + "</td></tr>";
+    myTable+="<td>DC longitude</td>";
+    myTable+="<td>" + DC.getLng() + "</td></tr>";
+    myTable+="</table>";
+    
+    var paths = get_paths(optRoute, optBreak);
+	// save paths.length
+    var trk_num;
+    var myTable2= "<table><tr>";
+    for (var i=0; i<paths.length; i++){
+        trk_num = i+1;
+        myTable2+="<td>Truck " + trk_num  + "</td>";
+        
+        myTable2+="<td><font color=blue> DC </font>";
+        for(x in paths[i]){
+            myTable2+= " -- " + "<font color=blue>" + stores[paths[i][x]].getExt() +"</font>";
+        }
+        myTable2+="<td> route demand </td>";
+        myTable2+= "</td></tr>";
+        
+    }
+ 
+    myTable2+="</table>";
+    
+    myWindow.document.write( myTable);
+    myWindow.document.write("<p><b>Routes:</b></p>" );
+    myWindow.document.write( myTable2);
+    
 };
 
 

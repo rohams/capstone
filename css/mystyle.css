@@ -46,7 +46,7 @@ body { height: 100%; margin: 10; padding: 0 }
         display:none;
       }
 #panel14 {
-        display:block;
+        display:none;
       }
 .side-panel {
         position: absolute;
@@ -121,4 +121,14 @@ select {
     
  .stores_lst:hover{
   border: 1px solid #C8C8C8;
+}
+
+table
+{
+border-collapse:collapse;
+}
+table,th, td
+{
+border: 2px solid black;
+padding: 8px;
 }
