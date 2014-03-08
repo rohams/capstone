@@ -576,9 +576,9 @@ function insertion(Route, Break, post_fitVal){
  */
 function pathsCap(routes, brks)
 {
-	var paths = getPaths(route, brks);
+	var paths = get_paths(routes, brks);
 	var pathsL = paths.length;
-	var pathsD = new Array(pathsL);
+	var pathsD = [];
 	var weightSum;
 	// Traverse paths
 	for (var i = 0; i < pathsL; i++)
@@ -726,25 +726,28 @@ function group_progress(){
     
 }
     
-function openWin(){
+function reportWin(){
+    
+    var total_demand = 0;
     var myWindow = window.open("","Scheduling Report", "_self");
     myWindow.document.write('<link rel="stylesheet" type="text/css" href="css/mystyle.css">');
     myWindow.document.write("<p><b>" + myWindow.name + "</b></p>");
+    
     var myTable= "<table><tr>";
-    myTable+="<td>Number of trucks</td>";
+    myTable+="<td>number of trucks</td>";
     myTable+="<td>" + trucks + "</td></tr>";
-    myTable+="<td>Truck capacity</td>";
+    myTable+="<td>truck capacity</td>";
     myTable+="<td>" + truck_cap + "</td></tr>";
-    myTable+="<td>Off-routing rate</td>";
+    myTable+="<td>off-routing rate</td>";
     myTable+="<td>$" + off_route_rate + " per km</td></tr>";
-    myTable+="<td>Off-routing limit</td>";
+    myTable+="<td>off-routing limit</td>";
     myTable+="<td>" + off_route_lim + " km</td></tr>";
     myTable+="<td>DC latitude</td>";
     myTable+="<td>" + DC.getLat() + "</td></tr>";
     myTable+="<td>DC longitude</td>";
     myTable+="<td>" + DC.getLng() + "</td></tr>";
     myTable+="</table>";
-    
+        
     var paths = get_paths(optRoute, optBreak);
 	// save paths.length
     var trk_num;
@@ -758,15 +761,35 @@ function openWin(){
             myTable2+= " -- " + "<font color=blue>" + stores[paths[i][x]].getExt() +"</font>";
         }
         myTable2+="<td> route demand </td>";
+        myTable2+="<td> route distance </td>";
         myTable2+= "</td></tr>";
         
     }
- 
     myTable2+="</table>";
+    var total_demand = 0;
+    var route_demands = pathsCap(optRoute, optBreak);
+    for (var i = 0; i< route_demands.length; i++) {
+        total_demand += route_demands[i];
+    }
     
-    myWindow.document.write( myTable);
+    var myTable3= "<table><tr>";
+    myTable3+="<td><b>total demand</b></td>";
+    myTable3+="<td><b>" + total_demand  + "</b></td></tr>";
+    myTable3+="<td><b>total off-routing</b></td>";
+    myTable3+="<td><b>" + off_routing_distance(optRoute,optBreak).toFixed(2) + " km</b></td></tr>";
+    myTable3+="<td><b>total distance</b></td>";
+    myTable3+="<td><b>" + totalDistance(optRoute,optBreak).toFixed(2) + " km</b></td></tr>";
+    myTable3+="<td><b>total cost</b></td>";
+    myTable3+="<td>$<b>" + fitVal(optRoute, optBreak, off_route_lim, off_route_rate).toFixed(2) + "</b></td></tr>";
+    myTable3+="</table>";
+    
+    myWindow.document.write("<p><b>Results:</b></p>" );
+    myWindow.document.write(myTable3);
+    myWindow.document.write("<p><b>Parameters:</b></p>" );
+    myWindow.document.write(myTable);
     myWindow.document.write("<p><b>Routes:</b></p>" );
-    myWindow.document.write( myTable2);
+    myWindow.document.write(myTable2);
+
     
 };
 
