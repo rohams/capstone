@@ -62,27 +62,27 @@ function get_paths(routes, brks)
  * Calculate the total stores' weight of each path.
  * Return an array of each path's total weight
  */
-function route_cap(routes, brks)
-{
-	var paths = get_paths(routes, brks);
-	var pathsLength = paths.length;
-	var pathsWeight = new Array(pathsLength);
-	
-	// Now paths contain the stores' indices of of each path
-	// Calculate sum of path weight
-	for (var i = 0; i < pathsLength; i++)
-	{
-		var paths_iLength = paths[i].length;
-		var sum = new Number(0);
-		for (var j = 0; j < paths_iLength; j++)
-		{
-			sum += Stores(paths[i][j]).getDemand();
-		}
-		pathsWeight[i] = sum;
-	}
-	
-	return pathsWeight;
-}
+//function route_cap(routes, brks)
+//{
+//	var paths = get_paths(routes, brks);
+//	var pathsLength = paths.length;
+//	var pathsWeight = new Array(pathsLength);
+//	
+//	// Now paths contain the stores' indices of of each path
+//	// Calculate sum of path weight
+//	for (var i = 0; i < pathsLength; i++)
+//	{
+//		var paths_iLength = paths[i].length;
+//		var sum = new Number(0);
+//		for (var j = 0; j < paths_iLength; j++)
+//		{
+//			sum += Stores(paths[i][j]).getDemand();
+//		}
+//		pathsWeight[i] = sum;
+//	}
+//	
+//	return pathsWeight;
+//}
 
 /* Calculates the fitness value of each route.
  * Has a lot of similarity with totalDistance().
@@ -523,18 +523,9 @@ function insertion(Route, Break, post_fitVal){
 									newRoute = optRoute.slice(fk,fk+1).concat(tempRoute.slice(x, tempRoute.length));
 								}
                                                                 newBreak = tempBreak.slice();
-								//newBreak = tempBreak;
-								 
-                                                                 //console.log(newRoute);
                                                                 //calculating the opt fitVal
-//                                                                opt_cost = totalDistance(optRoute, optBreak);
-//                                                                opt_off_r=off_routing_distance(optRoute,optBreak);
-                                                                //opt_fitVal = opt_cost + (off_route_rate*opt_off_r);
                                                                 opt_fitVal = fitVal(optRoute, optBreak, off_route_lim, off_route_rate)
 								//calculating the opt fitVal
-//                                                                new_cost = totalDistance(newRoute, newBreak);
-//                                                                new_off_r=off_routing_distance(newRoute,newBreak);
-//                                                                new_fitVal = new_cost + (off_route_rate*new_off_r);
                                                                 new_fitVal = fitVal(newRoute, newBreak, off_route_lim, off_route_rate)
                                                                 //allNewRoutes(row,:) = newRoute;
 								if (new_fitVal<opt_fitVal){
@@ -756,7 +747,12 @@ function reportWin(){
     myTable+="<td>number of trucks</td>";
     myTable+="<td>" + trucks + "</td></tr>";
     myTable+="<td>truck capacity</td>";
-    myTable+="<td>" + truck_cap + "</td></tr>";
+    if(truck_cap!=undefined){
+        myTable+="<td>" + truck_cap + "</td></tr>";
+    }
+    else{
+        myTable+="<td><font color=red>" + truck_cap + "</font></td></tr>";
+    }
     myTable+="<td>off-routing rate</td>";
     myTable+="<td>$" + off_route_rate + " per km</td></tr>";
     myTable+="<td>off-routing limit</td>";
@@ -796,14 +792,14 @@ function reportWin(){
 
     
     var myTable3= "<table><tr>";
-    myTable3+="<td><b>total demand</b></td>";
-    myTable3+="<td><b>" + total_demand.toFixed(2)  + "</b></td></tr>";
-    myTable3+="<td><b>total off-routing</b></td>";
-    myTable3+="<td><b>" + r_off_r.toFixed(2) + " km</b></td></tr>";
-    myTable3+="<td><b>total distance</b></td>";
-    myTable3+="<td><b>" + r_tot_dist.toFixed(2) + " km</b></td></tr>";
-    myTable3+="<td><b>fitness value</b></td>";
-    myTable3+="<td><b>" + fitVal(optRoute, optBreak, off_route_lim, off_route_rate).toFixed(2) + "</b></td></tr>";
+    myTable3+="<td>total demand</td>";
+    myTable3+="<td>" + total_demand.toFixed(2)  + "</td></tr>";
+    myTable3+="<td>total off-routing</td>";
+    myTable3+="<td>" + r_off_r.toFixed(2) + " km</td></tr>";
+    myTable3+="<td>total distance</td>";
+    myTable3+="<td>" + r_tot_dist.toFixed(2) + " km</td></tr>";
+    myTable3+="<td>fitness value</td>";
+    myTable3+="<td>" + fitVal(optRoute, optBreak, off_route_lim, off_route_rate).toFixed(2) + "</td></tr>";
     myTable3+="<td><b>total cost</b></td>";
     myTable3+="<td>$<b>" +  r_total_cost.toFixed(2) + "</b></td></tr>";
     myTable3+="</table>";
