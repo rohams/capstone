@@ -527,13 +527,15 @@ function insertion(Route, Break, post_fitVal){
 								 
                                                                  //console.log(newRoute);
                                                                 //calculating the opt fitVal
-                                                                opt_cost = totalDistance(optRoute, optBreak);
-                                                                opt_off_r=off_routing_distance(optRoute,optBreak);
-                                                                opt_fitVal = opt_cost + (off_route_rate*opt_off_r);
+//                                                                opt_cost = totalDistance(optRoute, optBreak);
+//                                                                opt_off_r=off_routing_distance(optRoute,optBreak);
+                                                                //opt_fitVal = opt_cost + (off_route_rate*opt_off_r);
+                                                                opt_fitVal = fitVal(optRoute, optBreak, off_route_lim, off_route_rate)
 								//calculating the opt fitVal
-                                                                new_cost = totalDistance(newRoute, newBreak);
-                                                                new_off_r=off_routing_distance(newRoute,newBreak);
-                                                                new_fitVal = new_cost + (off_route_rate*new_off_r);
+//                                                                new_cost = totalDistance(newRoute, newBreak);
+//                                                                new_off_r=off_routing_distance(newRoute,newBreak);
+//                                                                new_fitVal = new_cost + (off_route_rate*new_off_r);
+                                                                new_fitVal = fitVal(newRoute, newBreak, off_route_lim, off_route_rate)
                                                                 //allNewRoutes(row,:) = newRoute;
 								if (new_fitVal<opt_fitVal){
                                                                         allNewRoutes.push(newRoute);								
@@ -620,13 +622,12 @@ function fitVal(routes, brks, off_route_lim, off_route_rate)
 	var w_temp = 0;
 	var totWeight = 0;
 	var fitVal = 0;
-	var capacity_rate = 20*off_route_rate;
+	var capacity_rate = 2000*off_route_rate;
 	var tot_off_r = off_routing_distance(routes, brks);
 	var tot_dist = totalDistance(routes, brks);
 	
 	if (is_capacity_on)
-	{
-		truck_cap = document.getElementById('trk-cap').value;
+	{       
 		var path_Capacity = pathsCap(routes, brks);
 		var pathsCapL = path_Capacity.length;
 		for (var i = 0; i < pathsCapL; i++)
@@ -636,7 +637,7 @@ function fitVal(routes, brks, off_route_lim, off_route_rate)
 			if (diff <= 0)
 				w_temp = 0;
 			else
-				w_temp = diff*capacity_rate;
+				w_temp = (diff/total_demand)*capacity_rate;
 			
 			totWeight += w_temp;
 		}	
@@ -673,6 +674,18 @@ function group_progress(){
     var tot_dist;
     var min_brk;
     var min_route;
+    if(is_capacity_on){
+        truck_cap = document.getElementById('trk-cap').value;
+    }
+    else{
+        truck_cap = undefined;
+    }
+    
+    total_demand=0;
+    for(x in not_null_stores){
+        total_demand += stores[not_null_stores[x]].getDemand();
+    }
+
     //randomly initialize the population
     updateProgress(progbar);
     while(k<popSize){
@@ -698,13 +711,16 @@ function group_progress(){
                 
                 //off route
                 pp_fit= fitVal(optRoute, optBreak, off_route_lim, off_route_rate);
+                var pp_off_r = off_routing_distance(optRoute,optBreak);
+                var pp_tot_dist = totalDistance(optRoute,optBreak);
+                var pp_total_cost = pp_tot_dist + off_route_rate*(pp_off_r);
                 
                 if(pp_fit<min_cost){
                     min_cost=pp_fit;
                     min_route=optRoute.slice();
                     min_brk=optBreak.slice();
                     graph_groups(map, min_route, min_brk);
-                    var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
+                    var x = "Total cost: " + pp_total_cost.toFixed(2) + " Total distance: " + pp_tot_dist.toFixed(2);
                     document.getElementById("panel").innerHTML = x;
                     }
 
@@ -728,15 +744,10 @@ function group_progress(){
     
 function reportWin(){
     
-    var total_demand = 0;
     var myWindow = window.open("","Scheduling Report", "_self");
     myWindow.document.write('<link rel="stylesheet" type="text/css" href="css/mystyle.css">');
     myWindow.document.write("<p><b>" + myWindow.name + "</b></p>");
-    var total_demand = 0;
-    var route_demands = pathsCap(optRoute, optBreak);
-    for (var i = 0; i< route_demands.length; i++) {
-        total_demand += route_demands[i];
-    }
+
     var r_off_r = off_routing_distance(optRoute,optBreak);
     var r_tot_dist = totalDistance(optRoute,optBreak);
     var r_total_cost = r_tot_dist + off_route_rate*(r_off_r);
@@ -757,6 +768,7 @@ function reportWin(){
     myTable+="</table>";
         
     var paths = get_paths(optRoute, optBreak);
+    var route_demands = pathsCap(optRoute, optBreak);
 	// save paths.length
     var trk_num;
     var myTable2= "<table><tr>";
