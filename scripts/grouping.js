@@ -84,9 +84,62 @@ function get_paths(routes, brks)
 //	return pathsWeight;
 //}
 
+function route_distance(routes, brks){
+	var paths = get_paths(routes, brks);
+	// save paths.length
+	var pathsLength = paths.length;
+	// Add DC as the starting point of each path
+	for (var i = 0; i < pathsLength; i++)
+	{
+		paths[i].unshift(DC);
+	}
+	
+	// distances will store the distances that need to be traveled in each paths
+	var distances = new Array(pathsLength);
+	
+	var DCStoresDist = distFromDCToStores(DC, stores);
+	for (var i = 0; i < pathsLength; i++)
+	{
+		distances[i] = new Array();
+		distances[i].push(DCStoresDist[paths[i][1]]); // first distance
+	}
+	
+	// using the global variable distMat
+	distMat = distanceMatrix(stores);
+	
+	for (var i = 0; i < pathsLength; i++) // traverse each path
+	{
+		var path_iLength = paths[i].length;
+		for (var j = 1; j < path_iLength - 1; j++) // traverse paths[i]
+		{
+		//	console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]); // showing all the distances involve to check if it's correct
+			distances[i].push(distMat[paths[i][j]][paths[i][j+1]]);
+		}
+	}
+	
+	// total will store the total distance of each path (ie each truck's total distance)
+	var distancesLength = distances.length;
+	var total = new Array(distancesLength);
+	for (var i = 0; i < distancesLength; i++)
+	{
+		var sum = new Number(0);
+		var distances_iLength = distances[i].length;
+		for (var j = 0; j < distances_iLength; j++)
+		{
+			sum += Number(distances[i][j]);
+		}
+		total[i] = sum;
+	}
+	
+	return total;
+}
+
+
+
 /* Calculates the fitness value of each route.
  * Has a lot of similarity with totalDistance().
  * DC must be already defined. */
+
 function off_routing_distance(routes, brks)
 {
 	var paths = get_paths(routes, brks);
@@ -765,6 +818,7 @@ function reportWin(){
         
     var paths = get_paths(optRoute, optBreak);
     var route_demands = pathsCap(optRoute, optBreak);
+    var rte_dist = route_distance(optRoute, optBreak);
 	// save paths.length
     var trk_num;
     var myTable2= "<table><tr>";
@@ -778,7 +832,7 @@ function reportWin(){
             myTable2+= " -- " + "<font color=blue>" + stores[paths[i][x]].getExt() +"</font>";
         }
         myTable2+="<td>" + route_demands[i].toFixed(2) + "</td>";
-        myTable2+="<td> route distance </td>";
+        myTable2+="<td>" + rte_dist[i].toFixed(2) + "</td>";
         if(route_demands[i]>truck_cap){
             myTable2+="<td><font color=red><b> No </b></font></td>";
         }
