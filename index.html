@@ -472,7 +472,7 @@ function initialize() {
             <input type="text" placeholder="latitude" class="panel-textb" id="lat">
             <input type="text" placeholder="longitude" class="panel-textb" id="lng">
             <input type="text" placeholder="weight" class="panel-textb" id="weight">
-            <button class="panel-button" id="add" onclick="addNode(map)">Insert</button>
+            <br><button class="panel-button" id="add" onclick="addNode(map)">Insert</button>
         </div>
         <div class="panel" id="panel2">
             <div class="heading">Draw Ellipses</div>
@@ -489,21 +489,21 @@ function initialize() {
                 Enter DC Location:<br>
                 <input type="text" placeholder="latitude" class="panel-textb" id="dc-lat">
                 <input type="text" placeholder="longitude" class="panel-textb" id="dc-lng">
-                <button class="panel-button" id="insert-dc" onclick="addDC(map)">Insert</button>
-        </div>
+                <br><button class="panel-button" id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
+        
             <div class="collapsable" id="heading15">second DC</div>
             <div class="panel" id="panel15">
             Enter DC Location:<br>
             <input type="text" placeholder="latitude" class="panel-textb" id="dc2-lat">
             <input type="text" placeholder="longitude" class="panel-textb" id="dc2-lng">
-            <button class="panel-button" id="insert-dc2" onclick="addDC(map)">Insert</button></div>
+            <br><button class="panel-button" id="insert-dc2" onclick="addDC(map)">Insert</button></div>
         <div class="panel" id="panel7">Select the option: <br>
                 <select id="opts" onchange="selOption()">
                     <option>Remove next node</option>
                     <option>Add next node</option>  
                     <option>Store Grouping</option>
                   </select>
-           <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
+           <br><div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
            <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
            <div class="panel" id="panel12">
                 <input type="checkbox" name="capacity" value="cap" id="capacity">capacity<br>
@@ -513,8 +513,8 @@ function initialize() {
                 <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
                 <div id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
                 <div id="panel14"><span><a href="" onclick="reportWin(); return false"> view report...</a></span></div>
-                <button class="panel-button" onclick="group_progress()">OK</button>
-
+                <br><button class="panel-button" onclick="group_progress()">OK</button>
+            </div>
            </div>
         </div>
     </div>
