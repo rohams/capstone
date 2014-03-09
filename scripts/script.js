@@ -658,6 +658,7 @@ function addDC(map){
       if (results[1]) {
          if(panel7){
             selOption();
+            document.getElementById("heading15").style.display = 'block'; 
             document.getElementById("panel7").style.display = 'block';
             panel7=false;
         }  

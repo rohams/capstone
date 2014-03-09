@@ -33,6 +33,9 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     $('body').on("click", '#heading10', function() {
      $("#panel0").slideToggle("fast");
   });
+    $('body').on("click", '#heading15', function() {
+     $("#panel15").slideToggle("fast");
+  });
 });
 
 
@@ -483,30 +486,36 @@ function initialize() {
         </div>
         <div class="panel" id="panel6"> 
             <div class="heading">Store Optimization</div>
+                Enter DC Location:<br>
+                <input type="text" placeholder="latitude" class="panel-textb" id="dc-lat">
+                <input type="text" placeholder="longitude" class="panel-textb" id="dc-lng">
+                <button class="panel-button" id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
+        </div>
+            <div class="collapsable" id="heading15">second DC</div>
+            <div class="panel" id="panel15">
             Enter DC Location:<br>
-            <input type="text" placeholder="latitude" class="panel-textb" id="dc-lat">
-            <input type="text" placeholder="longitude" class="panel-textb" id="dc-lng">
-            <button class="panel-button" id="insert-dc" onclick="addDC(map)">Insert</button><br><br>
-            <div class="panel" id="panel7">Select the option: <br>
-                    <select id="opts" onchange="selOption()">
-                        <option>Remove next node</option>
-                        <option>Add next node</option>  
-                        <option>Store Grouping</option>
-                      </select>
-               <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
-               <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
-               <div class="panel" id="panel12">
-                    <input type="checkbox" name="capacity" value="cap" id="capacity">capacity<br>
-                    <input type="text" placeholder="off-route limit" class="panel-textb" id="off-lim">
-                    <input type="text" placeholder="off-route rate" class="panel-textb" id="off-rate">
-                    <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
-                    <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
-                    <div id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
-                    <div id="panel14"><span><a href="" onclick="reportWin(); return false"> view report...</a></span></div>
-                    <button class="panel-button" onclick="group_progress()">OK</button>
-                   
-               </div>
-            </div>
+            <input type="text" placeholder="latitude" class="panel-textb" id="dc2-lat">
+            <input type="text" placeholder="longitude" class="panel-textb" id="dc2-lng">
+            <button class="panel-button" id="insert-dc2" onclick="addDC(map)">Insert</button><br><br></div>
+        <div class="panel" id="panel7">Select the option: <br>
+                <select id="opts" onchange="selOption()">
+                    <option>Remove next node</option>
+                    <option>Add next node</option>  
+                    <option>Store Grouping</option>
+                  </select>
+           <div id="panel8"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
+           <div class="panel" id="panel11"><button class="panel-button" onclick="bounceNextNode()">Find</button></div>
+           <div class="panel" id="panel12">
+                <input type="checkbox" name="capacity" value="cap" id="capacity">capacity<br>
+                <input type="text" placeholder="off-route limit" class="panel-textb" id="off-lim">
+                <input type="text" placeholder="off-route rate" class="panel-textb" id="off-rate">
+                <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
+                <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
+                <div id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
+                <div id="panel14"><span><a href="" onclick="reportWin(); return false"> view report...</a></span></div>
+                <button class="panel-button" onclick="group_progress()">OK</button>
+
+           </div>
         </div>
     </div>
     <div id="panel" style="margin-left: -52px"></div>
