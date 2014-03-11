@@ -506,7 +506,7 @@ function insertion(Route, Break, post_fitVal){
         var run = 1;
 	var newBreak;
         var newRoute;
-        
+             
         var opt_cost;
         var opt_fitVal;
         var opt_off_r;
@@ -669,7 +669,7 @@ function fitVal(routes, brks, off_route_lim, off_route_rate)
 	var capacity_rate = 2000*off_route_rate;
 	var tot_off_r = off_routing_distance(routes, brks);
 	var tot_dist = totalDistance(routes, brks);
-	
+        
 	if (is_capacity_on)
 	{       
 		var path_Capacity = pathsCap(routes, brks);
@@ -702,6 +702,7 @@ function group_progress(){
     var progbar = 0;
     var myprog = 0;
     document.getElementById("panel14").style.display = 'none';
+    //document.getElementById("panel16").style.display = 'none';
     document.getElementById('panel12').appendChild(progress);
     popSize = document.getElementById('pop-size').value; 
     trucks = document.getElementById('no-trks').value;    
@@ -716,6 +717,7 @@ function group_progress(){
     var temp_dist;
     var off_r;
     var tot_dist;
+    hist = [];
     var min_brk;
     var min_route;
     if(is_capacity_on){
@@ -759,7 +761,7 @@ function group_progress(){
                 var pp_tot_dist = totalDistance(optRoute,optBreak);
                 var pp_total_cost = pp_tot_dist + off_route_rate*(pp_off_r);
                 
-                if(pp_fit<min_cost){
+                if(pp_fit<min_cost){                    
                     min_cost=pp_fit;
                     min_route=optRoute.slice();
                     min_brk=optBreak.slice();
@@ -767,7 +769,7 @@ function group_progress(){
                     var x = "Total cost: " + pp_total_cost.toFixed(2) + " Total distance: " + pp_tot_dist.toFixed(2);
                     document.getElementById("panel").innerHTML = x;
                     }
-
+                hist.push(min_cost);
                 if (i== popSize-1){
                     clearInterval(grouping);
                     progbar = 100;
@@ -778,7 +780,7 @@ function group_progress(){
                     document.getElementById("panel14").style.display = 'block';
 //                    var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
 //                    document.getElementById("panel").innerHTML = x;
-//                    document.getElementById("panel14").style.display = 'block';
+                    //document.getElementById("panel16").style.display = 'block';
                 }
                 i++;
 
@@ -787,11 +789,11 @@ function group_progress(){
 }
     
 function reportWin(){
-    
+   
     var myWindow = window.open("","Scheduling Report", "_self");
     myWindow.document.write('<link rel="stylesheet" type="text/css" href="css/mystyle.css">');
     myWindow.document.write("<p><b>" + myWindow.name + "</b></p>");
-
+    drawChart();  
     var r_off_r = off_routing_distance(optRoute,optBreak);
     var r_tot_dist = totalDistance(optRoute,optBreak);
     var r_total_cost = r_tot_dist + off_route_rate*(r_off_r);
@@ -844,7 +846,7 @@ function reportWin(){
     }
     myTable2+="</table>";
 
-    
+    var chart = window.document.getElementById('chart_div');
     var myTable3= "<table><tr>";
     myTable3+="<td>total demand</td>";
     myTable3+="<td>" + total_demand.toFixed(2)  + "</td></tr>";
@@ -863,9 +865,52 @@ function reportWin(){
     myWindow.document.write("<p><b>Parameters:</b></p>" );
     myWindow.document.write(myTable);
     myWindow.document.write("<p><b>Routes:</b></p>" );
-    myWindow.document.write(myTable2);
-
-    
+    myWindow.document.write(myTable2); 
+    myWindow.document.write("<p><b>History of best solution:</b></p>" );
+    myWindow.document.write(chart.innerHTML);
 };
 
 
+function init_solution(){
+    
+    var temp_route = rand_routes (not_null_stores);
+    var pBreak = rand_breaks (trucks, non_null_size(stores), min_tour);
+    var end_navigator_brk = pBreak.concat(temp_route.length - 1);
+    var start_navigator_brk = [0].concat(optBreak);
+    var pRoute = [];
+    //insert DCs at the start of each route
+    for(x in end_navigator_brk){
+        pRoute.push(DC);
+        pRoute.concat(temp_route.slice(start_navigator_brk[x],end_navigator_brk[x]));   
+    }
+    //update the break array
+    for(var i=0; i<pBreak.length; i++){
+        pBbreak[i]+=i+1;
+    }
+    
+} 
+
+function drawChart() {
+    var history = [];
+    var trial = 1;
+//    history.push(['Trial', 'Fitness Value']);
+
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Trial');
+        data.addColumn('number', 'Fitness Value');
+        data.addRows(hist.length);
+        for (var i=0; i<hist.length; i++){
+          data.setCell(i,0,trial.toString());
+          data.setCell(i,1,hist[i]);
+           trial++;
+       }
+        var options = {
+          legend:'none',
+          axisTitlesPosition:'in',
+          pointSize:1,
+          vAxis: {title: 'Best fitness value'}
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }

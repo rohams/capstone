@@ -5,6 +5,7 @@
 <script src="scripts/script.js"></script>
 <script src="scripts/testScript.js"></script>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript"
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbjocx6qcs0&sensor=false">
 </script>
@@ -262,6 +263,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var manual_add_id=0;
     var imp1 = false;
     var max_weight= 1;
+    var hist = [];
     var norm_weight_ave= 1;
     var pathInfos = [];
     var AVE_ZINDEX = 200;
@@ -446,6 +448,7 @@ function initialize() {
     progress.max=100;
     progress.id='p';
     progress.value=0;
+    google.load("visualization", "1", {packages:["corechart"]});
 </script>
 </head>
 
@@ -513,7 +516,8 @@ function initialize() {
                 <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
                 <div id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
                 <div id="panel14"><span><a href="" onclick="reportWin(); return false"> view report...</a></span></div>
-                <br><button class="panel-button" onclick="group_progress()">OK</button>
+                <button class="panel-button" onclick="group_progress()">OK</button>
+                <div id="panel16"><div id="chart_div" style="width: 250px; height: 170px;"></div></div>
             </div>
            </div>
         </div>
