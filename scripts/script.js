@@ -735,12 +735,13 @@ function addMarkers(id) {
     distMat = distanceMatrix(stores);
     
     // Test 'functions'_2s
-    var routes, brks;
+    //var routes, brks;
     //get_paths_2(routes, brks);
     //route_distance_2(routes, brks);
     //off_routing_distance_2(routes, brks);
     //graph_groups_2(map, routes, brks);
-    pathsCap_2(routes, brks);
+    //pathsCap_2(routes, brks);
+    // End test
 }
 
 function updateWeights(){
