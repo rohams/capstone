@@ -829,6 +829,126 @@ function insertion(Route, Break, post_fitVal){
     }
 }
 
+function insertion_2(Route, Break, post_fitVal){
+    
+	optRoute = Route;
+        optBreak = Break;
+	var fitValHist = post_fitVal;
+        var run = 1;
+	var newBreak;
+        var newRoute;
+        
+        var opt_cost;
+        var opt_fitVal;
+        var opt_off_r;
+        
+        var new_cost;
+        var new_fitVal;
+        var new_off_r; 
+        
+        var bestFitVal;
+        
+        // for all the primary routes 
+	while(run)
+	{
+                //this helps us better deal with the scanning through the routes 
+		var start_navigator_brk = [0].concat(optBreak);
+		var end_navigator_brk = optBreak.concat(optRoute.length - 1);
+		
+		for (var fi = 0; fi < start_navigator_brk.length; fi++){
+			//var tempRoute = optRoute;
+                        var tempRoute = optRoute.slice();
+                        //for all the secondary routes
+			for (var fj = 0; fj < start_navigator_brk.length; fj++){
+				//var tempBreak = optBreak;
+                                var tempBreak = optBreak.slice();
+                                //we do not compare a route against itself
+				if (fj != fi){					
+					for (var b = fi; b < optBreak.length; b++){
+						tempBreak[b] = optBreak[b] - 1;
+					}
+					
+					for (var b = fj; b < optBreak.length; b++){
+						tempBreak[b] = tempBreak[b] + 1;
+					}
+					
+                                        //sanity checks
+					for (var y = 0; y < tempBreak.length; y++){
+						if(tempBreak[y] < 1){
+						    tempBreak[y] = 1;
+						}
+						if(tempBreak[y] > optRoute.length - 1){
+						  tempBreak[y] = optRoute.length - 1;
+						}
+					}	
+                                        
+					var start_new_nav_brk = [0].concat(tempBreak);
+					var end_new_nav_brk = tempBreak.concat(optRoute.length-1);
+					
+                                        //so far we have taken care of all the breaks 
+                                        //do not remove more nodes from the primary route is already at minimum 
+					if((end_navigator_brk[fi] - start_navigator_brk[fi]) > min_tour){
+                                            //traverse through the primary route
+						for (var fk = start_navigator_brk[fi]; fk <= end_navigator_brk[fi]; fk++){
+							var allNewRoutes = new Array();
+							var allNewFitVals = new Array();
+							var row = 0;
+                                                        //traverse through the new secondary route  
+							for (var x = start_new_nav_brk[fj]; x <= end_new_nav_brk[fj]; x++){
+                                                            //remove the node from the primary route
+                                                                if (fk > -1) {
+                                                                    tempRoute.splice(fk, 1);
+                                                                }
+                                                                //insert the node to the secondary route
+								if (x > 0){
+									newRoute = tempRoute.slice(0, x).concat(optRoute[fk]).concat(tempRoute.slice(x, tempRoute.length));
+								}
+								else{
+									newRoute = optRoute.slice(fk,fk+1).concat(tempRoute.slice(x, tempRoute.length));
+								}
+                                                                newBreak = tempBreak.slice();
+                                                                //calculating the opt fitVal
+                                                                opt_fitVal = fitVal(optRoute, optBreak, off_route_lim, off_route_rate)
+								//calculating the opt fitVal
+                                                                new_fitVal = fitVal(newRoute, newBreak, off_route_lim, off_route_rate)
+                                                                //allNewRoutes(row,:) = newRoute;
+								if (new_fitVal<opt_fitVal){
+                                                                        allNewRoutes.push(newRoute);								
+									allNewFitVals.push(new_fitVal);
+									row = row + 1;
+								}
+                                                                tempRoute = optRoute.slice();
+								//tempRoute = optRoute;
+							}
+							//[bestFitVal,best_idx] = min(allNewFitVals);
+                                                        bestFitVal = Math.min.apply(Math,allNewFitVals);
+                                                        var best_idx = allNewFitVals.indexOf(bestFitVal);
+                                                        
+							if (bestFitVal < opt_fitVal){
+                                                                //optRoute = allNewRoutes(best_idx,:);
+                                                                optRoute = allNewRoutes[best_idx].slice();  
+                                                                //console.log(optRoute);
+								optBreak = newBreak.slice();
+								tempRoute = optRoute.slice();
+								post_fitVal = bestFitVal;
+							}
+						}
+						
+					}
+				}				
+			}
+		}
+        //if there was no improvment
+	if(fitValHist == post_fitVal){
+		run = 0;
+	}
+        else{
+		fitValHist = post_fitVal;
+	}
+    }
+}
+
+
 /*
  * Return the demand of each path.
  */
@@ -944,6 +1064,45 @@ function fitVal(routes, brks, off_route_lim, off_route_rate)
 	return fitVal;
 }
 
+function fitVal_2(routes, brks, off_route_lim, off_route_rate)
+{
+	var temp_dist;
+	var w_temp = 0;
+	var totWeight = 0;
+	var fitVal = 0;
+	var capacity_rate = 2000*off_route_rate;
+	var tot_off_r = off_routing_distance_2(routes, brks);
+	var tot_dist = totalDistance_2(routes, brks);
+	
+	if (is_capacity_on)
+	{       
+		var path_Capacity = pathsCap_2(routes, brks);
+		var pathsCapL = path_Capacity.length;
+		for (var i = 0; i < pathsCapL; i++)
+		{
+			var diff = path_Capacity[i] - truck_cap;
+			
+			if (diff <= 0)
+				w_temp = 0;
+			else
+				w_temp = (diff/total_demand)*capacity_rate;
+			
+			totWeight += w_temp;
+		}	
+	}
+	
+	if (tot_off_r > off_route_lim)
+		temp_dist = tot_dist + tot_off_r*off_route_rate;
+	else
+		temp_dist = tot_dist;
+	
+	fitVal = temp_dist + totWeight;
+	
+	return fitVal;
+}
+
+
+
 function group_progress(){
     
     var progbar = 0;
@@ -1035,6 +1194,112 @@ function group_progress(){
     
 }
     
+    
+function group_progress_2(){
+    
+    var progbar = 0;
+    var myprog = 0;
+    document.getElementById("panel14").style.display = 'none';
+    //document.getElementById("panel16").style.display = 'none';
+    document.getElementById('panel12').appendChild(progress);
+    popSize = document.getElementById('pop-size').value; 
+    trucks = document.getElementById('no-trks').value;    
+    off_route_rate = document.getElementById('off-rate').value;
+    off_route_lim = document.getElementById('off-lim').value;
+    var pBreaks = new Array(popSize);
+    var pRoutes = new Array(popSize);
+    var not_null_stores = non_null_indices(stores);
+    var k = 0;
+    var i = 0;
+    var min_cost=10000000;
+    var temp_dist;
+    var off_r;
+    var tot_dist;
+    hist = [];
+    var min_brk;
+    var min_route;
+    if(is_capacity_on){
+        truck_cap = document.getElementById('trk-cap').value;
+    }
+    else{
+        truck_cap = undefined;
+    }
+    
+    total_demand=0;
+    for(x in not_null_stores){
+        total_demand += stores[not_null_stores[x]].getDemand();
+    }
+
+    //randomly initialize the population
+    updateProgress(progbar);
+    while(k<popSize){
+        //pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
+        //pRoutes[k] = rand_routes (not_null_stores);
+        pRoutes[k]=[];
+        var temp_route = rand_routes (not_null_stores);
+        pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
+        var end_nav_brk = pBreaks[k].concat(temp_route.length - 1);
+        var start_nav_brk = [0].concat(pBreaks[k]);
+        //insert DCs at the start of each route
+        for(x in end_nav_brk){
+            pRoutes[k].push(DC);
+            pRoutes[k].concat(temp_route.slice(start_nav_brk[x],end_nav_brk[x]));   
+        }
+        //update the break array
+        for(var i=0; i<pBreaks[k].length; i++){
+            pBreaks[k][i]+=i+1;
+        }
+        
+        k++;
+    }
+   var grouping =setInterval(function(){ 
+             progbar = (myprog++/popSize)*100;
+             updateProgress(progbar);
+
+                off_r=off_routing_distance_2(pRoutes[i],pBreaks[i]);
+                tot_dist=totalDistance_2(pRoutes[i],pBreaks[i]);
+                if (off_r>off_route_lim)
+                {
+                    temp_fit= tot_dist + off_route_rate*(off_r);
+                }
+                else{
+                    temp_fit= tot_dist;
+                }
+                //insertion(pRoutes[i], pBreaks[i], temp_fit);        
+                
+                //off route
+                pp_fit= fitVal_2(optRoute, optBreak, off_route_lim, off_route_rate);
+                var pp_off_r = off_routing_distance_2(optRoute,optBreak);
+                var pp_tot_dist = totalDistance_2(optRoute,optBreak);
+                var pp_total_cost = pp_tot_dist + off_route_rate*(pp_off_r);
+                
+                if(pp_fit<min_cost){                    
+                    min_cost=pp_fit;
+                    min_route=optRoute.slice();
+                    min_brk=optBreak.slice();
+                    graph_groups_2(map, min_route, min_brk);
+                    var x = "Total cost: " + pp_total_cost.toFixed(2) + " Total distance: " + pp_tot_dist.toFixed(2);
+                    document.getElementById("panel").innerHTML = x;
+                    }
+                hist.push(min_cost);
+                if (i== popSize-1){
+                    clearInterval(grouping);
+                    progbar = 100;
+                    updateProgress(progbar);
+                    graph_groups_2(map, min_route, min_brk);
+                    optRoute=min_route.slice();
+                    optBreak=min_brk.slice();
+                    document.getElementById("panel14").style.display = 'block';
+//                    var x = "Total cost: " + min_cost.toFixed(2) + " Total distance: " + totalDistance(min_route,min_brk).toFixed(2);
+//                    document.getElementById("panel").innerHTML = x;
+                    //document.getElementById("panel16").style.display = 'block';
+                }
+                i++;
+
+    },0);
+    
+}    
+    
 function reportWin(){
    
     var myWindow = window.open("","Scheduling Report", "_self");
@@ -1119,20 +1384,23 @@ function reportWin(){
 
 
 function init_solution(){
-    
+    var count_offset=1;
+    var count = trucks+count_offset;
+    var pBreaks = new Array(count);
+    var pRoutes = new Array(count);
     var temp_route = rand_routes (not_null_stores);
     var pBreak = rand_breaks (trucks, non_null_size(stores), min_tour);
     var end_navigator_brk = pBreak.concat(temp_route.length - 1);
-    var start_navigator_brk = [0].concat(optBreak);
+    var start_navigator_brk = [0].concat(pBreak);
     var pRoute = [];
     //insert DCs at the start of each route
     for(x in end_navigator_brk){
         pRoute.push(DC);
-        pRoute.concat(temp_route.slice(start_navigator_brk[x],end_navigator_brk[x]));   
+        pRoute[0].concat(temp_route.slice(start_navigator_brk[x],end_navigator_brk[x]));   
     }
     //update the break array
     for(var i=0; i<pBreak.length; i++){
-        pBbreak[i]+=i+1;
+        pBreak[i]+=i+1;
     }
     
 } 

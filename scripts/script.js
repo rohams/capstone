@@ -667,13 +667,59 @@ function addDC(map){
         //Add listeners for Removing markers
          google.maps.event.addListener(dcmarker, 'dblclick', function() {
         dcmarker.setMap(null);
-        var x = "Removed the DC";
+        var x = "Removed DC 1";
         document.getElementById("panel").innerHTML = x;
         document.getElementById("panel7").style.display = 'none'; 
         panel7=true;
         DC = null;
         });
         DC = new Node(lat,lng);       
+      } else {
+        alert('No results found');
+      }
+    } else {
+      alert('Geocoder failed due to: ' + status);
+    }
+  });
+}
+
+//add a DC node
+function addDC2(map){
+    if(typeof(dcmarker2) != "undefined"){
+        dcmarker2.setMap(null);
+    }  
+    var infowindow = new google.maps.InfoWindow();
+    var input1 = document.getElementById('dc2-lat').value;
+    var input2 = document.getElementById('dc2-lng').value;
+    var lat = parseFloat(input1);
+    var lng = parseFloat(input2);
+    var latlng = new google.maps.LatLng(lat, lng);
+    var info = 'Distribution Center 2: ';
+    geocoder.geocode({'latLng': latlng}, function(results, status) {
+    if (status == google.maps.GeocoderStatus.OK) {
+      if (results[1]) {
+        dcmarker2 = new google.maps.Marker({
+            position: latlng,
+            map: map,
+            icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        strokeColor: 'blue',
+                        fillOpacity: 0.8,
+                        scale: 6
+                      },
+            animation: google.maps.Animation.DROP
+        });
+
+        infowindow.setContent(info + results[1].formatted_address);
+        infowindow.open(map, dcmarker2);
+        //Add listeners for Removing markers
+         google.maps.event.addListener(dcmarker2, 'dblclick', function() {
+        dcmarker2.setMap(null);
+        var x = "Removed DC 2";
+        document.getElementById("panel").innerHTML = x;
+        DC2 = null;
+        });
+        DC2 = new Node(lat,lng);       
       } else {
         alert('No results found');
       }

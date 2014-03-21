@@ -280,6 +280,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var openedInfoWindow = null;
     var map;
     var DC;
+    var DC2;
     var is_capacity_on;
     var circle;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
@@ -288,6 +289,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var markers = [];
     var FW_marker;
     var dcmarker;
+    var dcmarker2;
     var distMat = [];
     var truck_cap;
     var total_demand;
@@ -499,7 +501,7 @@ function initialize() {
             Enter DC Location:<br>
             <input type="text" placeholder="latitude" class="panel-textb" id="dc2-lat">
             <input type="text" placeholder="longitude" class="panel-textb" id="dc2-lng">
-            <br><button class="panel-button" id="insert-dc2" onclick="addDC(map)">Insert</button></div>
+            <br><button class="panel-button" id="insert-dc2" onclick="addDC2(map)">Insert</button></div>
         <div class="panel" id="panel7">Select the option: <br>
                 <select id="opts" onchange="selOption()">
                     <option>Remove next node</option>
@@ -516,7 +518,7 @@ function initialize() {
                 <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
                 <div id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
                 <div id="panel14"><span><a href="" onclick="reportWin(); return false"> view report...</a></span></div>
-                <button class="panel-button" onclick="group_progress()">OK</button>
+                <button class="panel-button" onclick="group_progress_2()">OK</button>
                 <div id="panel16"><div id="chart_div" style="width: 250px; height: 170px;"></div></div>
             </div>
            </div>
