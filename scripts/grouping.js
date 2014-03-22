@@ -69,8 +69,8 @@ function get_paths(routes, brks)
 function get_paths_2(routes, brks)
 {
 	// Test get_paths_2----------
-	var routes = ['DC1', 21, 22, 'DC2', 25, 28, 'DC1', 29, 31, 37, 'DC2', 38, 55, 56, 57, 'DC2', 66, 71, 81, 84, 'DC1', 109];
-	var brks = [2, 5, 9, 14, 19];
+	// var routes = ['DC1', 21, 22, 'DC2', 25, 28, 'DC1', 29, 31, 37, 'DC2', 38, 55, 56, 57, 'DC2', 66, 71, 81, 84, 'DC1', 109];
+	// var brks = [2, 5, 9, 14, 19];
 	// --------------------------
 	
 	// save brks.length
@@ -163,10 +163,10 @@ function route_distance(routes, brks){
 function route_distance_2(routes, brks){
 	
 	// Test: Data (All are BC North stores -----------
-	var DC1 = new Node(parseFloat(53.04121304075649), parseFloat(-124.716796875));
-	var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
-	var routes = [DC1, 21, 22, DC2, 25, 28, DC1, 29, 31, 37, DC2, 38, 55, 56, 57, DC2, 66, 71, 81, 84, DC1, 109];
-	var brks = [2, 5, 9, 14, 19];
+	//var DC1 = new Node(parseFloat(53.04121304075649), parseFloat(-124.716796875));
+	//var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
+	//var routes = [DC1, 21, 22, DC2, 25, 28, DC1, 29, 31, 37, DC2, 38, 55, 56, 57, DC2, 66, 71, 81, 84, DC1, 109];
+	//var brks = [2, 5, 9, 14, 19];
 	// -----------------------------------------------
 	
 	var paths = get_paths(routes, brks);
@@ -195,7 +195,7 @@ function route_distance_2(routes, brks){
 		{
 			// Test: check output -----------
 			// Show all the distances involve to check if it's correct
-			console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]);
+			 console.log("Dist[" + paths[i][j] + "][" + paths[i][j+1] + "] = " + distMat[paths[i][j]][paths[i][j+1]]);
 			// ------------------------------
 			pathsDist[i].push(distMat[paths[i][j]][paths[i][j+1]]);
 		}
@@ -296,10 +296,10 @@ function off_routing_distance(routes, brks)
 function off_routing_distance_2(routes, brks)
 {
 	// Test: Data (All are BC North stores) -----------
-	var DC1 = new Node(parseFloat(53.04121304075649), parseFloat(-124.716796875));
-	var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
-	var routes = [DC1, 21, 22, DC2, 25, 28, DC1, 29, 31, 37, DC2, 38, 55, 56, 57, DC2, 66, 71, 81, 84, DC1, 109];
-	var brks = [2, 5, 9, 14, 19];
+	//var DC1 = new Node(parseFloat(53.04121304075649), parseFloat(-124.716796875));
+	//var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
+	//var routes = [DC1, 21, 22, DC2, 25, 28, DC1, 29, 31, 37, DC2, 38, 55, 56, 57, DC2, 66, 71, 81, 84, DC1, 109];
+	//var brks = [2, 5, 9, 14, 19];
 	// ------------------------------------------------
 	
 	var totalDist = totalDistance_2(routes, brks);
@@ -513,10 +513,10 @@ for (var i = 0; i < paths.length; i++)
 function graph_groups_2(map, routes, brks)
 {
 	// Test: Data (All are BC North stores) -----------
-	var DC1 = new Node(parseFloat(53.04121304075649), parseFloat(-124.716796875));
-	var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
-	var routes = [DC1, 21, 22, DC2, 25, 28, DC1, 29, 31, 37, DC2, 38, 55, 56, 57, DC2, 66, 71, 81, 84, DC1, 109];
-	var brks = [2, 5, 9, 14, 19];
+	//var DC1 = new Node(parseFloat(53.04121304075649), parseFloat(-124.716796875));
+	//var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
+	//var routes = [DC1, 21, 22, DC2, 25, 28, DC1, 29, 31, 37, DC2, 38, 55, 56, 57, DC2, 66, 71, 81, 84, DC1, 109];
+	//var brks = [2, 5, 9, 14, 19];
 //	var routes = [21, 22, 25, 28, 29, 31, 37, 38, 55, 56, 57, 66, 71, 81, 84, 109];
 //	var brks = [2, 5, 9, 14];
 //	graph_groups(map, routes, brks);
@@ -851,7 +851,7 @@ function insertion_2(Route, Break, post_fitVal){
         // for all the primary routes 
 	while(run)
 	{
-                //this helps us better deal with the scanning through the routes 
+                //this helps us better deal with scanning through the routes
 		var start_navigator_brk = [0].concat(optBreak);
 		var end_navigator_brk = optBreak.concat(optRoute.length - 1);
 		
@@ -1202,10 +1202,10 @@ function group_progress_2(){
     document.getElementById("panel14").style.display = 'none';
     //document.getElementById("panel16").style.display = 'none';
     document.getElementById('panel12').appendChild(progress);
-    popSize = document.getElementById('pop-size').value; 
-    trucks = document.getElementById('no-trks').value;    
-    off_route_rate = document.getElementById('off-rate').value;
-    off_route_lim = document.getElementById('off-lim').value;
+    popSize = parseFloat(document.getElementById('pop-size').value); 
+    trucks = parseFloat(document.getElementById('no-trks').value);   
+    off_route_rate = parseFloat(document.getElementById('off-rate').value);
+    off_route_lim = parseFloat(document.getElementById('off-lim').value);
     var pBreaks = new Array(popSize);
     var pRoutes = new Array(popSize);
     var not_null_stores = non_null_indices(stores);
@@ -1218,6 +1218,7 @@ function group_progress_2(){
     hist = [];
     var min_brk;
     var min_route;
+    popSize = popSize*(trucks+1);
     if(is_capacity_on){
         truck_cap = document.getElementById('trk-cap').value;
     }
@@ -1233,26 +1234,29 @@ function group_progress_2(){
     //randomly initialize the population
     updateProgress(progbar);
     while(k<popSize){
-        //pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
-        //pRoutes[k] = rand_routes (not_null_stores);
-        pRoutes[k]=[];
-        var temp_route = rand_routes (not_null_stores);
-        pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
-        var end_nav_brk = pBreaks[k].concat(temp_route.length - 1);
-        var start_nav_brk = [0].concat(pBreaks[k]);
-        //insert DCs at the start of each route
-        for(x in end_nav_brk){
-            pRoutes[k].push(DC);
-            pRoutes[k].concat(temp_route.slice(start_nav_brk[x],end_nav_brk[x]));   
+        for (var j=0; j<(trucks+1) ;j++){
+            var assign_DC=j;
+            pRoutes[k]=[];
+            var temp_route = rand_routes (not_null_stores);
+            pBreaks[k] = rand_breaks (trucks, non_null_size(stores), min_tour);
+            var end_nav_brk = pBreaks[k].concat(temp_route.length - 1);
+            var start_nav_brk = [0].concat(pBreaks[k]);
+            //insert DCs at the start of each route
+            for(var x=0; x<end_nav_brk.length;x++){
+                if(assign_DC<1){ pRoutes[k].push(DC);}
+                else {pRoutes[k].push(DC2);}
+                assign_DC--;
+                pRoutes[k] = pRoutes[k].concat(temp_route.slice(start_nav_brk[x],end_nav_brk[x]));
+            }
+            //update the break array
+            for(var i=0; i<pBreaks[k].length; i++){
+                pBreaks[k][i]+=i+1;
+            }
+
+            k++;
         }
-        //update the break array
-        for(var i=0; i<pBreaks[k].length; i++){
-            pBreaks[k][i]+=i+1;
-        }
-        
-        k++;
     }
-   var grouping =setInterval(function(){ 
+//   var grouping =setInterval(function(){ 
              progbar = (myprog++/popSize)*100;
              updateProgress(progbar);
 
@@ -1296,7 +1300,7 @@ function group_progress_2(){
                 }
                 i++;
 
-    },0);
+//    },0);
     
 }    
     
