@@ -269,7 +269,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var AVE_ZINDEX = 200;
     var addAppend = false;
     var drawAppend = false;
-    var DST_CST_RATIO = 0.001;
+    var DST_CST_RATIO = 0.003;
     var image1 = 'images/marker.png';
     var image2 = 'images/marker2.png';
     var geocoder;
@@ -280,7 +280,7 @@ src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAxfWoChDI1GdE2uBRUcl17cbj
     var openedInfoWindow = null;
     var map;
     var DC;
-    var DC2 = new Node(parseFloat(53.12040528310657), parseFloat(-117.24609375));
+    var DC2 = null;
     var is_capacity_on;
     var circle;
     var sun=0,mon=0,tue=0,wed=0,thu=0,sat=0,fri=0;
@@ -517,7 +517,7 @@ function initialize() {
                 <input type="text" placeholder="number of trucks" class="panel-textb" id="no-trks">
                 <input type="text" placeholder="size of population" class="panel-textb" id="pop-size">
                 <div id="panel13"><input type="text" placeholder="truck capacity" class="panel-textb" id="trk-cap"></div>
-                <div id="panel14"><span><a href="" onclick="reportWin(); return false"> view report...</a></span></div>
+                <div id="panel14"><span><a href="" onclick="reportWin_2(); return false"> view report...</a></span></div>
                 <button class="panel-button" onclick="group_progress_2()">OK</button>
                 <div id="panel16"><div id="chart_div" style="width: 250px; height: 170px;"></div></div>
             </div>

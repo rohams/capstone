@@ -294,7 +294,7 @@ function getEllipse(foci,map){
     var min;
     var max_lng, min_lng, mid_lng;
     var FW_point = new Node; 
-    var cost_step = document.getElementById('coststep').value;
+    var cost_step = parseFloat(document.getElementById('coststep').value)*3;
     var init_cost = new Cost(document.getElementById('cost').value);
     normalizeWeights();
     if (!init_cost.status()){
