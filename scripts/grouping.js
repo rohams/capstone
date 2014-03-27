@@ -640,6 +640,11 @@ function group_progress(){
     trucks = parseFloat(document.getElementById('no-trks').value);   
     off_route_rate = parseFloat(document.getElementById('off-rate').value);
     off_route_lim = parseFloat(document.getElementById('off-lim').value);
+    if (off_route_lim < 0 || isNaN(off_route_lim) || off_route_rate < 0 || isNaN(off_route_rate) || trucks < 0 || isNaN(trucks) || 
+    		popSize < 0 || isNaN(popSize) ) {
+    	alert("Entered store grouping parameter is not valid!");
+    	return;
+    }
     var pBreaks = new Array(popSize);
     var pRoutes = new Array(popSize);
     var not_null_stores = non_null_indices(stores);
@@ -658,6 +663,10 @@ function group_progress(){
     }
     if(is_capacity_on){
         truck_cap = document.getElementById('trk-cap').value;
+        if (truck_cap < 0 || isNaN(truck_cap) ) {
+        	alert("Entered truck capacity value is not valid!");
+        	return;
+        }
     }
     else{
         truck_cap = undefined;

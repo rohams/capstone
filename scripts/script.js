@@ -297,7 +297,7 @@ function getEllipse(foci,map){
     var cost_step = parseFloat(document.getElementById('coststep').value)*3;
     var init_cost = new Cost(document.getElementById('cost').value);
     normalizeWeights();
-    if (!init_cost.status()){
+    if (!init_cost.status() || cost_step < 0 || isNaN(cost_step) ){
         alert ('Entered cost parameter is not valid!');
         return false;
     }
