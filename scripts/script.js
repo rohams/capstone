@@ -258,16 +258,16 @@ function getAverage(stores){
     return aveNode;
 }
 
-function distance(point1, point2){
-    return Math.sqrt( Math.pow(point1.getLat() - point2.getLat(), 2) + Math.pow(point1.getLng() - point2.getLng(), 2) );
-}
+//function distance(point1, point2){
+//    return Math.sqrt( Math.pow(point1.getLat() - point2.getLat(), 2) + Math.pow(point1.getLng() - point2.getLng(), 2) );
+//}
 
 
 function SumOfDistances(foci,i,j){
     var distance = 0;      
     for (k = 0; k < foci.length; k++) {
         if (foci[k] != null) {
-            distance += foci[k].getWeight()*(Math.sqrt( Math.pow(foci[k].getLat() - i, 2) + Math.pow(foci[k].getLng() - j, 2) ));
+            distance += foci[k].getWeight()*distHaversine2(foci[k],i,j);
         }
     }
     return distance;    
@@ -284,8 +284,8 @@ function getEllipse(foci,map){
 //GRANULARITY
     var height = 0;
     var set_grl = true;
-    var THERESHOLD= 0.0045;
-    var STEPSIZE = 0.002;
+    var THERESHOLD= 0.04;
+    var STEPSIZE = 0.00015;
     var ellipse = [];
     var lngs = [];
     var point;
@@ -294,7 +294,7 @@ function getEllipse(foci,map){
     var min;
     var max_lng, min_lng, mid_lng;
     var FW_point = new Node; 
-    var cost_step = parseFloat(document.getElementById('coststep').value)*3;
+    var cost_step = parseFloat(document.getElementById('coststep').value);
     var init_cost = new Cost(document.getElementById('cost').value);
     normalizeWeights();
     if (!init_cost.status() || cost_step < 0 || isNaN(cost_step) ){
@@ -332,7 +332,7 @@ function getEllipse(foci,map){
                         point= new Node(i,j);
                         if(set_grl){
                             set_grl=false;
-                            height = distance(point,ave);
+                            height = distHaversine(point,ave);
                             steps = STEPSIZE*height;
                             thl=THERESHOLD*height*norm_weight_ave;
                         }
@@ -859,7 +859,7 @@ function nodeToRemove(){
     for (x in stores){
         if (stores[x] != null) {
             node=new Node(stores[x].getLat(),stores[x].getLng());
-            var temp =stores[x].getWeight()*distance(node,DC);
+            var temp =stores[x].getWeight()*distHaversine(node,DC);
             if (temp>max){
                 max=temp;
                 mymarker=markers[x];
@@ -1015,3 +1015,33 @@ function updateCap(){
     else
         document.getElementById("panel13").style.display = 'none'; 
 };
+
+
+//calculating distance in km
+rad = function(x) {return x*Math.PI/180;}
+
+distHaversine = function(p1, p2) {
+  var R = 6371; // earth's mean radius in km
+  var dLat  = rad(p2.getLat() - p1.getLat());
+  var dLong = rad(p2.getLng() - p1.getLng());
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(rad(p1.getLat())) * Math.cos(rad(p2.getLat())) * Math.sin(dLong/2) * Math.sin(dLong/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+
+  return d.toFixed(3);
+  }
+  
+  distHaversine2 = function(p1, i, j) {
+  var R = 6371; // earth's mean radius in km
+  var dLat  = rad(i - p1.getLat());
+  var dLong = rad(j - p1.getLng());
+
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+          Math.cos(rad(p1.getLat())) * Math.cos(rad(i)) * Math.sin(dLong/2) * Math.sin(dLong/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+
+  return d.toFixed(3);
+  }
