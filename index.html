@@ -393,6 +393,16 @@ function initialize() {
     control4.innerHTML = 'Store Optimiz';
     control4.title = 'add the next most optimal store';
     control4.index = 4;
+    
+    var control5 = document.createElement('DIV');
+    control5.setAttribute("id", "control5");
+    control5.style.padding = '5px';
+    control5.style.border = '1px solid #000';
+    control5.style.backgroundColor = 'yellow';
+    control5.style.cursor = 'pointer';
+    control5.innerHTML = '<a href="http://www.google.com">Help</a>';
+    control5.title = 'Help page';
+    control5.index = 5;
 
     //draw ellipses
     google.maps.event.addDomListener(control1, 'click', function() {   
@@ -420,7 +430,12 @@ function initialize() {
                             document.getElementById("panel2").style.display = 'none'; 
                             document.getElementById("panel10").style.display = 'none';
                                          });
-       // Find Average
+    // Help
+    google.maps.event.addDomListener(control5, 'click', function() {
+                            document.getElementById("panel").innerHTML = "Help page";
+                                         });
+    
+    // Find Average
     google.maps.event.addDomListener(control2, 'click', function() {                        
                             var node = getWeightedAverage(stores); 
                             oldAveMarker = aveMarker;
@@ -443,6 +458,7 @@ function initialize() {
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control2);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control3);
     map.controls[google.maps.ControlPosition.TOP_LEFT].push(control4);
+    map.controls[google.maps.ControlPosition.TOP_RIGHT].push(control5);
 }
     google.maps.event.addDomListener(window, 'load', initialize);
     var loading =document.createTextNode("Loading...");
