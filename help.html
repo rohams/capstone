@@ -1,0 +1,90 @@
+ <head>
+ <title>Help Page</title>
+ </head>
+ <body>
+ <div class="wrapper">
+   <header class="cf"><center><img src="help.png" width="90" height="90"  alt="Location Planning" class="logo"/></center>
+   </header>
+   <section class="container content" id="main-content">
+     <article>
+        <h1><center>Location Planning Using Multi-Focal Ellipses Help Page</center></h1>
+	<p class="nb"><b>Quick links</b></p>	
+	<a href="#01">import1</a><br>
+	<a href="#02">import2</a><br>
+	<a href="#03">Draw Ellipse</a><br>
+	<a href="#04">Find Average</a><br>
+	<a href="#05">Add a Store</a><br>
+	<a href="#06">Store Optimiz</a><br>
+	<a href="#07">Remove next node</a><br>
+	<a href="#08">Store Grouping</a></p>
+        
+	<h2><a name="01"></a>import1</h2> 
+        <p class="intro tab">By clicking on this box, the application would ask you to upload a spreadsheet file that contains the locations of all the stores in the <a href="#09">required format</a>.</p> <p class="tab">
+        
+	<h2><a name="02"></a><span>import2</span></h2> 
+        <p class="tab">This icon appears after a valid file has been uploaded and it is OPTIONAL. It asks you to upload another spreadsheet file that contains the weight of all the stores provided in <a href="#01">import1</a>. This file must be in <a href="#10">the required format</a>.</p> 
+        
+	<h2><a name="03"></a>Draw Ellipse</h2> 
+        <p class="intro tab">This feature allows you to draw multiple ellipses. Each ellipse demonstrates a constant cost of travelling from any point on the ellipse (possible location for your distribution center) to all the stores. The required fields are <a href="#11">sub-networks</a>, <a href="#12">initial cost</a>, and <a href="#13">cost steps</a>. <a href="#14">Active stores</a> is an optional icon that only lists the identity of available stores within the selected <a href="#11">sub-networks</a>.  After filling all the required boxes, simply click on Enter to draw the ellipses. This process might take several minutes.</p> <p class="tab">
+	
+	<h2><a name="04"></a>Find Average</h2> 
+        <p class="intro tab">Find Average as its name suggests, finds the average location for all the selected stores and locates it on the map. Find average is visible on the map as a larger black marker. Note that the average location does NOT represent the most optimum location for your distribution center. Find average is a good tool to approximate the <a href="#12">initial cost</a> for <a href="#03">draw ellipse</a> feature.</p> <p class="tab">
+	
+	<h2><a name="05"></a>Add a Store</h2> 
+        <p class="intro tab">This feature allows you to manually add a store by manually entering its latitude, longitude and weight. This software also allows you to find the latitude and longitude of your desired location by clicking on any location on the map. In addition you are able to <a href="#15">remove</a> any store on the map by simply double clicking on the red store marker.</p> <p class="tab">
+	
+	<h2><a name="06"></a>Store Optimiz</h2> 
+        <p class="intro tab">This feature determines a near-optimum delivery routes from your distribution center to your stores. Firstly, under "Store Optimization" you are prompt to enter the latitude and longitude of your distribution center. Then, you need to select <a href="#07">remove next node</a> or <a href="#08">store grouping</a> option.</p> <p class="tab">
+	
+	<h2><a name="07"></a>Remove next node</h2> 
+        <p class="intro tab">Remove next node finds the node that has the highest transportation cost based on its weight and distance. Simply by clicking on “Find” button the store to remove stats to bounce up and down.</p> <p class="tab">
+	
+	<h2><a name="08"></a>Store Grouping</h2> 
+        <p class="intro tab">Store Grouping displays a near-optimum route on the map originating from your distribution center/centers. After choosing this option, you are asked to choose weather or not you want to consider <a href="#16">capacity</a> constraint. Then you are prompt to enter <a href="#17">off-route limit</a>, <a href="#18">off-route rate</a>, <a href="#19">number of trucks</a>, <a href="#20">size of population</a>, and <a href="#21">truck capacity</a>. By clicking on "OK" button, the calculation begins by displaying a random solution converging to a near-optimum solution. Clicking on "report" opens a new page with a short report about the calculated routes.</p> <p class="tab">
+	<p class="intro tab">Please note that after you enter the location of your distribution center, another dark gray drop down menu appears that gives you the option to add a second distribution center. Please note that clicking on the dark gray bars gives you the option to hide/show.</p> <p class="tab">
+	
+	<h2><a name="09"></a>Required format</h2> 
+	<p class="intro tab">The default format for the spreadsheet that contains store locations has been set to the following format:<br>Column#2= Store ID#<br>Column#6= Latitude<br>Column#7= Longitude<br>Column#17= Sub-Network<br>Please note that the default column numbers can be easily changed in the provided "import.js" source code under "readFile1" function.</p> <p class="tab">
+	
+	<h2><a name="10"></a>The required format</h2> 
+	<p class="intro tab">The default format for the spreadsheet that contains stores’ weights has been set to the following format:<br>Column#1= Store ID#<br>Column#2-8= Ambient By Weight<br>Column#9-15= Frozen By Weight<br>Column#16-22= Perishable By Weight<br>Column#23-29= Ambient By Cubic Volume<br>Column#30-36= Frozen By Cubic Volume<br>Column#23-29= Perishable By Cubic Volume<br>Please note that the default column numbers can be easily changed in the provided "import.js" source code under "readFile2" function.</p> <p class="tab">
+	
+	<h2><a name="11"></a>Sub-networks</h2> 
+	<p class="intro tab">Sub-networks is a drop down menu that shows the sub-networks available based on the provided spreadsheet. Clicking on the dark gray bar gives you the option to hide/show available sub-networks.</p> <p class="tab">
+	
+	<h2><a name="12"></a>Initial cost</h2> 
+	<p class="intro tab">Initial cost is a required field in order to draw ellipses. It indicates the cost that you want to set for the initial ellipse. This value has to be a reasonable value in order to draw ellipses. <a href="#04">Find Average</a> is a good tool to approximate this value.</p> <p class="tab">
+	
+	<h2><a name="13"></a>Cost step</h2> 
+	<p class="intro tab">Cost step is a required field in order to draw ellipses. It indicates the distance between the ellipses. Cost step has to be a reasonable value in order to draw multiple ellipses. Please note that clicking anywhere on the map shows the total cost from that point to all the stores. You can use this function to approximate a suitable value for cost step.</p> <p class="tab">
+	
+	<h2><a name="14"></a>Active Stores</h2> 
+	<p class="intro tab">Active stores is a drop down menu that shows that selected stores external ID#. Clicking on the dark gray bar gives you the option to hide/show all the active stores.</p> <p class="tab">
+	
+	<h2><a name="15"></a>Remove</h2> 
+	<p class="intro tab">In order to manually any store on the map you need to double click on the store marker.</p> <p class="tab">
+	
+	<h2><a name="16"></a>Capacity</h2> 
+	<p class="intro tab">This is an optional feature for delivery routing feature. Capacity is the constraint set by the size of one truck. Checking the box beside capacity adds capacity constraint as an additional variable to the required calculations needed in order to determine delivery routes. Checking this box adds an additional field to be entered called <a href="#21">truck capacity</a>.</p> <p class="tab">
+	
+	<h2><a name="17"></a>Off-route limit</h2> 
+	<p class="intro tab">This is a required field to be filled for delivery routing feature. Off route limit refers to the maximum distance that each truck is allowed to travel in addition to its original distance for no extra cost. Original distance is the distance from distribution center to the destination store. Couriers set this variable.</p> <p class="tab">
+	
+	<h2><a name="18"></a>Off-route rate</h2> 
+	<p class="intro tab">This is a required field to be filled for delivery routing feature. Off route rate is set to be a penalty that your courier charges you if a truck’s total distance travelled exceeds the sum of original distance and <a href="#17">off-route limit</a>. This rate is a multiple of regular per kilometer charge. For instance, if your courier charges you $1/km, entering 4 for your off-route rate means that your courier charges you $4 for each kilometer that a truck exceeds <a href="#17">off-route limit</a>.</p> <p class="tab">
+	
+	<h2><a name="19"></a>Number of trucks</h2> 
+	<p class="intro tab">This is a required field to be filled for delivery routing feature. Number of trucks as its name suggest refers to the quantity of trucks to service your stores.</p> <p class="tab">
+	
+	<h2><a name="20"></a>Size of population</h2> 
+	<p class="intro tab">This is a required field to be filled for delivery routing feature. Size of population is a variable that determines the number of iterations to calculate the delivery routings. Increasing this value increase the accuracy and the time to calculate the routes. However, keep in mind that entering a large number only adds a significant amount of time to the calculations since the accuracy converges to a near-optimum solution after a few iterations. Using report under “Store Optimization” menu you can visually see a graph of convergence to a better solution, which saturates after some point.</p> <p class="tab">
+	
+	<h2><a name="21"></a>Truck capacity</h2> 
+	<p class="intro tab">Truck capacity is a required field to be filled if you choose to consider <a href="#16">capacity</a>. This value refers to the maximum capacity of one truck. It could either be by cubic volume or weight depending on whether you checked by volume or by weight commodities.</p> <p class="tab">
+     </article>
+   </section>
+ </div>
+ <script async src="http://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+ <script src="http://cdn.computerhope.com/site.js"></script>
+ </body>
