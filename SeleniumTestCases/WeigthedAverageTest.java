@@ -20,8 +20,8 @@ public class WeigthedAverageTest {
 	@Before
 	public void setUp() throws Exception {
 		driver = new FirefoxDriver();
-		baseUrl = "http://localhost:8080/index.html";
-		filePath = "/Users/sj/capstone/UBC ECE Capstone Project - Nodes.csv";
+		baseUrl = "file:///Users/sj/capstone/index.html";
+		filePath = "/Users/sj/capstone/Nodes.csv";
 		driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
 	}
 
@@ -42,12 +42,12 @@ public class WeigthedAverageTest {
 		driver.findElement(By.id("lng")).sendKeys("-132");
 		driver.findElement(By.id("weight")).clear();
 		driver.findElement(By.id("weight")).sendKeys("2");
-		driver.findElement(By.id("add")).click();
-		driver.findElement(By.id("control4")).click();
-		driver.findElement(By.id("ave")).click();
-		assertEquals("Weighted Average Geolocation: (57,-128)", driver
-				.findElement(By.id("panel")).getText());
-		Thread.sleep(2000);
+		//driver.findElement(By.id("add")).click();
+		//driver.findElement(By.id("control4")).click();
+		driver.findElement(By.id("control2")).click();
+		//driver.findElement(By.id("ave")).click();
+		assertEquals("Weighted Average Geolocation: (51,-120)", driver.findElement(By.id("panel")).getText());
+		Thread.sleep(3000);
 	}
 
 	@Test
@@ -58,7 +58,7 @@ public class WeigthedAverageTest {
 		WebElement fileInput = driver.findElement(By
 				.xpath("//input[@type='file']"));
 		fileInput.sendKeys(filePath);
-		assertEquals("25 stores imported!", closeAlertAndGetItsText());
+		assertEquals("128 stores imported!", closeAlertAndGetItsText());
 		driver.findElement(By.id("control3")).click();
 		driver.findElement(By.id("lat")).clear();
 		driver.findElement(By.id("lat")).sendKeys("49");
@@ -73,12 +73,10 @@ public class WeigthedAverageTest {
 		driver.findElement(By.id("sub_id3")).click();
 		driver.findElement(By.id("sub_id4")).click();
 		driver.findElement(By.id("sub_id5")).click();
-		driver.findElement(By.id("control4")).click();
-		driver.findElement(By.id("ave")).click();
-		assertEquals(
-				"Weighted Average Geolocation: (49.90216182222222,-118.98982204444445)",
-				driver.findElement(By.id("panel")).getText());
-		Thread.sleep(2000);
+		driver.findElement(By.id("control2")).click();
+		//driver.findElement(By.id("ave")).click();
+		assertEquals("Weighted Average Geolocation: (50.120368217286824,-119.06846252868218)", driver.findElement(By.id("panel")).getText());
+		Thread.sleep(3000);
 	}
 
 	@Test
@@ -89,16 +87,16 @@ public class WeigthedAverageTest {
 		WebElement fileInput = driver.findElement(By
 				.xpath("//input[@type='file']"));
 		fileInput.sendKeys(filePath);
-		assertEquals("25 stores imported!", closeAlertAndGetItsText());
+		assertEquals("128 stores imported!", closeAlertAndGetItsText());
 		driver.findElement(By.id("sub_id0")).click();
 		driver.findElement(By.id("sub_id1")).click();
 		driver.findElement(By.id("sub_id2")).click();
-		driver.findElement(By.id("control4")).click();
-		driver.findElement(By.id("ave")).click();
+		driver.findElement(By.id("control2")).click();
+		//driver.findElement(By.id("ave")).click();
 		assertEquals(
-				"Weighted Average Geolocation: (50.54120447619047,-117.74744133333334)",
+				"Weighted Average Geolocation: (50.441917671084354,-118.52197121084338)",
 				driver.findElement(By.id("panel")).getText());
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 	}
 
 	@Test
@@ -110,7 +108,7 @@ public class WeigthedAverageTest {
 		WebElement fileInput = driver.findElement(By
 				.xpath("//input[@type='file']"));
 		fileInput.sendKeys(filePath);
-		assertEquals("25 stores imported!", closeAlertAndGetItsText());
+		assertEquals("128 stores imported!", closeAlertAndGetItsText());
 		driver.findElement(By.id("sub_id0")).click();
 		driver.findElement(By.id("sub_id1")).click();
 		driver.findElement(By.id("sub_id2")).click();
@@ -125,21 +123,13 @@ public class WeigthedAverageTest {
 		driver.findElement(By.id("weight")).clear();
 		driver.findElement(By.id("weight")).sendKeys("20");
 		driver.findElement(By.id("add")).click();
-		driver.findElement(
-				By.xpath("//div[@id='map-canvas']/div/div/div/div[2]/div[2]/div/div/div[5]"))
-				.click();
-		action.doubleClick(driver.findElement(By.cssSelector("#gmimap23 > area")));
+		action.doubleClick(driver.findElement(By.xpath("(//img[contains(@src,'https://maps.gstatic.com/mapfiles/transparent.png')])[25]")));
 		action.perform();
-		action.doubleClick(driver.findElement(By.cssSelector("#gmimap2 > area")));
-		action.perform();
-		action.doubleClick(driver.findElement(By.cssSelector("#gmimap1 > area")));
-		action.perform();
-		driver.findElement(By.id("control4")).click();
-		driver.findElement(By.id("ave")).click();
+		driver.findElement(By.id("control2")).click();
 		assertEquals(
-				"Weighted Average Geolocation: (49.604877357142854,-119.25492285714287)",
+				"Weighted Average Geolocation: (50.123639323125005,-119.13018011796875)",
 				driver.findElement(By.id("panel")).getText());
-		Thread.sleep(2000);
+		Thread.sleep(3000);
 	}
 
 	@After
